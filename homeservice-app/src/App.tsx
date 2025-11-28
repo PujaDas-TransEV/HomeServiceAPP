@@ -1,4 +1,4 @@
-// import { Route, Redirect } from 'react-router-dom';
+// import { Route, Redirect, Switch } from 'react-router-dom';
 // import {
 //   IonApp,
 //   IonRouterOutlet,
@@ -7,52 +7,65 @@
 // import { IonReactRouter } from '@ionic/react-router';
 
 // /* Pages */
-// import Tab1 from '../src/pages/Tab1' // make sure the path is correct
+// import LandingPage from './components/users/pages/LandingPage';
+// import Signup from './components/users/pages/Signup';
+// import Login from './components/users/pages/Login';
+// import Home from './components/users/Home';
 
-// /* Core CSS required for Ionic components to work properly */
+// /* Core CSS */
 // import '@ionic/react/css/core.css';
-
-// /* Basic CSS for apps built with Ionic */
 // import '@ionic/react/css/normalize.css';
 // import '@ionic/react/css/structure.css';
 // import '@ionic/react/css/typography.css';
-
-// /* Optional CSS utils */
 // import '@ionic/react/css/padding.css';
 // import '@ionic/react/css/float-elements.css';
 // import '@ionic/react/css/text-alignment.css';
 // import '@ionic/react/css/text-transformation.css';
 // import '@ionic/react/css/flex-utils.css';
 // import '@ionic/react/css/display.css';
-
-// /* Ionic Dark Mode */
 // import '@ionic/react/css/palettes/dark.system.css';
-
-// /* Theme variables */
 // import './theme/variables.css';
 
 // setupIonicReact();
 
-// const App: React.FC = () => (
-//   <IonApp>
-//     <IonReactRouter>
-//       <IonRouterOutlet>
-//         {/* Signup page route */}
-//         <Route exact path="/signup">
-//           <Tab1 />
-//         </Route>
+// // Dummy authentication check (replace with real logic)
+// const isLoggedIn = false;
 
-//         {/* Default route redirects to signup */}
-//         <Route exact path="/">
-//           <Redirect to="/signup" />
-//         </Route>
-//       </IonRouterOutlet>
-//     </IonReactRouter>
-//   </IonApp>
-// );
+// const App: React.FC = () => {
+//   return (
+//     <IonApp>
+//       <IonReactRouter>
+//         <IonRouterOutlet>
+//           <Switch>
+//             {/* Landing Page */}
+//             <Route exact path="/" component={LandingPage} />
+
+//             {/* Authentication pages */}
+//             <Route exact path="/login" component={Login} />
+//             <Route exact path="/signup" component={Signup} />
+
+//             {/* Protected Home Page */}
+//             <Route
+//               exact
+//               path="/home"
+//               render={() =>
+//                 isLoggedIn ? <Home /> : <Redirect to="/" />
+//               }
+//             />
+
+//             {/* Redirect unknown routes to landing */}
+//             <Route path="*">
+//               <Redirect to="/" />
+//             </Route>
+//           </Switch>
+//         </IonRouterOutlet>
+//       </IonReactRouter>
+//     </IonApp>
+//   );
+// };
 
 // export default App;
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonRouterOutlet,
@@ -61,50 +74,65 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 
 /* Pages */
-import Tab1 from './pages/Tab1'; // Signup page
-import Home from './components/Home'; // Home page
+import LandingPage from './components/users/pages/LandingPage';
+import Signup from './components/users/pages/Signup';
+import Login from './components/users/pages/Login';
+import Home from './components/users/Home';
+// import HelperSignup from './components/users/pages/HelperSignup';
+import UserSignup from './components/users/UserSignup';
 
-/* Core CSS required for Ionic components to work properly */
+/* Core CSS */
 import '@ionic/react/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
-
-/* Optional CSS utils */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-
-/* Ionic Dark Mode */
 import '@ionic/react/css/palettes/dark.system.css';
-
-/* Theme variables */
 import './theme/variables.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        {/* Signup page route */}
-        <Route exact path="/signup" component={Tab1} />
+// Dummy authentication check (replace with real logic)
+const isLoggedIn = false;
 
-        {/* Home page route */}
-        <Route exact path="/home" component={Home} />
+const App: React.FC = () => {
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Switch>
+            {/* Landing Page */}
+            <Route exact path="/" component={LandingPage} />
 
-        {/* Default route redirects to home */}
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+            {/* Authentication pages */}
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
+            {/* <Route exact path="/signup-helper" component={HelperSignup} /> */}
+            <Route exact path="/signup-user" component={UserSignup} />
+
+            {/* Protected Home Page */}
+            <Route
+              exact
+              path="/home"
+              render={() =>
+                isLoggedIn ? <Home /> : <Redirect to="/" />
+              }
+            />
+
+            {/* Redirect unknown routes to landing */}
+            <Route path="*">
+              <Redirect to="/" />
+            </Route>
+          </Switch>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
