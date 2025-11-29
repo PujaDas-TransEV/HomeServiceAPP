@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { IonPage, IonContent, IonButton, IonIcon } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
@@ -61,17 +60,7 @@ const LandingPage: React.FC = () => {
     <IonPage className="bg-pink-50">
       <IonContent className="p-0">
 
-        {/* Navbar */}
-        {/* <div className="flex items-center justify-between p-4 bg-white shadow sticky top-0 z-50">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">🧹</div>
-            <span className="font-bold text-lg md:text-2xl">Maidigo</span>
-          </div>
-          <div className="flex gap-2">
-            <IonButton size="small" color="primary" onClick={handleLoginRedirect}>Login</IonButton>
-            <IonButton size="small" color="secondary" onClick={handleSignupRedirect}>Signup</IonButton>
-          </div>
-        </div> */}
+       
         {/* Navbar */}
 {/* Navbar */}
 <div className="flex items-center justify-between p-4 bg-white shadow sticky top-0 z-50">
