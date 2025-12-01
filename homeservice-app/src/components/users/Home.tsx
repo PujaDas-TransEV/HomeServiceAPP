@@ -1,476 +1,586 @@
+
 // import {
 //   IonPage,
-//   IonContent,
-//   IonMenu,
 //   IonHeader,
 //   IonToolbar,
-//   IonTitle,
-//   IonMenuButton,
 //   IonButtons,
-//   IonItem,
+//   IonMenuButton,
+//   IonContent,
+//   IonMenu,
 //   IonList,
-//   IonIcon,
+//   IonItem,
 //   IonLabel,
-//   IonSearchbar,
-//   IonButton,
+//   IonFooter,
+//   IonIcon,
+//   IonModal,
+//   IonButton
 // } from "@ionic/react";
 
 // import {
 //   homeOutline,
-//   listOutline,
-//   bookmarkOutline,
-//   personOutline,
-//   logInOutline,
-//   personAddOutline,
+//   chatbubbleEllipsesOutline,
+//   personCircleOutline,
+//   searchOutline,
+//   closeOutline
 // } from "ionicons/icons";
+// import { menuController } from "@ionic/core";
+// import { useHistory } from "react-router-dom";
+// import { useState } from "react";
+// import Logo from "../assets/logo.jpg";
 
-// import { useHistory } from "react-router";
+// /* Maid Profile Images */
+// import Maid1 from "../assets/maid1.jpg";
+// import Maid2 from "../assets/maid2.jpg";
+// import Maid3 from "../assets/maid3.jpg";
+// import Maid4 from "../assets/maid2.jpg";
+// import Maid5 from "../assets/maid3.jpg";
+// import Maid6 from "../assets/maid1.jpg";
 
-// export default function Home() {
+// /* Dummy Maid Data */
+// const maids = [
+//   { id: 1, name: "Sita Devi", category: "Cleaning", experience: "5 yrs", rating: 5, image: Maid1, location: "Dhaka" },
+//   { id: 2, name: "Anita Sharma", category: "Cooking", experience: "3 yrs", rating: 4, image: Maid2, location: "Chittagong" },
+//   { id: 3, name: "Rina Das", category: "Baby Sitter", experience: "4 yrs", rating: 5, image: Maid3, location: "Dhaka" },
+//   { id: 4, name: "Maya Roy", category: "Elder Care", experience: "6 yrs", rating: 5, image: Maid4, location: "Sylhet" },
+//   { id: 5, name: "Priya Sen", category: "Cleaning", experience: "2 yrs", rating: 4, image: Maid5, location: "Dhaka" },
+//   { id: 6, name: "Rita Khatun", category: "Cooking", experience: "5 yrs", rating: 5, image: Maid6, location: "Chittagong" }
+// ];
+
+// export default function HomePage() {
 //   const history = useHistory();
+//   const [selectedMaid, setSelectedMaid] = useState<any>(null);
+//   const [searchText, setSearchText] = useState("");
+//   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-//   const openService = (id: number) => {
-//     history.push(`/service-detail/${id}`);
-//   };
-
-//   return (
-//     <>
-//       {/* ---------- LEFT MENU ---------- */}
-//       <IonMenu contentId="main-content">
-//         <IonHeader>
-//           <IonToolbar color="primary">
-//             <IonTitle className="text-white">Menu</IonTitle>
-//           </IonToolbar>
-//         </IonHeader>
-
-//         <IonContent className="ion-padding">
-//           <IonList className="space-y-2">
-//             <IonItem routerLink="/home">
-//               <IonIcon icon={homeOutline} slot="start" />
-//               <IonLabel>Home</IonLabel>
-//             </IonItem>
-
-//             <IonItem routerLink="/services">
-//               <IonIcon icon={listOutline} slot="start" />
-//               <IonLabel>All Services</IonLabel>
-//             </IonItem>
-
-//             <IonItem routerLink="/bookings">
-//               <IonIcon icon={bookmarkOutline} slot="start" />
-//               <IonLabel>Your Bookings</IonLabel>
-//             </IonItem>
-
-//             <IonItem routerLink="/profile">
-//               <IonIcon icon={personOutline} slot="start" />
-//               <IonLabel>Profile</IonLabel>
-//             </IonItem>
-//           </IonList>
-//         </IonContent>
-//       </IonMenu>
-
-//       {/* ---------- MAIN PAGE ---------- */}
-//       <IonPage id="main-content">
-//         <IonHeader className="shadow-md">
-//           <IonToolbar color="primary">
-//             <IonButtons slot="start">
-//               <IonMenuButton />
-//             </IonButtons>
-//             <IonTitle className="text-white font-semibold text-lg">
-//               Maid Booking
-//             </IonTitle>
-//           </IonToolbar>
-//         </IonHeader>
-
-//         <IonContent fullscreen className="bg-gray-100">
-
-//           {/* ---- TOP GRADIENT BANNER ---- */}
-//           <div className="w-full h-56 bg-gradient-to-b from-orange-500 to-orange-300 px-6 pt-6 rounded-b-[38px] relative shadow-lg">
-//             <h2 className="text-white text-3xl font-bold drop-shadow">
-//               Fast & Trusted
-//             </h2>
-//             <p className="text-white text-sm opacity-90">
-//               Home services at your doorstep
-//             </p>
-
-//             {/* Floating Search Box */}
-//             <div className="absolute inset-x-0 -bottom-8 px-6">
-//               <div className="bg-white p-2 rounded-2xl shadow-xl">
-//                 <IonSearchbar
-//                   placeholder="Search cleaners, plumbing, electric..."
-//                   className="rounded-xl"
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* ---- Login / Signup Buttons ---- */}
-//           <div className="px-6 mt-14 flex gap-4">
-//             <IonButton
-//               expand="block"
-//               className="flex-1 bg-white text-orange-600 border border-orange-400 rounded-xl shadow font-semibold"
-//               onClick={() => history.push("/login")}
-//             >
-//               <IonIcon icon={logInOutline} slot="start" />
-//               Login
-//             </IonButton>
-
-//             <IonButton
-//               expand="block"
-//               className="flex-1 bg-orange-600 text-white rounded-xl shadow font-semibold"
-//               onClick={() => history.push("/signup")}
-//             >
-//               <IonIcon icon={personAddOutline} slot="start" />
-//               Signup
-//             </IonButton>
-//           </div>
-
-//           {/* ---- Categories ---- */}
-//           <div className="px-6 mt-10">
-//             <h3 className="text-lg font-semibold mb-3 text-gray-800">
-//               Service Categories
-//             </h3>
-
-//             <div className="grid grid-cols-2 gap-5">
-
-//               {[
-//                 { icon: homeOutline, label: "Cleaning", bg: "bg-orange-100", color: "text-orange-500" },
-//                 { icon: listOutline, label: "Plumbing", bg: "bg-blue-100", color: "text-blue-500" },
-//                 { icon: personOutline, label: "Electric", bg: "bg-green-100", color: "text-green-600" },
-//                 { icon: bookmarkOutline, label: "Painting", bg: "bg-purple-100", color: "text-purple-600" },
-//               ].map((cat, index) => (
-//                 <div
-//                   key={index}
-//                   className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow hover:shadow-xl transition-all"
-//                 >
-//                   <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${cat.bg}`}>
-//                     <IonIcon icon={cat.icon} className={`text-3xl ${cat.color}`} />
-//                   </div>
-//                   <div>
-//                     <h4 className="text-sm font-semibold">{cat.label}</h4>
-//                     <p className="text-xs text-gray-500">Explore services</p>
-//                   </div>
-//                 </div>
-//               ))}
-
-//             </div>
-//           </div>
-
-//           {/* ---- Popular Services ---- */}
-//           <div className="px-6 mt-10 mb-10">
-//             <h3 className="text-lg font-semibold mb-4 text-gray-800">
-//               Popular Services
-//             </h3>
-
-//             <div className="grid grid-cols-2 gap-5">
-//               {[ 
-//                 { id: 1, title: "Home Cleaning", price: "$20", img: "/assets/img/cleaning.jpg" },
-//                 { id: 2, title: "Plumbing", price: "$15", img: "/assets/img/plumbing.jpg" },
-//                 { id: 3, title: "Electrician", price: "$10", img: "/assets/img/electrician.jpg" },
-//                 { id: 4, title: "Painting", price: "$25", img: "/assets/img/painting.jpg" },
-//               ].map((item) => (
-//                 <div
-//                   key={item.id}
-//                   className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer"
-//                   onClick={() => openService(item.id)}
-//                 >
-//                   <img
-//                     src={item.img}
-//                     className="h-32 w-full object-cover"
-//                   />
-//                   <div className="p-3">
-//                     <h4 className="font-semibold text-sm">{item.title}</h4>
-//                     <p className="text-xs text-gray-500">
-//                       Starts at {item.price}
-//                     </p>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-
-//         </IonContent>
-//       </IonPage>
-//     </>
+//   /* Filter maids based on search */
+//   const filteredMaids = maids.filter(
+//     maid =>
+//       maid.name.toLowerCase().includes(searchText.toLowerCase()) ||
+//       maid.category.toLowerCase().includes(searchText.toLowerCase()) ||
+//       maid.location.toLowerCase().includes(searchText.toLowerCase())
 //   );
-// }
-// import React from "react";
-// import {
-//   IonPage,
-//   IonContent,
-//   IonMenu,
-//   IonHeader,
-//   IonToolbar,
-//   IonTitle,
-//   IonMenuButton,
-//   IonButtons,
-//   IonItem,
-//   IonList,
-//   IonIcon,
-//   IonLabel,
-//   IonSearchbar,
-//   IonButton,
-// } from "@ionic/react";
 
-// import {
-//   homeOutline,
-//   listOutline,
-//   bookmarkOutline,
-//   personOutline,
-//   logInOutline,
-//   personAddOutline,
-// } from "ionicons/icons";
+//   /* Navigate to chat page with maid */
+//   const handleChat = (maid: any) => {
+//     setSelectedMaid(null);
+//     history.push("/chat", { maid });
+//   };
 
-// import { useHistory } from "react-router";
-
-// export default function Home() {
-//   const history = useHistory();
-
-//   const openService = (id: number) => {
-//     history.push(`/service-detail/${id}`);
+//   /* Handle logout */
+//   const handleLogout = () => {
+//     setShowLogoutModal(false);
+//     history.push("/login"); // Change this to your login route
 //   };
 
 //   return (
 //     <>
-//       {/* ---------- LEFT MENU ---------- */}
-//       <IonMenu contentId="main-content">
-//         <IonHeader>
-//           <IonToolbar color="primary">
-//             <IonTitle className="text-white font-bold">Menu</IonTitle>
-//           </IonToolbar>
-//         </IonHeader>
-
-//         <IonContent className="ion-padding bg-pink-50">
-//           <IonList className="space-y-2">
-//             <IonItem routerLink="/home">
-//               <IonIcon icon={homeOutline} slot="start" />
-//               <IonLabel>Home</IonLabel>
+//       {/* ---------- Drawer Menu ---------- */}
+//       <IonMenu side="end" menuId="main-menu" contentId="main-content">
+//         <IonContent className="bg-white">
+//           <IonList className="mt-4">
+//             <IonItem button onClick={() => history.push("/home")}>
+//               <IonLabel className="text-lg">🏠 Home</IonLabel>
 //             </IonItem>
-//             <IonItem routerLink="/services">
-//               <IonIcon icon={listOutline} slot="start" />
-//               <IonLabel>All Services</IonLabel>
+//             <IonItem button onClick={() => history.push("/profile")}>
+//               <IonLabel className="text-lg">👤 Profile</IonLabel>
 //             </IonItem>
-//             <IonItem routerLink="/bookings">
-//               <IonIcon icon={bookmarkOutline} slot="start" />
-//               <IonLabel>Your Bookings</IonLabel>
+//             <IonItem button onClick={() => history.push("/chat")}>
+//               <IonLabel className="text-lg">💬 Chat</IonLabel>
 //             </IonItem>
-//             <IonItem routerLink="/profile">
-//               <IonIcon icon={personOutline} slot="start" />
-//               <IonLabel>Profile</IonLabel>
+//             <IonItem button onClick={() => history.push("/maid-list")}>
+//               <IonLabel className="text-lg">🧹 Maid List</IonLabel>
+//             </IonItem>
+//               <IonItem
+//   button
+//   onClick={() => {
+//     history.push("/preferences"); // Navigate to preferences page
+//     menuController.close("main-menu");
+//   }}
+// >
+//   <IonLabel className="text-lg">⚙️ Preferences</IonLabel>
+// </IonItem>
+//             <IonItem button onClick={() => setShowLogoutModal(true)}>
+//               <IonLabel className="text-lg text-red-500">🚪 Logout</IonLabel>
 //             </IonItem>
 //           </IonList>
 //         </IonContent>
 //       </IonMenu>
 
-//       {/* ---------- MAIN PAGE ---------- */}
-//       <IonPage id="main-content" className="bg-white">
+//       {/* ---------- Main Page ---------- */}
+//       <IonPage id="main-content">
+//         {/* ---------- Top Navbar ---------- */}
 //         <IonHeader className="shadow-md">
-//           <IonToolbar color="primary">
-//             <IonButtons slot="start">
-//               <IonMenuButton />
+//           <IonToolbar className="flex justify-between px-4 bg-white">
+//             {/* Logo + Title */}
+//             <div className="flex items-center gap-2">
+//               <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shadow-md">
+//                 <img
+//                   src={Logo}
+//                   alt="logo"
+//                   className="w-8 h-8 object-cover rounded-full"
+//                 />
+//               </div>
+//               <h1 className="text-xl font-semibold text-indigo-600">Maidigo</h1>
+//             </div>
+//             {/* Hamburger */}
+//             <IonButtons slot="end">
+//               <IonMenuButton className="text-2xl"></IonMenuButton>
 //             </IonButtons>
-//             <IonTitle className="text-white font-bold text-lg">
-//               Baai Sahab
-//             </IonTitle>
 //           </IonToolbar>
 //         </IonHeader>
 
-//         <IonContent fullscreen className="bg-pink-50">
+//         {/* ---------- Content ---------- */}
+//         <IonContent className="bg-gray-50">
+//           {/* --- Hero Banner --- */}
+//           <div className="w-full h-48 bg-linear-to-r from-pink-600 to-indigo-300 rounded-b-3xl p-5 text-white flex flex-col justify-center">
+//             <h2 className="text-2xl font-semibold">Find Trusted Maids Near You</h2>
+//             <p className="opacity-90">Verified • Experienced • Reliable</p>
+//           </div>
 
-//           {/* ---- TOP BANNER ---- */}
-//           <div className="w-full h-60 bg-gradient-to-b from-pink-500 to-pink-300 px-6 pt-6 rounded-b-[40px] relative shadow-lg">
-//             <h2 className="text-white text-3xl font-bold drop-shadow-lg">
-//               Trusted Maids at Your Doorstep
-//             </h2>
-//             <p className="text-white text-sm opacity-90 mt-1">
-//               Cooking, Cleaning, Babysitter, Elderly Care
-//             </p>
-
-//             {/* Floating Search Box */}
-//             <div className="absolute inset-x-0 -bottom-8 px-6">
-//               <div className="bg-white p-2 rounded-2xl shadow-xl">
-//                 <IonSearchbar
-//                   placeholder="Search maids by name or location..."
-//                   className="rounded-xl"
-//                 />
-//               </div>
+//           {/* --- Search Section --- */}
+//           <div className="px-4 mt-5">
+//             <div className="bg-white rounded-full p-3 flex items-center shadow-md">
+//               <IonIcon icon={searchOutline} className="text-indigo-600 text-xl" />
+//               <input
+//                 type="text"
+//                 placeholder="Search by name, category, or location..."
+//                 value={searchText}
+//                 onChange={(e) => setSearchText(e.target.value)}
+//                 className="ml-2 w-full focus:outline-none text-gray-700 bg-transparent"
+//               />
 //             </div>
 //           </div>
 
-//           {/* ---- Login / Signup Buttons ---- */}
-//           <div className="px-6 mt-16 flex gap-4">
-//             <IonButton
-//               expand="block"
-//               className="flex-1 bg-white text-pink-500 border border-pink-400 rounded-xl shadow font-semibold"
-//               onClick={() => history.push("/login")}
-//             >
-//               <IonIcon icon={logInOutline} slot="start" />
-//               Login
-//             </IonButton>
-
-//             <IonButton
-//               expand="block"
-//               className="flex-1 bg-pink-500 text-white rounded-xl shadow font-semibold"
-//               onClick={() => history.push("/signup")}
-//             >
-//               <IonIcon icon={personAddOutline} slot="start" />
-//               Signup
-//             </IonButton>
-//           </div>
-
-//           {/* ---- Service Categories ---- */}
-//           <div className="px-6 mt-10">
-//             <h3 className="text-lg font-semibold mb-3 text-gray-800">
-//               Service Categories
-//             </h3>
-
-//             <div className="grid grid-cols-2 gap-5">
+//           {/* --- Services Grid --- */}
+//           <div className="mt-6 px-4">
+//             <h3 className="text-2xl font-bold mb-5 text-gray-800">Our Services</h3>
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 //               {[
-//                 { icon: homeOutline, label: "Cleaning", bg: "bg-pink-100", color: "text-pink-500" },
-//                 { icon: listOutline, label: "Cooking", bg: "bg-yellow-100", color: "text-yellow-500" },
-//                 { icon: personOutline, label: "Babysitter", bg: "bg-green-100", color: "text-green-600" },
-//                 { icon: bookmarkOutline, label: "Elderly Care", bg: "bg-purple-100", color: "text-purple-600" },
-//               ].map((cat, index) => (
+//                 { name: "Cleaning", icon: "🧹", bg: "bg-gradient-to-r from-indigo-500 to-indigo-300", description: "Keep your home spotless and organized with our trusted cleaning maids." },
+//                 { name: "Cooking", icon: "🍽️", bg: "bg-gradient-to-r from-orange-500 to-orange-300", description: "Delicious home-cooked meals prepared by professional cooking maids." },
+//                 { name: "Baby Sitter", icon: "👩‍🍼", bg: "bg-gradient-to-r from-pink-500 to-pink-300", description: "Safe and caring babysitting services to look after your little ones." },
+//                 { name: "Elder Care", icon: "🧓", bg: "bg-gradient-to-r from-green-500 to-green-300", description: "Compassionate elder care maids to assist your loved ones daily." }
+//               ].map(service => (
 //                 <div
-//                   key={index}
-//                   className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow hover:shadow-xl transition-all cursor-pointer"
+//                   key={service.name}
+//                   onClick={() => history.push(`/category/${service.name}`)}
+//                   className={`p-6 rounded-2xl flex flex-col items-center justify-center cursor-pointer transform transition hover:scale-105 hover:shadow-2xl ${service.bg}`}
 //                 >
-//                   <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${cat.bg}`}>
-//                     <IonIcon icon={cat.icon} className={`text-3xl ${cat.color}`} />
+//                   <div className={`w-16 h-16 flex items-center justify-center rounded-full mb-4 bg-white`}>
+//                     <span className="text-3xl">{service.icon}</span>
 //                   </div>
-//                   <div>
-//                     <h4 className="text-sm font-semibold">{cat.label}</h4>
-//                     <p className="text-xs text-gray-500">Explore services</p>
-//                   </div>
+//                   <h4 className="font-semibold text-lg text-white mb-2">{service.name}</h4>
+//                   <p className="text-sm text-white text-center">{service.description}</p>
 //                 </div>
 //               ))}
 //             </div>
 //           </div>
 
-//           {/* ---- Popular Maids ---- */}
-//           <div className="px-6 mt-10 mb-10">
-//             <h3 className="text-lg font-semibold mb-4 text-gray-800">
-//               Popular Maids
-//             </h3>
-
-//             <div className="grid grid-cols-2 gap-5">
-//               {[
-//                 { id: 1, name: "Anita", service: "Cleaning", rating: 4.5, location: "Dhaka", img: "/assets/img/maid1.jpg" },
-//                 { id: 2, name: "Maya", service: "Cooking", rating: 4.2, location: "Chittagong", img: "/assets/img/maid2.jpg" },
-//                 { id: 3, name: "Rina", service: "Babysitter", rating: 4.8, location: "Sylhet", img: "/assets/img/maid3.jpg" },
-//                 { id: 4, name: "Farida", service: "Elderly Care", rating: 4.3, location: "Dhaka", img: "/assets/img/maid4.jpg" },
-//               ].map((maid) => (
+//           {/* --- Featured Maids --- */}
+//           <div className="mt-6 px-4">
+//             <h3 className="text-xl font-semibold mb-3">Available Maids for your Preferences</h3>
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               {filteredMaids.map((maid) => (
 //                 <div
 //                   key={maid.id}
-//                   className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer"
-//                   onClick={() => openService(maid.id)}
+//                   onClick={() => setSelectedMaid(maid)}
+//                   className="bg-white rounded-xl shadow p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-50 transition"
 //                 >
-//                   <img src={maid.img} className="h-32 w-full object-cover" />
-//                   <div className="p-3">
-//                     <h4 className="font-semibold text-sm">{maid.name}</h4>
-//                     <p className="text-xs text-gray-500">{maid.service}</p>
-//                     <p className="text-xs text-gray-500">Rating: {maid.rating} ⭐</p>
-//                     <p className="text-xs text-gray-400">{maid.location}</p>
+//                   <img
+//                     src={maid.image}
+//                     alt={maid.name}
+//                     className="w-16 h-16 object-cover rounded-full"
+//                   />
+//                   <div>
+//                     <h4 className="font-semibold">{maid.name}</h4>
+//                     <p className="text-sm text-gray-600">{maid.experience}</p>
+//                     <p className="text-sm text-gray-500">{maid.location}</p>
+//                     <div className="text-yellow-500">{"⭐".repeat(maid.rating)}</div>
 //                   </div>
 //                 </div>
 //               ))}
 //             </div>
 //           </div>
 
+//           {/* Other sections like How It Works, Why Choose Us, Testimonials */}
+//           {/* ... you can include your other sections here ... */}
+
 //         </IonContent>
+
+//         {/* ---------- Bottom Navigation ---------- */}
+//         <IonFooter className="border-t bg-white">
+//           <div className="flex justify-around text-gray-500 py-3">
+//             <div onClick={() => history.push("/profile")} className="flex flex-col items-center text-gray-400 cursor-pointer">
+//               <IonIcon icon={personCircleOutline} className="text-2xl" />
+//               <span className="text-sm">Profile</span>
+//             </div>
+//             <div onClick={() => history.push("/chat")} className="flex flex-col items-center text-gray-400 cursor-pointer">
+//               <IonIcon icon={chatbubbleEllipsesOutline} className="text-2xl" />
+//               <span className="text-sm">Chat</span>
+//             </div>
+//             <div className="flex flex-col items-center text-indigo-600">
+//               <IonIcon icon={homeOutline} className="text-2xl" />
+//               <span className="text-sm font-semibold">Home</span>
+//             </div>
+//           </div>
+//         </IonFooter>
+
+//         {/* ---------- Maid Details Modal ---------- */}
+//         <IonModal isOpen={selectedMaid !== null} onDidDismiss={() => setSelectedMaid(null)}>
+//           {selectedMaid && (
+//             <div className="p-5 bg-white h-full overflow-y-auto">
+//               <div className="flex justify-between items-center mb-4">
+//                 <h3 className="text-xl font-semibold">{selectedMaid.name}</h3>
+//                 <IonButton fill="clear" onClick={() => setSelectedMaid(null)}>
+//                   <IonIcon icon={closeOutline} className="text-xl" />
+//                 </IonButton>
+//               </div>
+//               <img
+//                 src={selectedMaid.image}
+//                 alt={selectedMaid.name}
+//                 className="w-full h-48 object-cover rounded-lg mb-3"
+//               />
+//               <p><strong>Category:</strong> {selectedMaid.category}</p>
+//               <p><strong>Experience:</strong> {selectedMaid.experience}</p>
+//               <p><strong>Location:</strong> {selectedMaid.location}</p>
+//               <p><strong>Rating:</strong> {"⭐".repeat(selectedMaid.rating)}</p>
+
+//               {/* Chat Button */}
+//               <IonButton expand="block" color="primary" className="mt-5" onClick={() => handleChat(selectedMaid)}>
+//                 <IonIcon icon={chatbubbleEllipsesOutline} slot="start" />
+//                 Chat with {selectedMaid.name}
+//               </IonButton>
+//             </div>
+//           )}
+//         </IonModal>
+
+//       {/* ---------- Logout Modal ---------- */}
+//         {showLogoutModal && (
+//           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//             <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+//               <h2 className="text-lg font-bold mb-4">Logout</h2>
+//               <p className="text-gray-700 mb-6">Are you sure you want to logout?</p>
+//               <div className="flex justify-end gap-4">
+//                 <IonButton
+//                   fill="outline"
+//                   color="medium"
+//                   onClick={() => setShowLogoutModal(false)}
+//                   className="px-6 py-2 rounded-xl hover:bg-gray-100"
+//                 >
+//                   No
+//                 </IonButton>
+//                 <IonButton
+//                   color="danger"
+//                   onClick={handleLogout}
+//                   className="px-6 py-2 rounded-xl hover:bg-red-600"
+//                 >
+//                   Yes
+//                 </IonButton>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
 //       </IonPage>
 //     </>
 //   );
 // }
-import React from "react";
+
 import {
   IonPage,
-  IonContent,
-  IonMenu,
   IonHeader,
   IonToolbar,
-  IonTitle,
-  IonMenuButton,
   IonButtons,
-  IonItem,
+  IonMenuButton,
+  IonContent,
+  IonMenu,
   IonList,
-  IonIcon,
+  IonItem,
   IonLabel,
-  IonSearchbar,
+  IonFooter,
+  IonIcon,
+  IonModal,
+  IonButton
 } from "@ionic/react";
 
 import {
   homeOutline,
-  personOutline,
-  chatbubblesOutline,
-  listOutline,
-  logOutOutline,
+  chatbubbleEllipsesOutline,
+  personCircleOutline,
+  searchOutline,
+  closeOutline
 } from "ionicons/icons";
 
-import { useHistory } from "react-router";
+import { menuController } from "@ionic/core";
+import { useHistory } from "react-router-dom";
+import { useState } from "react";
+import Logo from "../assets/logo.jpg";
 
-export default function Home() {
+import Maid1 from "../assets/maid1.jpg";
+import Maid2 from "../assets/maid2.jpg";
+import Maid3 from "../assets/maid3.jpg";
+import Maid4 from "../assets/maid2.jpg";
+import Maid5 from "../assets/maid3.jpg";
+import Maid6 from "../assets/maid1.jpg";
+
+/* ---------------- Dummy Maid Data ---------------- */
+const maids = [
+  { id: 1, name: "Sita Devi", category: "Cleaning", experience: "5 yrs", rating: 5, image: Maid1, location: "Dhaka" },
+  { id: 2, name: "Anita Sharma", category: "Cooking", experience: "3 yrs", rating: 4, image: Maid2, location: "Chittagong" },
+  { id: 3, name: "Rina Das", category: "Baby Sitter", experience: "4 yrs", rating: 5, image: Maid3, location: "Dhaka" },
+  { id: 4, name: "Maya Roy", category: "Elder Care", experience: "6 yrs", rating: 5, image: Maid4, location: "Sylhet" },
+  { id: 5, name: "Priya Sen", category: "Cleaning", experience: "2 yrs", rating: 4, image: Maid5, location: "Dhaka" },
+  { id: 6, name: "Rita Khatun", category: "Cooking", experience: "5 yrs", rating: 5, image: Maid6, location: "Chittagong" }
+];
+
+export default function HomePage() {
   const history = useHistory();
 
-  const maids = [
-    { id: 1, name: "Anita", service: "Cleaning", rating: 4.5, location: "Dhaka", icon: homeOutline },
-    { id: 2, name: "Maya", service: "Cooking", rating: 4.2, location: "Chittagong", icon: listOutline },
-    { id: 3, name: "Rina", service: "Babysitting", rating: 4.8, location: "Sylhet", icon: personOutline },
-    { id: 4, name: "Farida", service: "Elderly Care", rating: 4.3, location: "Dhaka", icon: chatbubblesOutline },
-  ];
+  /* ---------------- States ---------------- */
+  const [selectedMaid, setSelectedMaid] = useState<any>(null);
+  const [searchText, setSearchText] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const openService = (id: number) => {
-    history.push(`/service-detail/${id}`);
+  /* ---------------- Multi-select Toggle Logic ---------------- */
+  const toggleService = (serviceName: string) => {
+    setSelectedServices(prev =>
+      prev.includes(serviceName)
+        ? prev.filter(s => s !== serviceName)
+        : [...prev, serviceName]
+    );
+  };
+
+  /* ---------------- Filtering Logic ---------------- */
+  const filteredMaids = maids.filter((maid) => {
+    const matchesSearch =
+      maid.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      maid.category.toLowerCase().includes(searchText.toLowerCase()) ||
+      maid.location.toLowerCase().includes(searchText.toLowerCase());
+
+    const matchesService =
+      selectedServices.length === 0 ||
+      selectedServices.includes(maid.category);
+
+    return matchesSearch && matchesService;
+  });
+
+  const handleChat = (maid: any) => {
+    setSelectedMaid(null);
+    history.push("/chat", { maid });
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(false);
+    history.push("/login");
   };
 
   return (
     <>
-      <IonMenu contentId="main-content">
-        <IonHeader>
-          <IonToolbar color="pink">
-            <IonTitle className="text-white">Menu</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding bg-pink-50">
-          <IonList>
-            <IonItem routerLink="/home"><IonIcon icon={homeOutline} slot="start" /><IonLabel>Home</IonLabel></IonItem>
-            <IonItem routerLink="/profile"><IonIcon icon={personOutline} slot="start" /><IonLabel>Profile</IonLabel></IonItem>
-            <IonItem routerLink="/chat"><IonIcon icon={chatbubblesOutline} slot="start" /><IonLabel>Chat</IonLabel></IonItem>
-            <IonItem routerLink="/" onClick={() => history.push("/")}>
-              <IonIcon icon={logOutOutline} slot="start" />
-              <IonLabel>Logout</IonLabel>
+      {/* ---------------- Drawer Menu ---------------- */}
+      <IonMenu side="end" menuId="main-menu" contentId="main-content">
+        <IonContent className="bg-white">
+          <IonList className="mt-4">
+            <IonItem button onClick={() => history.push("/home")}>
+              <IonLabel className="text-lg">🏠 Home</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => history.push("/profile")}>
+              <IonLabel className="text-lg">👤 Profile</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => history.push("/chat")}>
+              <IonLabel className="text-lg">💬 Chat</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => history.push("/maid-list")}>
+              <IonLabel className="text-lg">🧹 Maid List</IonLabel>
+            </IonItem>
+
+            <IonItem
+              button
+              onClick={() => {
+                history.push("/preferences");
+                menuController.close("main-menu");
+              }}
+            >
+              <IonLabel className="text-lg">⚙️ Preferences</IonLabel>
+            </IonItem>
+
+            <IonItem button onClick={() => setShowLogoutModal(true)}>
+              <IonLabel className="text-lg text-red-500">🚪 Logout</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>
       </IonMenu>
 
+      {/* ---------------- Main Page ---------------- */}
       <IonPage id="main-content">
         <IonHeader className="shadow-md">
-          <IonToolbar color="pink">
-            <IonButtons slot="start"><IonMenuButton /></IonButtons>
-            <IonTitle className="text-white font-bold">Baai Sahab</IonTitle>
+          <IonToolbar className="px-4 bg-white flex justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shadow-md">
+                <img src={Logo} alt="logo" className="w-8 h-8 rounded-full" />
+              </div>
+              <h1 className="text-xl font-semibold text-indigo-600">Maidigo</h1>
+            </div>
+
+            <IonButtons slot="end">
+              <IonMenuButton className="text-2xl" />
+            </IonButtons>
           </IonToolbar>
         </IonHeader>
 
-        <IonContent fullscreen className="bg-pink-50 p-4">
-          <div className="bg-white rounded-xl shadow p-4 mb-6">
-            <IonSearchbar placeholder="Search maids by name, service, location..." />
+        {/* ---------------- Content ---------------- */}
+        <IonContent className="bg-gray-50">
+
+          {/* Hero Section */}
+          <div className="w-full h-48 bg-linear-to-r from-pink-600 to-indigo-400 rounded-b-3xl p-5 text-white flex flex-col justify-center">
+            <h2 className="text-2xl font-semibold">Find Trusted Maids Near You</h2>
+            <p className="opacity-90">Verified • Experienced • Reliable</p>
           </div>
 
-          <h3 className="text-lg font-semibold mb-3 text-gray-800">Popular Maids</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {maids.map((maid) => (
-              <div key={maid.id} className="bg-white rounded-xl shadow p-3 cursor-pointer" onClick={() => openService(maid.id)}>
-                <div className="flex justify-center mb-2">
-                  <IonIcon icon={maid.icon} className="text-4xl text-pink-500" />
+          {/* Search Bar */}
+          <div className="px-4 mt-5">
+            <div className="bg-white rounded-full p-3 flex items-center shadow-md">
+              <IonIcon icon={searchOutline} className="text-indigo-600 text-xl" />
+              <input
+                type="text"
+                placeholder="Search maids..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="ml-2 w-full focus:outline-none text-gray-700 bg-transparent"
+              />
+            </div>
+          </div>
+
+          {/* ---------------- Filter by Service ---------------- */}
+          <div className="px-4 mt-6">
+            <h3 className="text-xl font-semibold mb-3">Filter by Service</h3>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { name: "Cleaning", icon: "🧹", bg: "from-indigo-400 to-indigo-600" },
+                { name: "Cooking", icon: "🍽️", bg: "from-orange-400 to-orange-600" },
+                { name: "Baby Sitter", icon: "👩‍🍼", bg: "from-pink-400 to-pink-600" },
+                { name: "Elder Care", icon: "🧓", bg: "from-green-400 to-green-600" }
+              ].map((service) => (
+                <button
+                  key={service.name}
+                  onClick={() => toggleService(service.name)}
+                  className={`
+                    p-3 rounded-xl text-center shadow-md font-medium flex items-center justify-center gap-2
+                    transition transform hover:scale-105
+                    ${
+                      selectedServices.includes(service.name)
+                        ? `bg-linear-to-r ${service.bg} text-white shadow-lg`
+                        : "bg-white text-gray-800 border border-gray-200"
+                    }
+                  `}
+                >
+                  <span className="text-xl">{service.icon}</span>
+                  {service.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ---------------- Maid List ---------------- */}
+          <div className="mt-8 px-4 flex justify-between items-center">
+            <h3 className="text-xl font-bold">
+              {selectedServices.length > 0
+                ? `Filtered Maids`
+                : "All Maids"}
+            </h3>
+
+            <button
+              onClick={() => history.push("/maid-list")}
+              className="text-sm px-4 py-1 rounded-full bg-indigo-600 text-white shadow hover:bg-indigo-700"
+            >
+              Show More →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 mt-3 pb-6">
+            {filteredMaids.map((maid) => (
+              <div
+                key={maid.id}
+                onClick={() => setSelectedMaid(maid)}
+                className="bg-white rounded-xl shadow p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-50 transition"
+              >
+                <img src={maid.image} className="w-16 h-16 rounded-full object-cover" />
+
+                <div>
+                  <h4 className="font-semibold">{maid.name}</h4>
+                  <p className="text-sm text-gray-600">{maid.experience}</p>
+                  <p className="text-sm text-gray-500">{maid.location}</p>
+                  <div className="text-yellow-500">{"⭐".repeat(maid.rating)}</div>
                 </div>
-                <h4 className="font-semibold text-sm">{maid.name}</h4>
-                <p className="text-xs text-gray-500">{maid.service}</p>
-                <p className="text-xs text-gray-400">Rating: {maid.rating} ⭐</p>
-                <p className="text-xs text-gray-400">{maid.location}</p>
               </div>
             ))}
           </div>
         </IonContent>
+
+        {/* ---------------- Bottom Navigation ---------------- */}
+        <IonFooter className="bg-white border-t">
+          <div className="flex justify-around text-gray-500 py-3">
+            <div onClick={() => history.push("/profile")} className="flex flex-col items-center">
+              <IonIcon icon={personCircleOutline} className="text-2xl" />
+              <span className="text-sm">Profile</span>
+            </div>
+
+            <div onClick={() => history.push("/chat")} className="flex flex-col items-center">
+              <IonIcon icon={chatbubbleEllipsesOutline} className="text-2xl" />
+              <span className="text-sm">Chat</span>
+            </div>
+
+            <div className="flex flex-col items-center text-indigo-600">
+              <IonIcon icon={homeOutline} className="text-2xl" />
+              <span className="text-sm font-semibold">Home</span>
+            </div>
+          </div>
+        </IonFooter>
+
+        {/* ---------------- Maid Modal ---------------- */}
+        <IonModal isOpen={selectedMaid !== null} onDidDismiss={() => setSelectedMaid(null)}>
+          {selectedMaid && (
+            <div className="p-5 bg-white h-full overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold">{selectedMaid.name}</h3>
+                <IonButton fill="clear" onClick={() => setSelectedMaid(null)}>
+                  <IonIcon icon={closeOutline} className="text-xl" />
+                </IonButton>
+              </div>
+
+              <img src={selectedMaid.image} className="w-full h-48 object-cover rounded-lg mb-3" />
+
+              <p><strong>Category:</strong> {selectedMaid.category}</p>
+              <p><strong>Experience:</strong> {selectedMaid.experience}</p>
+              <p><strong>Location:</strong> {selectedMaid.location}</p>
+
+              <IonButton
+                expand="block"
+                color="primary"
+                className="mt-5"
+                onClick={() => handleChat(selectedMaid)}
+              >
+                Chat with {selectedMaid.name}
+              </IonButton>
+            </div>
+          )}
+        </IonModal>
+
+        {/* ---------------- Logout Modal ---------------- */}
+        {showLogoutModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+              <h2 className="text-lg font-bold mb-4">Logout</h2>
+              <p className="text-gray-700 mb-6">Are you sure you want to logout?</p>
+
+              <div className="flex justify-end gap-4">
+                <IonButton fill="outline" onClick={() => setShowLogoutModal(false)}>No</IonButton>
+                <IonButton color="danger" onClick={handleLogout}>Yes</IonButton>
+              </div>
+            </div>
+          </div>
+        )}
       </IonPage>
     </>
   );

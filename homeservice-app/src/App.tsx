@@ -1,3 +1,4 @@
+
 // import { Route, Redirect, Switch } from 'react-router-dom';
 // import {
 //   IonApp,
@@ -11,6 +12,8 @@
 // import Signup from './components/users/pages/Signup';
 // import Login from './components/users/pages/Login';
 // import Home from './components/users/Home';
+// // import HelperSignup from './components/users/pages/HelperSignup';
+// import UserSignup from './components/users/UserSignup';
 
 // /* Core CSS */
 // import '@ionic/react/css/core.css';
@@ -43,6 +46,8 @@
 //             {/* Authentication pages */}
 //             <Route exact path="/login" component={Login} />
 //             <Route exact path="/signup" component={Signup} />
+//             {/* <Route exact path="/signup-helper" component={HelperSignup} /> */}
+//             <Route exact path="/signup-user" component={UserSignup} />
 
 //             {/* Protected Home Page */}
 //             <Route
@@ -78,9 +83,11 @@ import LandingPage from './components/users/pages/LandingPage';
 import Signup from './components/users/pages/Signup';
 import Login from './components/users/pages/Login';
 import Home from './components/users/Home';
-// import HelperSignup from './components/users/pages/HelperSignup';
 import UserSignup from './components/users/UserSignup';
-
+import ProfilePage from './components/users/pages/Profile';
+import ChatPage from './components/users/pages/Chat';
+import MaidListPage from './components/users/pages/MaidList';
+import Preferences from './components/users/pages/Preferences';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -97,8 +104,10 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-// Dummy authentication check (replace with real logic)
-const isLoggedIn = false;
+
+
+const isLoggedIn = true; // <-- TEMPORARY: always allow access for now
+
 
 const App: React.FC = () => {
   return (
@@ -106,16 +115,20 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Switch>
-            {/* Landing Page */}
+
+            {/* Landing Page (Always Visible) */}
             <Route exact path="/" component={LandingPage} />
 
-            {/* Authentication pages */}
+            {/* Auth Pages */}
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
-            {/* <Route exact path="/signup-helper" component={HelperSignup} /> */}
             <Route exact path="/signup-user" component={UserSignup} />
+              <Route exact path="/profile" component={ProfilePage} />
+                 <Route exact path="/chat" component={ChatPage} />
+                 <Route exact path="/maid-list" component={MaidListPage} />
+                  <Route exact path="/preferences" component={Preferences} />
 
-            {/* Protected Home Page */}
+            {/* Home Page (Temporarily Always Allowed) */}
             <Route
               exact
               path="/home"
@@ -124,10 +137,11 @@ const App: React.FC = () => {
               }
             />
 
-            {/* Redirect unknown routes to landing */}
+            {/* Catch All */}
             <Route path="*">
               <Redirect to="/" />
             </Route>
+
           </Switch>
         </IonRouterOutlet>
       </IonReactRouter>

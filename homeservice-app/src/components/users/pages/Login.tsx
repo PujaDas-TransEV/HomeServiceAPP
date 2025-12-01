@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
   <IonButton
     size="default"
     color="secondary"
-    className="w-28 h-5 text-lg rounded-full"
+    className="w-18 h-2 text-lg rounded-full"
     onClick={handleLogin}
   >
     Login

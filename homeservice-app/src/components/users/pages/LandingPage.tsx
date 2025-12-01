@@ -121,7 +121,7 @@ const LandingPage: React.FC = () => {
 
           {/* Services */}
           <section className="mb-8">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Our Services</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Choose a Service</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {services.map(service => (
                 <div key={service.id} className={`flex flex-col items-center gap-2 p-4 ${service.color} rounded-xl shadow hover:shadow-lg cursor-pointer transition`} onClick={handleSignupRedirect}>
@@ -194,7 +194,30 @@ const LandingPage: React.FC = () => {
     </p>
   </div>
 </section>
-
+  {/* --- Services Grid --- */}
+          <div className="mt-6 px-4">
+            <h3 className="text-2xl font-bold mb-5 text-gray-800">Find What You Need</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[
+                { name: "Cleaning", icon: "🧹", bg: "bg-gradient-to-r from-indigo-500 to-indigo-300", description: "Keep your home spotless and organized with our trusted cleaning maids." },
+                { name: "Cooking", icon: "🍽️", bg: "bg-gradient-to-r from-orange-500 to-orange-300", description: "Delicious home-cooked meals prepared by professional cooking maids." },
+                { name: "Baby Sitter", icon: "👩‍🍼", bg: "bg-gradient-to-r from-pink-500 to-pink-300", description: "Safe and caring babysitting services to look after your little ones." },
+                { name: "Elder Care", icon: "🧓", bg: "bg-gradient-to-r from-green-500 to-green-300", description: "Compassionate elder care maids to assist your loved ones daily." }
+              ].map(service => (
+                <div
+                  key={service.name}
+                  onClick={() => history.push(`/category/${service.name}`)}
+                  className={`p-6 rounded-2xl flex flex-col items-center justify-center cursor-pointer transform transition hover:scale-105 hover:shadow-2xl ${service.bg}`}
+                >
+                  <div className={`w-16 h-16 flex items-center justify-center rounded-full mb-4 bg-white`}>
+                    <span className="text-3xl">{service.icon}</span>
+                  </div>
+                  <h4 className="font-semibold text-lg text-white mb-2">{service.name}</h4>
+                  <p className="text-sm text-white text-center">{service.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* About App / Benefits */}
         <section className="mb-8 flex flex-col md:flex-row items-center bg-white p-6 md:p-8 rounded-xl shadow-lg">
