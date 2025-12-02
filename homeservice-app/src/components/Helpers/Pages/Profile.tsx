@@ -111,7 +111,7 @@ const MaidProfile: React.FC = () => {
             {/* Chat */}
             <div
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); history.push("/helper/chat"); }}
+              onClick={() => { setOpenMenu(false); history.push("/maid-chat"); }}
             >
               <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
               <span className="text-lg font-medium">Chat (চ্যাট)</span>

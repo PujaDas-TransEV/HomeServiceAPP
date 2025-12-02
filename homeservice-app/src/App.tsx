@@ -91,6 +91,8 @@ import Preferences from './components/users/pages/Preferences';
 import HelperHome from './components/Helpers/Home';
 import HelperSignup from './components/Helpers/Pages/Signup';
 import MaidProfile from './components/Helpers/Pages/Profile'
+import HelperChat from './components/Helpers/Pages/Chat';
+import MaidPreferences from './components/Helpers/Pages/ServicePreferences';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -133,6 +135,8 @@ const App: React.FC = () => {
                     <Route exact path="/helper-home" component={HelperHome} />
                     <Route exact path="/helper-signup" component={HelperSignup} />
                       <Route exact path="/maid-profile" component={MaidProfile} />
+                        <Route exact path="/maid-chat" component={HelperChat} />
+                         <Route exact path="/maid-preferences" component={MaidPreferences} />
 
 
             {/* Home Page (Temporarily Always Allowed) */}
