@@ -88,6 +88,9 @@ import ProfilePage from './components/users/pages/Profile';
 import ChatPage from './components/users/pages/Chat';
 import MaidListPage from './components/users/pages/MaidList';
 import Preferences from './components/users/pages/Preferences';
+import HelperHome from './components/Helpers/Home';
+import HelperSignup from './components/Helpers/Pages/Signup';
+import MaidProfile from './components/Helpers/Pages/Profile'
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -127,6 +130,10 @@ const App: React.FC = () => {
                  <Route exact path="/chat" component={ChatPage} />
                  <Route exact path="/maid-list" component={MaidListPage} />
                   <Route exact path="/preferences" component={Preferences} />
+                    <Route exact path="/helper-home" component={HelperHome} />
+                    <Route exact path="/helper-signup" component={HelperSignup} />
+                      <Route exact path="/maid-profile" component={MaidProfile} />
+
 
             {/* Home Page (Temporarily Always Allowed) */}
             <Route

@@ -7,7 +7,7 @@ import logoImg from '../../assets/logo.jpg';
 const Signup: React.FC = () => {
   const history = useHistory();
 
-  const handleHelperSignup = () => history.push('/signup-helper');
+  const handleHelperSignup = () => history.push('/helper-signup');
   const handleUserSignup = () => history.push('/signup-user');
 
   return (
