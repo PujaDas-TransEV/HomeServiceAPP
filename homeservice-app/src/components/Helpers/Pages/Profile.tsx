@@ -13,6 +13,8 @@ import {
   personCircle,
   chatbubbles,
   logOut,
+  settings,
+  home
 } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import Logo from "../../assets/logo.jpg";
@@ -96,7 +98,7 @@ const MaidProfile: React.FC = () => {
     className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
     onClick={() => { setOpenMenu(false); history.push("/helper-home"); }}
   >
-    <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
+    <IonIcon icon={home} className="text-2xl text-pink-600" />
     <span className="text-lg font-medium">Home (হোম)</span>
   </div>
             {/* Profile */}
@@ -116,7 +118,13 @@ const MaidProfile: React.FC = () => {
               <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
               <span className="text-lg font-medium">Chat (চ্যাট)</span>
             </div>
-
+  <div
+  className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
+  onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
+>
+  <IonIcon icon={settings} className="text-2xl text-pink-600" />
+  <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
+</div>
             {/* Logout */}
             <div
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"

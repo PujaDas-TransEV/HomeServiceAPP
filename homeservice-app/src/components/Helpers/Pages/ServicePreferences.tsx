@@ -8,7 +8,7 @@ import {
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
-import { menu, personCircle, chatbubbles, logOut } from "ionicons/icons";
+import { menu, personCircle, chatbubbles, logOut,settings,home } from "ionicons/icons";
 import Logo from "../../assets/logo.jpg";
 import DefaultAvatar from "../../assets/profile.png";
 
@@ -128,7 +128,7 @@ const MaidPreferencesPage: React.FC = () => {
             className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
             onClick={() => { setOpenMenu(false); history.push("/helper-home"); }}
           >
-            <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
+            <IonIcon icon={home} className="text-2xl text-pink-600" />
             <span className="text-lg font-medium">Home (হোম)</span>
           </div>
 
@@ -140,7 +140,13 @@ const MaidPreferencesPage: React.FC = () => {
             <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
             <span className="text-lg font-medium">Profile (প্রোফাইল)</span>
           </div>
-
+  <div
+  className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
+  onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
+>
+  <IonIcon icon={settings} className="text-2xl text-pink-600" />
+  <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
+</div>
           {/* Chat */}
           <div
             className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"

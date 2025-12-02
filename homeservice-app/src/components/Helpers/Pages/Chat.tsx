@@ -13,7 +13,7 @@ import {
   IonAvatar,
   IonModal,
 } from "@ionic/react";
-import { menu, send, personCircle, chatbubbles, logOut, home } from "ionicons/icons";
+import { menu, send, personCircle, chatbubbles, logOut, home,settings } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 
 import Logo from "../../assets/logo.jpg";
@@ -138,6 +138,7 @@ const MaidChat: React.FC = () => {
               <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
               <span className="text-lg font-medium">Profile (প্রোফাইল)</span>
             </div>
+             
             <div
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
               onClick={() => {
@@ -147,6 +148,13 @@ const MaidChat: React.FC = () => {
             >
               <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
               <span className="text-lg font-medium">Chat (চ্যাট)</span>
+            </div>
+             <div
+              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
+              onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
+            >
+              <IonIcon icon={settings} className="text-2xl text-pink-600" />
+              <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
             </div>
             <div
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"

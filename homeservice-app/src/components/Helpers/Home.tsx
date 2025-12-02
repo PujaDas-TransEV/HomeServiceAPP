@@ -203,6 +203,7 @@ import {
   time,
   arrowForward,
   send,
+  settings
 } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 
@@ -297,11 +298,18 @@ const HelperHome: React.FC = () => {
             {/* Chat */}
             <div
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); history.push("/helper/chat"); }}
+              onClick={() => { setOpenMenu(false); history.push("/maid-chat"); }}
             >
               <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
               <span className="text-lg font-medium">Chat (চ্যাট)</span>
             </div>
+           <div
+  className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
+  onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
+>
+  <IonIcon icon={settings} className="text-2xl text-pink-600" />
+  <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
+</div>
 
             {/* Logout */}
             <div
@@ -342,7 +350,7 @@ const HelperHome: React.FC = () => {
         </div>
 
         {/* MAIN CONTENT */}
-      {/* MAIN CONTENT WRAPPER */}
+    
 <div className="p-4 mt-4 pb-24"> {/* Added pb-24 for spacing above bottom navbar */}
   <IonSearchbar
     placeholder="Search job (কাজ খুঁজুন)..."
@@ -380,7 +388,7 @@ const HelperHome: React.FC = () => {
         <IonButton
           shape="round"
           color="danger"
-          onClick={() => history.push("/helper/chat")}
+          onClick={() => history.push("/maid-chat")}
         >
           <IonIcon icon={send} className="mr-1" />
           Chat (চ্যাট)
@@ -430,7 +438,7 @@ const HelperHome: React.FC = () => {
             <IonButton
               shape="round"
               color="danger"
-              onClick={() => history.push("/helper/chat")}
+              onClick={() => history.push("/maid-chat")}
             >
               <IonIcon icon={send} className="mr-1" />
               Chat (চ্যাট)
