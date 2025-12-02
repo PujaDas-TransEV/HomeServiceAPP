@@ -99,7 +99,7 @@ const MaidChat: React.FC = () => {
             <IonAvatar>
               <img src={Logo} alt="Logo" className="object-contain" />
             </IonAvatar>
-            <IonTitle className="text-pink-600 text-xl font-bold">Maidigo (মেইডিগো)</IonTitle>
+            <IonTitle className="text-indigo-400 text-xl font-bold">Maidigo (মেইডিগো)</IonTitle>
             <IonIcon
               icon={menu}
               className="text-pink-600 text-2xl"
