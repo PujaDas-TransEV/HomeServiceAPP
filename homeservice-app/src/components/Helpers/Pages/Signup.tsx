@@ -1,210 +1,97 @@
-// import React, { useState } from "react";
-// import {
-//   IonPage,
-//   IonContent,
-//   IonIcon,
-//   IonButton,
-//   IonInput,
-//   IonCheckbox,
-// } from "@ionic/react";
-// import { arrowBack } from "ionicons/icons";
 
-// import Logo from "../../assets/logo.jpg";
-
-// const HelperSignup: React.FC = () => {
-//   const [preferences, setPreferences] = useState<string[]>([]);
-
-//   const togglePreference = (item: string) => {
-//     if (preferences.includes(item)) {
-//       setPreferences(preferences.filter((x) => x !== item));
-//     } else {
-//       setPreferences([...preferences, item]);
-//     }
-//   };
-
-//   const options = [
-//     "Cooking (রান্না)",
-//     "Cleaning (পরিষ্কার)",
-//     "Babysitting (শিশু দেখাশোনা)",
-//     "Elderly Care (বয়স্কদের যত্ন)",
-//   ];
-
-//   return (
-//     <IonPage>
-//       <IonContent className="bg-gray-100">
-
-//         {/* NAVBAR */}
-//         <div className="w-full bg-white shadow-md p-4 flex items-center space-x-3">
-//           <IonIcon
-//             icon={arrowBack}
-//             className="text-2xl text-pink-600 cursor-pointer"
-//             onClick={() => window.history.back()}
-//           />
-
-//           <div className="flex items-center space-x-3">
-//             <img
-//               src={Logo}
-//               alt="logo"
-//               className="w-10 h-10 rounded-full border-2 border-pink-400"
-//             />
-//             <h1 className="text-xl font-bold text-indigo-600">
-//               Maidigo (মেইডিগো)
-//             </h1>
-//           </div>
-//         </div>
-
-//         {/* PAGE TITLE */}
-//         <div className="text-center mt-6 px-4">
-//           <h2 className="text-2xl font-bold text-pink-700">
-//             Helper Signup (হেল্পার সাইনআপ)
-//           </h2>
-//           <p className="text-gray-600 mt-1">
-//             Create your account to start working  
-//             (কাজ শুরু করতে অ্যাকাউন্ট তৈরি করুন)
-//           </p>
-//         </div>
-
-//         {/* SIGNUP FORM */}
-//         <div className="p-5 mt-4 space-y-5">
-
-//           {/* Name */}
-//           <div>
-//             <label className="font-semibold text-gray-700">
-//               Full Name (পূর্ণ নাম)
-//             </label>
-//             <IonInput
-//               placeholder="Enter your full name (আপনার নাম লিখুন)"
-//               className="bg-white p-3 rounded-xl shadow mt-1"
-//             />
-//           </div>
-
-//           {/* Phone */}
-//           <div>
-//             <label className="font-semibold text-gray-700">
-//               Phone Number (ফোন নম্বর)
-//             </label>
-//             <IonInput
-//               type="tel"
-//               placeholder="Enter phone number (ফোন নম্বর দিন)"
-//               className="bg-white p-3 rounded-xl shadow mt-1"
-//             />
-//           </div>
-
-//           {/* Password */}
-//           <div>
-//             <label className="font-semibold text-gray-700">
-//               Password (পাসওয়ার্ড)
-//             </label>
-//             <IonInput
-//               type="password"
-//               placeholder="Enter password (পাসওয়ার্ড দিন)"
-//               className="bg-white p-3 rounded-xl shadow mt-1"
-//             />
-//           </div>
-
-//           {/* PREFERENCE SECTION */}
-//           <div>
-//             <label className="font-semibold text-gray-700">
-//               Work Preference (কোন কোন কাজ করতে চান)
-//             </label>
-
-//             <div className="mt-3 space-y-3">
-//               {options.map((item, i) => (
-//                 <div
-//                   key={i}
-//                   className="flex items-center bg-white p-3 rounded-xl shadow border"
-//                 >
-//                   <IonCheckbox
-//                     checked={preferences.includes(item)}
-//                     onIonChange={() => togglePreference(item)}
-//                     className="mr-3"
-//                   />
-//                   <span className="text-gray-700 font-medium">{item}</span>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-
-//           {/* SIGNUP BUTTON */}
-//           <IonButton
-//             expand="block"
-//             color="danger"
-//             shape="round"
-//             className="mt-5 py-3 text-lg font-semibold"
-//           >
-//             Signup (সাইনআপ)
-//           </IonButton>
-
-//         </div>
-//       </IonContent>
-//     </IonPage>
-//   );
-// };
-
-// export default HelperSignup;
-
-import React, { useState } from "react";
-import {
-  IonPage,
-  IonContent,
-  IonIcon,
-  IonButton,
-  IonInput,
-  IonCheckbox,
-} from "@ionic/react";
+import { useState, useEffect } from "react";
+import { IonPage, IonContent, IonButton, IonToast, IonIcon } from "@ionic/react";
+import { useHistory, useLocation } from "react-router-dom";
 import { arrowBack } from "ionicons/icons";
-import { useHistory } from "react-router-dom";
+
 import Logo from "../../assets/logo.jpg";
 
 const HelperSignup: React.FC = () => {
   const history = useHistory();
-  const [preferences, setPreferences] = useState<string[]>([]);
+  const location = useLocation();
 
-  const togglePreference = (item: string) => {
-    if (preferences.includes(item)) {
-      setPreferences(preferences.filter((x) => x !== item));
-    } else {
-      setPreferences([...preferences, item]);
+  const [userType, setUserType] = useState("helper"); // default helper
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  const handleLoginRedirect = () => history.push('/login');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const type = params.get("type");
+    if (type === "helper") setUserType(type);
+  }, [location.search]);
+
+  const showToastMessageNow = (msg: string) => {
+    setToastMessage(msg);
+    setShowToast(true);
+  };
+
+  const handleSignup = async () => {
+    if (!name || !phone || !password) {
+      showToastMessageNow("সব ফিল্ড পূরণ করতে হবে! (All fields are required!)");
+      return;
+    }
+
+    const payload = {
+      name,
+      phone_number: phone,
+      password,
+      user_type: userType,
+    };
+
+    try {
+      const response = await fetch("https://api.bsbe.transev.site/auth/signup/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showToastMessageNow("সাইনআপ সফল হয়েছে! 🎉 (Signup Successful 🎉)");
+        setTimeout(() => {
+          history.push("/helper-workpreferences");
+        }, 1500);
+      } else {
+        showToastMessageNow(data?.message || data?.detail || "Signup Failed!");
+      }
+    } catch (error) {
+      showToastMessageNow("Network Error!");
     }
   };
 
-  const options = [
-    "Cooking (রান্না)",
-    "Cleaning (পরিষ্কার)",
-    "Babysitting (শিশু দেখাশোনা)",
-    "Elderly Care (বয়স্কদের যত্ন)",
-  ];
-
-  const handleLoginRedirect = () => {
-    history.push("/login");
-  };
-
   return (
-    <IonPage>
-      <IonContent className="bg-gray-100 flex justify-center items-start min-h-screen py-10">
+    <IonPage className="relative min-h-screen">
+
+      {/* FULL WIDTH NAVBAR */}
+      <div className="w-full bg-white shadow-md z-30 flex items-center px-4 py-3 fixed top-0 left-0">
+        <IonIcon
+          icon={arrowBack}
+          className="text-2xl text-pink-600 cursor-pointer"
+          onClick={() => window.history.back()}
+        />
+        <img
+          src={Logo}
+          alt="logo"
+          className="w-10 h-10 rounded-full border-2 border-pink-400 mx-4"
+        />
+        <h1 className="text-xl font-bold text-indigo-600">Maidigo (মেইডিগো)</h1>
+      </div>
+
+      {/* CONTENT */}
+      <IonContent className="bg-gray-100 pt-24 pb-10 overflow-y-auto">
 
         {/* CARD */}
-        <div className="bg-pink-50 rounded-3xl shadow-2xl w-full max-w-md">
-
-          {/* NAVBAR (no sticky) */}
-          <div className="w-full bg-white rounded-t-3xl shadow-md flex items-center space-x-3 p-4">
-            <IonIcon
-              icon={arrowBack}
-              className="text-2xl text-pink-600 cursor-pointer"
-              onClick={() => window.history.back()}
-            />
-            <img
-              src={Logo}
-              alt="logo"
-              className="w-10 h-10 rounded-full border-2 border-pink-400"
-            />
-            <h1 className="text-xl font-bold text-indigo-600">
-              Maidigo (মেইডিগো)
-            </h1>
-          </div>
+        <div className="bg-pink-50 rounded-3xl shadow-2xl w-full max-w-md mx-auto flex flex-col p-8">
 
           {/* PAGE TITLE */}
-          <div className="text-center mt-6 px-6 mb-6">
+          <div className="text-center mt-12 mb-6">
             <h2 className="text-2xl font-bold text-pink-700">
               Helper Signup (হেল্পার সাইনআপ)
             </h2>
@@ -213,90 +100,86 @@ const HelperSignup: React.FC = () => {
             </p>
           </div>
 
-          {/* SIGNUP FORM */}
-          <div className="px-6 pb-6 space-y-5">
-
-            {/* Name */}
-            <div>
-              <label className="font-semibold text-gray-700">
+          {/* INPUTS */}
+          <div className="flex flex-col space-y-4 mb-6">
+            {/* Full Name */}
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1 font-medium">
                 Full Name (পূর্ণ নাম) <span className="text-red-500">*</span>
               </label>
-              <IonInput
-                placeholder="Enter your full name (আপনার নাম লিখুন)"
-                className="bg-white p-3 rounded-xl shadow-inner mt-1 w-full"
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your full name"
+                className="border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 shadow-sm"
               />
             </div>
 
             {/* Phone */}
-            <div>
-              <label className="font-semibold text-gray-700">
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1 font-medium">
                 Phone Number (ফোন নম্বর) <span className="text-red-500">*</span>
               </label>
-              <IonInput
+              <input
                 type="tel"
-                placeholder="Enter phone number (ফোন নম্বর দিন)"
-                className="bg-white p-3 rounded-xl shadow-inner mt-1 w-full"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter your phone number"
+                className="border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 shadow-sm"
               />
             </div>
 
             {/* Password */}
-            <div>
-              <label className="font-semibold text-gray-700">
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1 font-medium">
                 Password (পাসওয়ার্ড) <span className="text-red-500">*</span>
               </label>
-              <IonInput
+              <input
                 type="password"
-                placeholder="Enter password (পাসওয়ার্ড দিন)"
-                className="bg-white p-3 rounded-xl shadow-inner mt-1 w-full"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 shadow-sm"
               />
             </div>
+          </div>
 
-            {/* PREFERENCE SECTION */}
-            <div>
-              <label className="font-semibold text-gray-700">
-                Work Preference (কোন কোন কাজ করতে চান) <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-3 space-y-3">
-                {options.map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center bg-white p-3 rounded-xl shadow-sm border cursor-pointer"
-                    onClick={() => togglePreference(item)}
-                  >
-                    <IonCheckbox
-                      checked={preferences.includes(item)}
-                      onIonChange={() => togglePreference(item)}
-                      className="mr-3"
-                    />
-                    <span className="text-gray-700 font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* SIGNUP BUTTON */}
+          {/* Signup Button */}
+          <div className="flex justify-center mb-4">
             <IonButton
+              size="large"
               expand="block"
-              color="danger"
-              shape="round"
-              className="mt-5 py-3 text-lg font-semibold"
+              className="py-4 text-lg font-semibold"
+              color="secondary"
+              onClick={handleSignup}
             >
               Signup (সাইনআপ)
             </IonButton>
-
-            {/* LOGIN REDIRECT */}
-            <p className="text-sm text-gray-600 text-center mt-4">
-              Already have an account?{" "}
-              <span
-                onClick={handleLoginRedirect}
-                className="text-pink-600 font-semibold cursor-pointer hover:underline"
-              >
-                Login
-              </span>
-            </p>
-
           </div>
+
+          {/* Login Redirect */}
+          <p className="text-sm text-gray-600 text-center mt-2">
+            Already have an account? (আপনার কি আগে থেকে অ্যাকাউন্ট আছে?) {' '}
+            <span
+              onClick={handleLoginRedirect}
+              className="text-pink-600 font-semibold cursor-pointer hover:underline"
+            >
+              Login (লগইন)
+            </span>
+          </p>
+
         </div>
+
+        {/* Toast */}
+        <IonToast
+          isOpen={showToast}
+          message={toastMessage}
+          duration={2000}
+          color={toastMessage.includes("সাইনআপ সফল") ? "success" : "danger"}
+          onDidDismiss={() => setShowToast(false)}
+        />
+
       </IonContent>
     </IonPage>
   );
