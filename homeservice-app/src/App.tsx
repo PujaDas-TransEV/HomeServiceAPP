@@ -98,7 +98,7 @@ import AdminProfile from './components/Admin/Pages/Profile';
 import AdminServicePage from './components/Admin/Pages/Service';
 import Maiddetails from './components/Admin/Pages/Maiddetails';
 import Userdetails from './components/Admin/Pages/Userdetails'
-import UserPreference from './components/users/pages/userpreference';
+import UserPreference from './components/users/pages/Userpreference';
 import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Login';
 /* Core CSS */
