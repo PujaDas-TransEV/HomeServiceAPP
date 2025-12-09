@@ -313,7 +313,10 @@ import {
   remove,
   chevronForwardOutline,
   carOutline,
-  constructOutline
+  constructOutline,
+  medkitOutline,
+  bandageOutline,
+   womanOutline
 } from 'ionicons/icons';
 
 /* Images */
@@ -339,7 +342,7 @@ const helpers = [
 const mainServices = [
   { name: "Cleaning", icon: brushOutline, bg: "bg-gradient-to-r from-indigo-500 to-indigo-300", sub: ["Home", "Office", "Deep Cleaning"] },
   { name: "Cooking", icon: restaurantOutline, bg: "bg-gradient-to-r from-orange-500 to-orange-300", sub: ["Home Meals", "Tiffin Services", "Meal Prep"] },
-  { name: "Babysitting", icon: happyOutline, bg: "bg-gradient-to-r from-pink-500 to-pink-300", sub: ["Infants", "Toddlers", "After School"] },
+  { name: "Babysitting", icon:  womanOutline, bg: "bg-gradient-to-r from-pink-500 to-pink-300", sub: ["Infants", "Toddlers", "After School"] },
   { name: "Elder Care", icon: walkOutline, bg: "bg-gradient-to-r from-green-500 to-green-300", sub: ["Home Care", "Medication Assistance", "Companionship"] },
   { name: "Laundry", icon: waterOutline, bg: "bg-gradient-to-r from-blue-500 to-blue-300", sub: ["Wash & Fold", "Dry Cleaning", "Ironing"] },
 ];
@@ -347,8 +350,8 @@ const mainServices = [
 /* Providers for advertisements */
 const providers = [
   { name: "Catering & Event Services", icon: restaurantOutline, bg: "bg-yellow-400", sub: ["Weddings", "Parties", "Corporate Events"] },
-  { name: "Pharmacy", icon: happyOutline, bg: "bg-red-400", sub: ["Medicines", "Health Supplies"] },
-  { name: "Emergency & Medical Care", icon: walkOutline, bg: "bg-pink-400", sub: ["Ambulance", "Home Nurses"] },
+  { name: "Pharmacy", icon: bandageOutline, bg: "bg-red-400", sub: ["Medicines", "Health Supplies"] },
+  { name: "Emergency & Medical Care", icon: medkitOutline, bg: "bg-pink-400", sub: ["Ambulance", "Home Nurses"] },
   { name: "Diagnostics", icon: brushOutline, bg: "bg-green-400", sub: ["Blood Test", "X-Ray", "ECG"] },
   { name: "Utility Repair & Installation", icon: constructOutline, bg: "bg-blue-400", sub: ["AC", "Plumbing", "Electrical"] },
   { name: "Transportation", icon: carOutline, bg: "bg-purple-400", sub: ["Car", "Van", "Bike"] },
@@ -468,6 +471,7 @@ const LandingPage: React.FC = () => {
               <h3 className="text-2xl md:text-3xl font-extrabold text-pink-600 mb-4">Why Choose HelperGo?</h3>
               <ul className="list-disc list-inside text-gray-700 text-base md:text-lg space-y-2">
                 <li>✅ Verified & trusted helpers</li>
+                <li>✅ Access to a variety of professional service providers</li>
                 <li>✅ Easy booking & scheduling</li>
                 <li>✅ Transparent pricing</li>
                 <li>✅ 24/7 customer support</li>
