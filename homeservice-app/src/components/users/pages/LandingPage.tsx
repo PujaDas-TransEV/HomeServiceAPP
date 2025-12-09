@@ -312,7 +312,8 @@ import {
   add,
   remove,
   chevronForwardOutline,
-  carOutline
+  carOutline,
+  constructOutline
 } from 'ionicons/icons';
 
 /* Images */
@@ -349,7 +350,7 @@ const providers = [
   { name: "Pharmacy", icon: happyOutline, bg: "bg-red-400", sub: ["Medicines", "Health Supplies"] },
   { name: "Emergency & Medical Care", icon: walkOutline, bg: "bg-pink-400", sub: ["Ambulance", "Home Nurses"] },
   { name: "Diagnostics", icon: brushOutline, bg: "bg-green-400", sub: ["Blood Test", "X-Ray", "ECG"] },
-  { name: "Utility Repair & Installation", icon: waterOutline, bg: "bg-blue-400", sub: ["AC", "Plumbing", "Electrical"] },
+  { name: "Utility Repair & Installation", icon: constructOutline, bg: "bg-blue-400", sub: ["AC", "Plumbing", "Electrical"] },
   { name: "Transportation", icon: carOutline, bg: "bg-purple-400", sub: ["Car", "Van", "Bike"] },
 ];
 
