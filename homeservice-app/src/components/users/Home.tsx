@@ -433,7 +433,7 @@ export default function HomePage() {
 
           {/* Hero Section */}
           <div className="w-full h-48 bg-linear-to-r from-pink-600 to-indigo-400 rounded-b-3xl p-5 text-white flex flex-col justify-center">
-            <h2 className="text-2xl font-semibold">Find Trusted Maids Near You</h2>
+            <h2 className="text-2xl font-semibold">Find Trusted Helper Near You</h2>
             <p className="opacity-90">Verified • Experienced • Reliable</p>
           </div>
 
