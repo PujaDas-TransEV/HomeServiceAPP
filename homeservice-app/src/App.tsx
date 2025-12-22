@@ -80,8 +80,8 @@ import { IonReactRouter } from '@ionic/react-router';
 
 /* Pages */
 import LandingPage from './components/users/pages/LandingPage';
-import Signup from './components/users/pages/Signup';
-
+import Signup from './components/Authentication/Signup';
+import UpsertProfile from './components/Authentication/Profile';
 import Home from './components/users/Home';
 import UserSignup from './components/users/UserSignup';
 import ProfilePage from './components/users/pages/Profile';
@@ -89,7 +89,7 @@ import ChatPage from './components/users/pages/Chat';
 import MaidListPage from './components/users/pages/MaidList';
 import Preferences from './components/users/pages/Preferences';
 import HelperHome from './components/Helpers/Home';
-import HelperSignup from './components/Helpers/Pages/Signup';
+
 import MaidProfile from './components/Helpers/Pages/Profile'
 import HelperChat from './components/Helpers/Pages/Chat';
 import MaidPreferences from './components/Helpers/Pages/ServicePreferences';
@@ -100,7 +100,7 @@ import Maiddetails from './components/Admin/Pages/Maiddetails';
 import Userdetails from './components/Admin/Pages/Userdetails'
 import UserPreference from './components/users/pages/Userpreference';
 import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
-import LoginPage from './components/Login';
+import LoginPage from './components/Authentication/Login';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -141,7 +141,7 @@ const App: React.FC = () => {
                  <Route exact path="/maid-list" component={MaidListPage} />
                   <Route exact path="/preferences" component={Preferences} />
                   <Route exact path="/helper-home" component={HelperHome} />
-                  <Route exact path="/helper-signup" component={HelperSignup} />
+                   <Route exact path="/upsertprofile" component={UpsertProfile} />
                   <Route exact path="/maid-profile" component={MaidProfile} />
                    <Route exact path="/maid-chat" component={HelperChat} />
                   <Route exact path="/maid-preferences" component={MaidPreferences} />
