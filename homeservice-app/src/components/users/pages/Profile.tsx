@@ -1,3 +1,4 @@
+
 import {
   IonPage,
   IonHeader,
@@ -5,192 +6,154 @@ import {
   IonButtons,
   IonMenuButton,
   IonContent,
-  IonButton,
   IonIcon,
-  IonMenu,
-  IonList,
-  IonItem,
-  IonLabel
+  IonLoading,
+  IonToast,
 } from "@ionic/react";
-import { cameraOutline, pencilOutline, checkmarkOutline, closeOutline } from "ionicons/icons";
-import { useState } from "react";
+import { starOutline, locationOutline, personOutline } from "ionicons/icons";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { menuController } from "@ionic/core";
 import DefaultAvatar from "../../assets/profile.png";
 import Logo from "../../assets/logo.jpg";
 
-export default function ProfilePage() {
+const ProfilePage: React.FC = () => {
   const history = useHistory();
 
-  const [profileImage, setProfileImage] = useState(DefaultAvatar);
-  const [name, setName] = useState("Rahim Khan");
-  const [email, setEmail] = useState("rahim@example.com");
-  const [phone, setPhone] = useState("+880 1234 567890");
-  const [address, setAddress] = useState("Kolkata, India");
-  const [isEditing, setIsEditing] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
 
-  const handleImageChange = (e: any) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => setProfileImage(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
+  const [avgRating, setAvgRating] = useState("0");
+  const [ratingCount, setRatingCount] = useState(0);
 
-  const handleSave = () => setIsEditing(false);
-  const handleCancel = () => setIsEditing(false);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        history.push("/login");
+        return;
+      }
 
-  const handleLogout = () => {
-    setShowLogoutModal(false);
-    // Clear session or token here if needed
-    history.push("/"); // Redirect to landing page
-  };
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "https://api.gshbe.transev.site/profiles/me",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-  // Helper component for input/display
-  const InfoField = ({ label, value, type, setter }: any) => (
-    <div className="mb-4">
-      <label className="block text-gray-600 mb-1 font-medium">{label}</label>
-      {isEditing ? (
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => setter(e.target.value)}
-          className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-        />
-      ) : (
-        <p className="w-full border border-gray-200 rounded-xl p-3 bg-indigo-50 text-gray-700">{value}</p>
-      )}
+        const data = await response.json();
+        if (!response.ok) throw new Error("Failed to load profile");
+
+        const profile = data.profile;
+        setName(profile?.name || "");
+        setCity(profile?.city || "");
+        setArea(profile?.area || "");
+        setAvgRating(profile?.avg_rating || "0");
+        setRatingCount(profile?.rating_count || 0);
+      } catch (err: any) {
+        setToast(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [history]);
+
+  const InfoRow = ({ icon, label, value }: any) => (
+    <div className="flex items-center gap-3 bg-white/70 backdrop-blur-md rounded-xl p-4 shadow-sm">
+      <IonIcon icon={icon} className="text-indigo-600 text-xl" />
+      <div>
+        <p className="text-xs text-gray-500">{label}</p>
+        <p className="font-semibold text-gray-800">{value || "-"}</p>
+      </div>
     </div>
   );
 
   return (
-    <>
-      {/* ---------- Drawer Menu ---------- */}
-      <IonMenu side="end" menuId="main-menu" contentId="main-content">
-        <IonContent className="bg-white">
-          <IonList className="mt-4">
-            <IonItem button onClick={() => { history.push("/home"); menuController.close("main-menu"); }}>
-              <IonLabel className="text-lg">🏠 Home</IonLabel>
-            </IonItem>
-            <IonItem button onClick={() => { history.push("/profile"); menuController.close("main-menu"); }}>
-              <IonLabel className="text-lg">👤 Profile</IonLabel>
-            </IonItem>
-            <IonItem button onClick={() => { history.push("/chat"); menuController.close("main-menu"); }}>
-              <IonLabel className="text-lg">💬 Chat</IonLabel>
-            </IonItem>
-            <IonItem button onClick={() => { history.push("/maid-list"); menuController.close("main-menu"); }}>
-              <IonLabel className="text-lg">🧹 Maid List</IonLabel>
-            </IonItem>
-            <IonItem
-  button
-  onClick={() => {
-    history.push("/preferences"); // Navigate to preferences page
-    menuController.close("main-menu");
-  }}
->
-  <IonLabel className="text-lg">⚙️ Preferences</IonLabel>
-</IonItem>
-
-            <IonItem button onClick={() => setShowLogoutModal(true)}>
-              <IonLabel className="text-lg text-red-500">🚪 Logout</IonLabel>
-            </IonItem>
-          </IonList>
-        </IonContent>
-      </IonMenu>
-
-      {/* ---------- Main Page ---------- */}
-      <IonPage id="main-content">
-        {/* ---------- Top Navbar ---------- */}
-        <IonHeader className="shadow-md">
-          <IonToolbar className="flex justify-between px-4 bg-white">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shadow-md">
-                <img src={Logo} alt="logo" className="w-8 h-8 object-cover rounded-full" />
-              </div>
-              <h1 className="text-xl font-semibold text-indigo-600">Maidigo</h1>
-            </div>
-            <IonButtons slot="end">
-              <IonMenuButton menu="main-menu" className="text-2xl" />
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-
-        {/* ---------- Profile Content ---------- */}
-        <IonContent className="bg-linear-to-b from-indigo-50 to-white">
-          <div className="max-w-md mx-auto mt-10 bg-linear-to-r from-indigo-100 via-indigo-50 to-indigo-100 rounded-3xl shadow-xl p-8 relative">
-            
-            {/* Profile Image */}
-            <div className="flex justify-center -mt-20 relative">
-              <img
-                src={profileImage}
-                alt="Profile"
-                className="w-32 h-32 object-cover rounded-full border-4 border-indigo-200 shadow-md"
-              />
-              {isEditing && (
-                <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-indigo-700">
-                  <input type="file" className="hidden" onChange={handleImageChange} />
-                  <IonIcon icon={cameraOutline} />
-                </label>
-              )}
-            </div>
-
-            {/* Input Fields */}
-            <div className="mt-6">
-              <InfoField label="Name" value={name} type="text" setter={setName} />
-              <InfoField label="Email" value={email} type="email" setter={setEmail} />
-              <InfoField label="Phone" value={phone} type="tel" setter={setPhone} />
-              <InfoField label="Address" value={address} type="text" setter={setAddress} />
-            </div>
-
-            {/* Buttons */}
-            <div className="mt-6 flex justify-center gap-4">
-              {isEditing ? (
-                <>
-                  <IonButton onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center gap-2">
-                    <IonIcon icon={checkmarkOutline} /> Save
-                  </IonButton>
-                  <IonButton onClick={handleCancel} className="bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl flex items-center gap-2">
-                    <IonIcon icon={closeOutline} /> Cancel
-                  </IonButton>
-                </>
-              ) : (
-                <IonButton onClick={() => setIsEditing(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center gap-2 mx-auto">
-                  <IonIcon icon={pencilOutline} /> Edit Profile
-                </IonButton>
-              )}
-            </div>
+    <IonPage>
+      {/* ---------- Header ---------- */}
+      <IonHeader className="shadow-md">
+        <IonToolbar className="bg-white px-4">
+          <div className="flex items-center gap-2">
+            <img src={Logo} alt="logo" className="w-9 h-9 rounded-full" />
+            <h1 className="text-xl font-bold text-indigo-600">Maidigo</h1>
           </div>
-        </IonContent>
+          <IonButtons slot="end">
+            <IonMenuButton />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
-        {/* ---------- Logout Modal ---------- */}
-        {showLogoutModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
-              <h2 className="text-lg font-bold mb-4">Logout</h2>
-              <p className="text-gray-700 mb-6">Are you sure you want to logout?</p>
-              <div className="flex justify-end gap-4">
-                <IonButton
-                  fill="outline"
-                  color="medium"
-                  onClick={() => setShowLogoutModal(false)}
-                  className="px-6 py-2 rounded-xl hover:bg-gray-100"
-                >
-                  No
-                </IonButton>
-                <IonButton
-                  color="danger"
-                  onClick={handleLogout}
-                  className="px-6 py-2 rounded-xl hover:bg-red-600"
-                >
-                  Yes
-                </IonButton>
+      {/* ---------- Content ---------- */}
+      <IonContent fullscreen className="bg-linear-to-b from-indigo-100 via-indigo-50 to-white">
+        <div className="max-w-md mx-auto mt-14 px-4">
+          
+          {/* Profile Card */}
+          <div className="relative bg-linear-to-br from-indigo-500 via-indigo-400 to-indigo-600 rounded-3xl p-1 shadow-2xl">
+            <div className="bg-white rounded-3xl p-8">
+              
+              {/* Avatar */}
+              <div className="flex justify-center -mt-24 mb-6">
+                <div className="bg-white p-2 rounded-full shadow-xl">
+                  <img
+                    src={DefaultAvatar}
+                    alt="Profile"
+                    className="w-32 h-32 rounded-full object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* Name */}
+              <h2 className="text-2xl font-bold text-center text-gray-800">
+                {name || "User"}
+              </h2>
+
+              {/* Rating */}
+              <div className="flex justify-center items-center gap-2 mt-2 text-indigo-600">
+                <IonIcon icon={starOutline} />
+                <span className="font-semibold">{avgRating}</span>
+                <span className="text-gray-500 text-sm">
+                  ({ratingCount} reviews)
+                </span>
+              </div>
+
+              {/* Info */}
+              <div className="mt-8 space-y-4">
+                <InfoRow
+                  icon={personOutline}
+                  label="Full Name"
+                  value={name}
+                />
+                <InfoRow
+                  icon={locationOutline}
+                  label="City"
+                  value={city}
+                />
+                <InfoRow
+                  icon={locationOutline}
+                  label="Area"
+                  value={area}
+                />
               </div>
             </div>
           </div>
-        )}
-      </IonPage>
-    </>
+        </div>
+
+        <IonLoading isOpen={loading} message="Loading profile..." />
+        <IonToast
+          isOpen={!!toast}
+          message={toast}
+          duration={2000}
+          onDidDismiss={() => setToast("")}
+        />
+      </IonContent>
+    </IonPage>
   );
-}
+};
+
+export default ProfilePage;
