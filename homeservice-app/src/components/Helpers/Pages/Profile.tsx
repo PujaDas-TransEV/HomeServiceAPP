@@ -1,278 +1,256 @@
-import React, { useState } from "react";
 import {
   IonPage,
-  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
   IonButton,
-  IonInput,
+  IonContent,
   IonIcon,
+  IonLoading,
+  IonToast,
   IonModal,
 } from "@ionic/react";
 import {
-  camera,
+  starOutline,
+  locationOutline,
+  personOutline,
+  callOutline,
   menu,
+  home,
   personCircle,
   chatbubbles,
-  logOut,
   settings,
-  home
+  logOut,
+  idCardOutline,
+  briefcaseOutline,
+  languageOutline,
+  peopleOutline,
+  calendarOutline,
+  schoolOutline,
+  pinOutline
 } from "ionicons/icons";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import DefaultAvatar from "../../assets/profile.png";
 import Logo from "../../assets/logo.jpg";
 
-const MaidProfile: React.FC = () => {
+const HelperProfilePage: React.FC = () => {
   const history = useHistory();
+
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [name, setName] = useState("Moushumi Khatun");
-  const [phone, setPhone] = useState("017xxxxxxxx");
-  const [email, setEmail] = useState("maid@example.com");
-  const [area, setArea] = useState("Your Area");
-  const [city, setCity] = useState("Your City");
+  // Root
+  const [registrationId, setRegistrationId] = useState("");
+  const [role, setRole] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [profileKind, setProfileKind] = useState("");
 
-  // Handle profile image change
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProfileImage(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // Profile
+  const [name, setName] = useState("");
+  const [age, setAge] = useState<number | null>(null);
+  const [faith, setFaith] = useState("");
+  const [languages, setLanguages] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
+  const [experience, setExperience] = useState<number | null>(null);
+  const [avgRating, setAvgRating] = useState("0");
+  const [ratingCount, setRatingCount] = useState(0);
 
-  const handleSave = () => {
-    console.log({ name, phone, email, area, city, profileImage });
-    alert("Profile updated!");
-  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        history.push("/login");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res = await fetch(
+          "https://api.gshbe.transev.site/profiles/me",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const data = await res.json();
+        if (!res.ok) throw new Error("Failed to load profile");
+
+        setRegistrationId(data.registration_id);
+        setRole(data.role);
+        setCapacity(data.capacity);
+        setProfileKind(data.profile_kind);
+
+        const p = data.profile;
+        setName(p?.name);
+        setAge(p?.age);
+        setFaith(p?.faith);
+        setLanguages(p?.languages);
+        setPhone(p?.phone);
+        setCity(p?.city);
+        setArea(p?.area);
+        setExperience(p?.years_of_experience);
+        setAvgRating(p?.avg_rating || "0");
+        setRatingCount(p?.rating_count || 0);
+      } catch (err: any) {
+        setToast(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [history]);
+
+  const InfoRow = ({ icon, label, value }: any) => (
+    <div className="flex items-center gap-3 bg-white/80 rounded-xl p-4 shadow-sm">
+      <IonIcon icon={icon} className="text-pink-600 text-xl" />
+      <div>
+        <p className="text-xs text-gray-500">{label}</p>
+        <p className="font-semibold text-gray-800">{value || "-"}</p>
+      </div>
+    </div>
+  );
 
   const handleLogout = () => {
-    setShowLogoutModal(false);
-    history.push("/landing"); // redirect to landing page
+    localStorage.clear();
+    history.push("/landing");
   };
 
   return (
     <IonPage>
-      <IonContent className="bg-linear-to-b from-pink-100 via-pink-50 to-white min-h-screen">
-
-        {/* NAVBAR */}
-        <div className="w-full bg-white shadow-md p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full bg-pink-100 border-2 border-pink-500 flex items-center justify-center shadow">
-              <img src={Logo} alt="maidigo logo" className="w-10 h-10 object-contain" />
-            </div>
-            <h1 className="text-xl font-bold text-indigo-500">
-              Maidigo (মেইডিগো)
-            </h1>
+      {/* HEADER */}
+      <IonHeader>
+        <IonToolbar className="bg-white px-4">
+          {/* Logo + Title on left */}
+          <div slot="start" className="flex items-center gap-2">
+            <img src={Logo} className="w-9 h-9 rounded-full" alt="Logo" />
+            <h1 className="text-xl font-bold text-pink-600">HelperGo</h1>
           </div>
 
+          {/* Hamburger on right */}
+          <IonButtons slot="end">
+            <IonButton
+              className="bg-pink-600 text-white rounded-lg"
+              onClick={() => setOpenMenu(true)}
+            >
+              <IonIcon icon={menu} className="text-2xl" />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+
+      {/* SIDE MENU */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300
+        ${openMenu ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="p-4 border-b flex justify-end">
           <button
-            onClick={() => setOpenMenu(!openMenu)}
-            className="p-2 rounded-lg bg-pink-600 text-white"
+            className="text-xl font-bold"
+            onClick={() => setOpenMenu(false)}
           >
-            <IonIcon icon={menu} className="text-2xl" />
+            ✕
           </button>
         </div>
 
-        {/* SIDE MENU */}
-        <div
-          className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform transition-all duration-300 z-50
-            ${openMenu ? "translate-x-0" : "translate-x-full"}`}
-        >
-          <div className="p-4 border-b flex justify-end">
-            <button
-              className="text-gray-600 font-bold"
-              onClick={() => setOpenMenu(false)}
+        <div className="p-4 space-y-4">
+          {/* Menu Items */}
+          {[
+            { icon: home, label: "Home", path: "/helper-home" },
+            { icon: personCircle, label: "Profile", path: "/helper-profile" },
+            { icon: chatbubbles, label: "Chat", path: "/helper-chat" },
+            { icon: settings, label: "Preferences", path: "/helper-preferences" },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+              onClick={() => {
+                setOpenMenu(false);
+                history.push(item.path);
+              }}
             >
-              ✕
-            </button>
-          </div>
+              <IonIcon icon={item.icon} className="text-pink-600 text-xl" />
+              <span>{item.label}</span>
+            </div>
+          ))}
 
-          <div className="p-4 space-y-4">
-           
-                       
-  {/* Home */}
-  <div
-    className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-    onClick={() => { setOpenMenu(false); history.push("/helper-home"); }}
-  >
-    <IonIcon icon={home} className="text-2xl text-pink-600" />
-    <span className="text-lg font-medium">Home (হোম)</span>
-  </div>
-            {/* Profile */}
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); history.push("/maid-profile"); }}
-            >
-              <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Profile (প্রোফাইল)</span>
-            </div>
-
-            {/* Chat */}
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); history.push("/maid-chat"); }}
-            >
-              <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Chat (চ্যাট)</span>
-            </div>
-  <div
-  className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-  onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
->
-  <IonIcon icon={settings} className="text-2xl text-pink-600" />
-  <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
-</div>
-            {/* Logout */}
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); setShowLogoutModal(true); }}
-            >
-              <IonIcon icon={logOut} className="text-2xl text-red-500" />
-              <span className="text-lg font-medium text-red-500">Logout (লগআউট)</span>
-            </div>
+          {/* Logout */}
+          <div
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 cursor-pointer text-red-500"
+            onClick={() => {
+              setOpenMenu(false);
+              setShowLogoutModal(true);
+            }}
+          >
+            <IonIcon icon={logOut} className="text-red-500 text-xl" />
+            <span>Logout</span>
           </div>
         </div>
-
-<IonModal isOpen={showLogoutModal} className="logout-modal">
-  <div className="flex items-center justify-center h-full w-full bg-black/30">
-    <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center">
-      <h2 className="text-xl font-bold text-gray-700 mb-4">
-        Are you sure you want to logout?{" "}
-        <span className="text-pink-500">(আপনি কি লগআউট করতে চান?)</span>
-      </h2>
-      <div className="flex justify-center space-x-4 mt-4">
-        <IonButton color="danger" onClick={handleLogout}>
-          Yes (হ্যাঁ)
-        </IonButton>
-        <IonButton color="medium" onClick={() => setShowLogoutModal(false)}>
-          No (না)
-        </IonButton>
       </div>
-    </div>
-  </div>
-</IonModal>
 
+      {/* CONTENT */}
+      <IonContent className="bg-linear-to-b from-pink-100 to-white">
+        <div className="max-w-md mx-auto mt-14 px-4">
+          <div className="bg-white rounded-3xl shadow-2xl p-8">
 
-
-        {/* Maid Profile Card */}
-        <div className="flex justify-center items-start py-12 px-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
-
-            {/* Profile Header */}
-            <div className="flex flex-col items-center mb-8">
-              <div className="relative w-32 h-32">
-                <img
-                  src={profileImage || Logo}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-pink-400 shadow-lg"
-                />
-                <label
-                  htmlFor="profileUpload"
-                  className="absolute bottom-0 right-0 bg-pink-600 p-3 rounded-full cursor-pointer shadow-md hover:bg-pink-700 transition"
-                >
-                  <IonIcon icon={camera} className="text-white text-xl" />
-                </label>
-                <input
-                  id="profileUpload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </div>
-              <h2 className="text-2xl font-bold text-pink-600 mt-4">{name}</h2>
+            {/* Avatar */}
+            <div className="flex justify-center mb-6">
+              <img src={DefaultAvatar} className="w-32 h-32 rounded-full" alt="Profile" />
             </div>
 
-            {/* Editable Form */}
-            <div className="space-y-5">
+            {/* Name */}
+            <h2 className="text-2xl font-bold text-center">{name}</h2>
 
-              {/* Name */}
-              <div>
-                <label className="font-semibold text-gray-700">
-                  Full Name <span className="text-pink-500">(পূর্ণ নাম)</span>
-                </label>
-                <IonInput
-                  value={name}
-                  onIonChange={(e) => setName(e.detail.value!)}
-                  placeholder="Enter your full name"
-                  className="bg-pink-50 p-3 rounded-xl w-full shadow-inner mt-1 focus:ring-2 focus:ring-pink-300"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="font-semibold text-gray-700">
-                  Phone Number <span className="text-pink-500">(ফোন নম্বর)</span>
-                </label>
-                <IonInput
-                  value={phone}
-                  onIonChange={(e) => setPhone(e.detail.value!)}
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  className="bg-pink-50 p-3 rounded-xl w-full shadow-inner mt-1 focus:ring-2 focus:ring-pink-300"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="font-semibold text-gray-700">
-                  Email <span className="text-pink-500">(ইমেইল)</span>
-                </label>
-                <IonInput
-                  value={email}
-                  onIonChange={(e) => setEmail(e.detail.value!)}
-                  type="email"
-                  placeholder="Enter your email (optional)"
-                  className="bg-pink-50 p-3 rounded-xl w-full shadow-inner mt-1 focus:ring-2 focus:ring-pink-300"
-                />
-              </div>
-
-              {/* Area */}
-              <div>
-                <label className="font-semibold text-gray-700">
-                  Area <span className="text-pink-500">(এলাকা)</span>
-                </label>
-                <IonInput
-                  value={area}
-                  onIonChange={(e) => setArea(e.detail.value!)}
-                  placeholder="Enter your area"
-                  className="bg-pink-50 p-3 rounded-xl w-full shadow-inner mt-1 focus:ring-2 focus:ring-pink-300"
-                />
-              </div>
-
-              {/* City */}
-              <div>
-                <label className="font-semibold text-gray-700">
-                  City <span className="text-pink-500">(শহর)</span>
-                </label>
-                <IonInput
-                  value={city}
-                  onIonChange={(e) => setCity(e.detail.value!)}
-                  placeholder="Enter your city"
-                  className="bg-pink-50 p-3 rounded-xl w-full shadow-inner mt-1 focus:ring-2 focus:ring-pink-300"
-                />
-              </div>
-
-              {/* Save Button */}
-              <IonButton
-                expand="block"
-                color="danger"
-                shape="round"
-                className="mt-6 py-4 text-lg font-semibold shadow-lg hover:scale-105 transition transform"
-                onClick={handleSave}
-              >
-                Save Profile <span className="text-white ml-2">(প্রোফাইল সংরক্ষণ)</span>
-              </IonButton>
-
+            {/* Rating */}
+            <div className="flex justify-center items-center gap-2 mt-2 text-pink-600">
+              <IonIcon icon={starOutline} />
+              <span className="font-semibold">{avgRating} Ratings</span>
+              <span className="text-gray-500 text-sm">| {ratingCount} Reviews</span>
             </div>
+
+            {/* Profile Info */}
+           
+            <div className="mt-6 space-y-4">
+  <InfoRow icon={idCardOutline} label="Registration ID" value={registrationId} />   
+  <InfoRow icon={personOutline} label="Role" value={role} />                        
+  <InfoRow icon={peopleOutline} label="Capacity" value={capacity} />               
+  <InfoRow icon={personCircle} label="Profile Type" value={profileKind} />        
+  <InfoRow icon={calendarOutline} label="Age" value={age} />                        
+  <InfoRow icon={languageOutline} label="Languages" value={languages} />           
+  <InfoRow icon={schoolOutline} label="Faith" value={faith} />                      
+  <InfoRow icon={callOutline} label="Phone" value={phone} />                        
+  <InfoRow icon={locationOutline} label="City" value={city} />                     
+  <InfoRow icon={pinOutline} label="Area" value={area} />                          
+  <InfoRow icon={briefcaseOutline} label="Experience (Years)" value={experience} /> 
+</div>
+
           </div>
         </div>
+
+        {/* Loading & Toast */}
+        <IonLoading isOpen={loading} message="Loading profile..." />
+        <IonToast isOpen={!!toast} message={toast} duration={2000} />
+
+        {/* LOGOUT MODAL */}
+        <IonModal isOpen={showLogoutModal}>
+          <div className="flex h-full items-center justify-center bg-black/30">
+            <div className="bg-white p-6 rounded-xl text-center w-72">
+              <p className="font-semibold mb-6">Are you sure you want to logout?</p>
+
+              {/* Buttons Row */}
+              <div className="flex justify-center gap-4">
+                <IonButton color="danger" onClick={handleLogout}>Yes</IonButton>
+                <IonButton color="medium" onClick={() => setShowLogoutModal(false)}>No</IonButton>
+              </div>
+            </div>
+          </div>
+        </IonModal>
       </IonContent>
     </IonPage>
   );
 };
 
-export default MaidProfile;
+export default HelperProfilePage;

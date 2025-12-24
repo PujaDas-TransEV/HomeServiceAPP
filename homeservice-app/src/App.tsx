@@ -81,7 +81,7 @@ import { IonReactRouter } from '@ionic/react-router';
 /* Pages */
 import LandingPage from './components/users/pages/LandingPage';
 import Signup from './components/Authentication/Signup';
-import UpsertProfile from './components/Authentication/Profile';
+
 import Home from './components/users/Home';
 import UserSignup from './components/users/UserSignup';
 import ProfilePage from './components/users/pages/Profile';
@@ -101,6 +101,7 @@ import Userdetails from './components/Admin/Pages/Userdetails'
 import UserPreference from './components/users/pages/Userpreference';
 import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Authentication/Login';
+import UpsertProfile from './components/Authentication/Profile';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -136,6 +137,7 @@ const App: React.FC = () => {
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/signup-user" component={UserSignup} />
+            
               <Route exact path="/profile" component={ProfilePage} />
                  <Route exact path="/chat" component={ChatPage} />
                  <Route exact path="/maid-list" component={MaidListPage} />
