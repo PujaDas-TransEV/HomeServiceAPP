@@ -21,6 +21,7 @@ import {
   locationOutline,
   personOutline,
   closeOutline,
+  mapOutline
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -203,7 +204,7 @@ const ProfilePage: React.FC = () => {
               <div className="p-6 space-y-4">
                 <InfoRow icon={personOutline} label="Full Name" value={name} />
                 <InfoRow icon={locationOutline} label="City" value={city} />
-                <InfoRow icon={locationOutline} label="Area" value={area} />
+                <InfoRow icon={mapOutline} label="Area" value={area} />
                 <div className="text-gray-500 text-sm mt-2">
                   <p>
                     <span className="font-semibold">Registration ID:</span> {registrationId}
