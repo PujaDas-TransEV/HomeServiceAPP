@@ -228,7 +228,7 @@ export default function ChatPage() {
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
                 <img src={Logo} alt="logo" className="w-8 h-8 object-cover rounded-full" />
               </div>
-              <h1 className="text-l font-bold text-indigo-400">Maidigo</h1>
+              <h1 className="text-l font-bold text-indigo-400">HelperGo</h1>
             </div>
             <IonButtons slot="end">
               <IonMenuButton

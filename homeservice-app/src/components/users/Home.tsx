@@ -419,7 +419,7 @@ export default function HomePage() {
               <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shadow-md">
                 <img src={Logo} alt="logo" className="w-8 h-8 rounded-full" />
               </div>
-              <h1 className="text-xl font-semibold text-indigo-600">Maidigo</h1>
+              <h1 className="text-xl font-semibold text-indigo-600">HelperGo</h1>
             </div>
 
             <IonButtons slot="end">
