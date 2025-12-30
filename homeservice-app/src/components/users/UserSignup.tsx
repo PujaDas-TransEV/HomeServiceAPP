@@ -359,7 +359,7 @@ const handleLoginRedirect = () => history.push('/login');
           </h2>
 
           {/* Full Name */}
-        {/* Full Name */}
+        
 <div className="flex flex-col mb-4">
   <label className="text-gray-700 mb-1 font-medium">
     Full Name <span className="text-red-500">*</span>

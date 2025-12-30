@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
                   className="w-14 h-14 rounded-full object-cover"
                 />
               </div>
-              <h1 className="text-3xl font-bold text-pink-600">Maidigo</h1>
+              <h1 className="text-3xl font-bold text-pink-600">HelperGo</h1>
               <p className="text-gray-500 text-sm mt-1">Login to your account</p>
             </div>
 

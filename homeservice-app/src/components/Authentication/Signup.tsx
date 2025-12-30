@@ -36,47 +36,7 @@ const Signup: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
 
-  // const handleSignup = async () => {
-  //   if (phone.length !== 10) {
-  //     setToastMsg('Enter valid 10-digit phone number');
-  //     return;
-  //   }
-  //   if (password.length < 6) {
-  //     setToastMsg('Password must be at least 6 characters');
-  //     return;
-  //   }
 
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(
-  //       'https://api.gshbe.transev.site/auth/signup',
-  //       {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify({
-  //           phone: `+91${phone}`,
-  //           password,
-  //           role,
-  //           capacity,
-  //         }),
-  //       }
-  //     );
-
-  //     const data = await response.json();
-  //     if (!response.ok) throw new Error(data?.message || 'Signup failed');
-
-  //     setToastMsg('Signup successful 🎉');
-
-  //     setTimeout(() => history.push('/upsertprofile'), 1200);
-
-  //     setPhone('');
-  //     setPassword('');
-  //   } catch (error: any) {
-  //     setToastMsg(error.message || 'Something went wrong');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 const handleSignup = async () => {
   if (phone.length !== 10) {
     setToastMsg('Enter valid 10-digit phone number');
@@ -212,7 +172,7 @@ const handleSignup = async () => {
             </IonItem>
 
             {/* Capacity */}
-          {/* Capacity */}
+   
 <div className="mb-6">
   <p className="text-sm font-semibold text-gray-600 mb-2">
     Account Type
