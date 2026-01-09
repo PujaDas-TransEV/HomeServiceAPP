@@ -93,7 +93,7 @@
 
 //     setLoading(true);
 //     try {
-//       const response = await fetch('https://api.gshbe.transev.site/profiles/me', {
+//       const response = await fetch('http://192.168.0.200:8000/profiles/me', {
 //         method: 'PUT',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -296,7 +296,7 @@ const ProfilePage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('https://api.gshbe.transev.site/profiles/me', {
+      const response = await fetch('http://192.168.0.200:8000/profiles/me', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

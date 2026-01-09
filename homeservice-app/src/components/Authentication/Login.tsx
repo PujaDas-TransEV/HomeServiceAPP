@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
 
     try {
-      const response = await fetch('https://api.gshbe.transev.site/auth/signin', {
+      const response = await fetch('http://192.168.0.200:8000/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

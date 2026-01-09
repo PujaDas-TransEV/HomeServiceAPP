@@ -50,7 +50,7 @@ const handleSignup = async () => {
   setLoading(true);
   try {
     const response = await fetch(
-      'https://api.gshbe.transev.site/auth/signup',
+      'http://192.168.0.200:8000/auth/signup',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

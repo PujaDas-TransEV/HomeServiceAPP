@@ -303,7 +303,7 @@ const handleLoginRedirect = () => history.push('/login');
     };
 
     try {
-      const response = await fetch("https://api.bsbe.transev.site/auth/signup/", {
+      const response = await fetch("http://192.168.0.200:8000/auth/signup/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
