@@ -57,7 +57,7 @@ const ProfilePage: React.FC = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://192.168.0.200:8000/profiles/me",
+          "http://192.168.0.187:9830/profiles/me",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
