@@ -26,7 +26,7 @@ import {
     FaTachometerAlt, 
   FaCogs, 
 } from "react-icons/fa";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const AdminProfile: React.FC = () => {
   const history = useHistory();
 
@@ -46,6 +46,12 @@ const AdminProfile: React.FC = () => {
     newPassword: "",
     confirmPassword: "",
   });
+
+
+// In your component:
+const [showOldPassword, setShowOldPassword] = useState(false);
+const [showNewPassword, setShowNewPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -94,16 +100,46 @@ const AdminProfile: React.FC = () => {
 };
 
 
-  const handleChangePassword = () => {
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+ const handleChangePassword = async () => {
+  if (passwords.newPassword !== passwords.confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    alert("You are not logged in!");
+    history.push("/login");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://192.168.0.187:9830/auth/change-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Authorization header
+      },
+      body: JSON.stringify({
+        old_password: passwords.oldPassword,
+        new_password: passwords.newPassword,
+        confirm_password: passwords.confirmPassword,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to change password");
     }
 
     alert("Password changed successfully!");
     setIsPasswordOpen(false);
     setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
-  };
+  } catch (err: any) {
+    alert(err.message || "Something went wrong");
+  }
+};
 
 
   return (
