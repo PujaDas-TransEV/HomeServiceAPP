@@ -92,9 +92,16 @@ const AdminServices: React.FC = () => {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
-    redirect("/login");
-  };
+  // Remove only the access token
+  localStorage.removeItem("access_token");
+
+  // Optional: remove any other related keys if needed
+  // localStorage.removeItem("refresh_token");
+
+  // Redirect to login page
+  redirect("/login");
+};
+
 
   // GET SERVICES
   const fetchServices = async () => {
@@ -170,7 +177,7 @@ const AdminServices: React.FC = () => {
   };
 
   // DELETE SERVICE
- // DELETE SERVICE
+
 const handleDelete = async (id: number) => {
   try {
     const res = await fetch(
@@ -316,13 +323,15 @@ const handleDelete = async (id: number) => {
 </div>
 
           {/* Fullscreen Background Image */}
-          <div
+          {/* <div
             className="absolute inset-0 bg-cover bg-center z-0"
             style={{
               backgroundImage:
                 "url('https://images.unsplash.com/photo-1581093588401-540cdd6073d8?auto=format&fit=crop&w=1350&q=80')",
             }}
-          ></div>
+          ></div> */}
+ 
+        
 
           {/* Content Container */}
           <div className="relative z-10 min-h-screen p-8">
@@ -341,6 +350,8 @@ const handleDelete = async (id: number) => {
   <IonIcon icon={addOutline} className="mr-2 text-lg" />
   Create Service
 </IonButton>
+
+
 
               </div>
 
@@ -411,6 +422,7 @@ const handleDelete = async (id: number) => {
               )}
             </div>
           </div>
+       
 
     {/* CREATE MODAL */}
 <IonModal isOpen={isCreateOpen}>

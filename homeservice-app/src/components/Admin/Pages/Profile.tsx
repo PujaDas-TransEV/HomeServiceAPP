@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   IonPage,
   IonContent,
@@ -6,39 +7,39 @@ import {
   IonToolbar,
   IonTitle,
   IonButton,
-  IonIcon,
-  IonButtons,
   IonMenu,
   IonMenuToggle,
+  IonModal,
+  IonInput,
   IonItem,
   IonLabel,
-  IonInput,
-  IonModal,
-  IonList,
 } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import {
-  menuOutline,
-  closeOutline,
-  mailOutline,
-  callOutline,
-  settingsOutline,
-  logOutOutline,
-  personCircleOutline,
-  homeOutline,
-} from "ionicons/icons";
-
-import logoImg from "../../assets/logo.jpg"; // Admin profile image
+  FaUserCircle,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaIdCard,
+  FaBars,
+  FaLock,
+  FaSignOutAlt,
+    FaTachometerAlt, 
+  FaCogs, 
+} from "react-icons/fa";
 
 const AdminProfile: React.FC = () => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const history = useHistory();
 
-  const [admin, setAdmin] = useState({
-    name: "Puja Das",
-    role: "Super Admin",
-    email: "admin@example.com",
-    phone: "+91 9876543210",
-  });
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+
+  const [registrationId, setRegistrationId] = useState("");
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
 
   const [passwords, setPasswords] = useState({
     oldPassword: "",
@@ -46,214 +47,295 @@ const AdminProfile: React.FC = () => {
     confirmPassword: "",
   });
 
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/login";
-  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        history.push("/login");
+        return;
+      }
 
-  const handleSaveProfile = () => {
-    setIsEditModalOpen(false);
-    alert("Profile updated successfully!");
-  };
+      setLoading(true);
+      try {
+        const res = await fetch(
+          "http://192.168.0.187:9830/profiles/me",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const data = await res.json();
+        if (!res.ok) throw new Error("Failed to load profile");
+
+        setRegistrationId(data.registration_id);
+        setRole(data.role);
+      setPhone(data.phone);
+        const p = data.profile;
+        setName(p?.name);
+      
+        setCity(p?.city);
+        setArea(p?.area);
+      } catch (err: any) {
+        setToast(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [history]);
+
+  const handleLogout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.clear();
+
+  const menu = document.querySelector("ion-menu");
+  if (menu) (menu as any).close();
+
+  history.replace("/login");
+};
+
 
   const handleChangePassword = () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("New password and confirm password do not match!");
+      alert("Passwords do not match!");
       return;
     }
-    setIsPasswordModalOpen(false);
+
     alert("Password changed successfully!");
+    setIsPasswordOpen(false);
     setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
   };
 
-  const redirect = (path: string) => {
-    window.location.href = path;
-  };
 
   return (
     <>
       {/* SIDE MENU */}
-      <IonMenu side="end" menuId="adminMenu" contentId="adminContent" className="bg-white">
-        <IonHeader>
-          <IonToolbar className="bg-pink-600 text-pink-400 flex justify-between items-center">
-            <IonTitle>Admin Menu</IonTitle>
-            {/* Close Button */}
-            <IonButtons slot="end">
-              <IonButton onClick={() => (window as any).document.querySelector("ion-menu")?.close()}>
-                <IonIcon icon={closeOutline} className="text-pink-500 text-xl" />
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
+      <IonMenu contentId="main-content" side="start">
+    <IonContent className="bg-linear-to-b from-slate-900 via-purple-900 to-slate-900 text-white p-6 ">
 
-        <IonContent className="bg-pink-50">
-          <IonList className="mt-4">
-            <IonMenuToggle autoHide={true}>
-              <IonItem button onClick={() => redirect("/admin-profile")}>
-                <IonIcon icon={personCircleOutline} className="mr-2 text-pink-600" />
-                <IonLabel>Profile</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
+  {/* Sidebar Header */}
+  <div className="mb-10 text-center">
+    <h2 className="text-xl font-bold tracking-wide text-purple-300">
+      Admin Panel
+    </h2>
+    <div className="w-16 h-1 bg-purple-500 mx-auto mt-2 rounded-full"></div>
+  </div>
 
-            <IonMenuToggle autoHide={true}>
-              <IonItem button onClick={() => redirect("/admin-home")}>
-                <IonIcon icon={homeOutline} className="mr-2 text-pink-600" />
-                <IonLabel>Dashboard</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
+  <div className="space-y-4">
 
-            <IonMenuToggle autoHide={true}>
-              <IonItem button onClick={() => redirect("/admin-service")}>
-                <IonIcon icon={settingsOutline} className="mr-2 text-pink-600" />
-                <IonLabel>Services</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
+    {/* Profile */}
+    <div
+      onClick={() => history.push("/admin-profile")}
+      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+    >
+      <FaUserCircle className="text-purple-400 text-lg group-hover:scale-110 transition-all duration-300" />
+      <span className="font-medium tracking-wide group-hover:text-white-300">
+        Profile
+      </span>
+    </div>
 
-            <IonMenuToggle autoHide={true}>
-              <IonItem button onClick={handleLogout}>
-                <IonIcon icon={logOutOutline} className="mr-2 text-red-500" />
-                <IonLabel className="text-red-500">Logout</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-          </IonList>
-        </IonContent>
+    {/* Dashboard */}
+    <div
+      onClick={() => history.push("/admin-home")}
+      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-indigo-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+    >
+      <FaTachometerAlt className="text-indigo-400 text-lg group-hover:scale-110 transition-all duration-300" />
+      <span className="font-medium tracking-wide group-hover:text-indigo-300">
+        Dashboard
+      </span>
+    </div>
+
+    {/* Manage Services */}
+    <div
+      onClick={() => history.push("/admin-service")}
+      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+    >
+      <FaCogs className="text-pink-400 text-lg group-hover:scale-110 transition-all duration-300" />
+      <span className="font-medium tracking-wide group-hover:text-white-300">
+        Manage Services
+      </span>
+    </div>
+
+    {/* Logout */}
+    <div
+      onClick={handleLogout}
+      className="group flex items-center gap-4 p-4 rounded-xl bg-red-500/10 hover:bg-red-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-red-400/20 mt-8"
+    >
+      <FaSignOutAlt className="text-red-400 text-lg group-hover:scale-110 transition-all duration-300" />
+      <span className="font-medium tracking-wide text-red-400 group-hover:text-red-300">
+        Logout
+      </span>
+    </div>
+
+  </div>
+
+</IonContent>
+
+
       </IonMenu>
 
-      <IonPage id="adminContent">
-        {/* Navbar */}
+      <IonPage id="main-content">
+        {/* HEADER WITH HAMBURGER */}
         <IonHeader>
-          <IonToolbar className="bg-pink-600 text-white flex justify-between px-4">
-            <IonTitle>Admin Profile</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => (window as any).document.querySelector("ion-menu")?.open()}>
-                <IonIcon icon={menuOutline} className="text-pink-600 text-2xl" />
+          <IonToolbar className="bg-linear-to-r from-purple-800 to-indigo-800 text-indigo-400 px-4">
+            <div className="flex justify-between items-center w-full">
+              <IonTitle className="text-lg font-semibold">
+                Admin Profile
+              </IonTitle>
+
+              <IonButton
+                fill="clear"
+                onClick={() =>
+                  (window as any).document.querySelector("ion-menu")?.open()
+                }
+              >
+                <FaBars className="text-pink-800 text-xl" />
               </IonButton>
-            </IonButtons>
+            </div>
           </IonToolbar>
         </IonHeader>
 
-        <IonContent className="bg-pink-50 p-4 min-h-screen flex flex-col items-center">
-          {/* Profile Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center mb-6 w-full max-w-md">
-            <img
-              src={logoImg}
-              alt="Admin"
-              className="w-28 h-28 rounded-full border-4 border-pink-500 mb-4 object-cover"
-            />
-            <h2 className="text-2xl font-bold text-gray-800">{admin.name}</h2>
-            <p className="text-pink-600 font-medium mb-4">{admin.role}</p>
+        <IonContent >
+         {/* Full Background Image */}
+         <div
+          className="min-h-screen bg-cover bg-center flex items-center justify-center px-4"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1400&q=80')",
+          }}
+        >
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/60"></div>
 
-            {/* Contact Info */}
-            <div className="w-full flex flex-col gap-3 mb-4">
-              <div className="flex items-center gap-3 bg-pink-50 rounded-lg p-3 shadow-sm w-full">
-                <IonIcon icon={mailOutline} className="text-pink-600 text-xl" />
-                <span className="text-gray-700">{admin.email}</span>
-              </div>
-              <div className="flex items-center gap-3 bg-pink-50 rounded-lg p-3 shadow-sm w-full">
-                <IonIcon icon={callOutline} className="text-pink-600 text-xl" />
-                <span className="text-gray-700">{admin.phone}</span>
-              </div>
-            </div>
+            {/* PROFILE CARD */}
+         <div className="bg-linear-to-br from-indigo-700/40 via-purple-700/40 to-indigo-900/40 backdrop-blur-md border border-indigo-400/30 rounded-3xl shadow-2xl p-8 max-w-md w-full text-white">
 
-            {/* Action Buttons */}
-            <div className="flex flex-col md:flex-row gap-4 w-full">
+
+
+              <div className="flex justify-center mb-4">
+                <FaUserCircle size={100} className="text-purple-300" />
+              </div>
+
+              <h2 className="text-2xl font-bold text-center">{name}</h2>
+              <p className="text-center text-purple-300 mb-6">{role}</p>
+
+              <div className="space-y-4">
+
+                <div className="flex items-center gap-3 bg-white/10 p-3 rounded-xl">
+                  <FaIdCard className="text-purple-300" />
+                  <span>{registrationId}</span>
+                </div>
+
+                <div className="flex items-center gap-3 bg-white/10 p-3 rounded-xl">
+                  <FaMapMarkerAlt className="text-purple-300" />
+                  <span>{city}, {area}</span>
+                </div>
+
+                <div className="flex items-center gap-3 bg-white/10 p-3 rounded-xl">
+                  <FaPhone className="text-purple-300" />
+                  <span>{phone}</span>
+                </div>
+
+              </div>
+
+              {/* CHANGE PASSWORD BUTTON */}
               <IonButton
                 expand="block"
-                className="bg-pink-600 hover:bg-pink-700 text-white"
-                onClick={() => setIsEditModalOpen(true)}
+                className="mt-6 bg-linear-to-r from-pink-500 to-purple-600 text-white rounded-xl"
+                onClick={() => setIsPasswordOpen(true)}
               >
-                Edit Profile
-              </IonButton>
-              <IonButton
-                expand="block"
-                className="bg-white border border-pink-600 text-pink-600 hover:bg-pink-50"
-                onClick={() => setIsPasswordModalOpen(true)}
-              >
+                <FaLock className="mr-2" />
                 Change Password
               </IonButton>
+
+              {loading && (
+                <p className="text-center mt-4 text-purple-200">Loading...</p>
+              )}
+
+              {toast && (
+                <p className="text-center mt-4 text-red-400">{toast}</p>
+              )}
             </div>
           </div>
-
-          {/* Edit Profile Modal */}
-          <IonModal isOpen={isEditModalOpen} backdropDismiss={true}>
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4 text-center">Edit Profile</h2>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">Name</IonLabel>
-                  <IonInput
-                    value={admin.name}
-                    onIonChange={(e) => setAdmin({ ...admin, name: e.detail.value! })}
-                  />
-                </IonItem>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">Email</IonLabel>
-                  <IonInput
-                    value={admin.email}
-                    onIonChange={(e) => setAdmin({ ...admin, email: e.detail.value! })}
-                  />
-                </IonItem>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">Phone</IonLabel>
-                  <IonInput
-                    value={admin.phone}
-                    onIonChange={(e) => setAdmin({ ...admin, phone: e.detail.value! })}
-                  />
-                </IonItem>
-                <div className="flex gap-4 mt-4">
-                  <IonButton expand="block" className="bg-pink-600 text-white" onClick={handleSaveProfile}>
-                    Save
-                  </IonButton>
-                  <IonButton expand="block" fill="outline" onClick={() => setIsEditModalOpen(false)}>
-                    Cancel
-                  </IonButton>
-                </div>
-              </div>
-            </div>
-          </IonModal>
-
-          {/* Change Password Modal */}
-          <IonModal isOpen={isPasswordModalOpen} backdropDismiss={true}>
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4 text-center">Change Password</h2>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">Old Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    value={passwords.oldPassword}
-                    onIonChange={(e) => setPasswords({ ...passwords, oldPassword: e.detail.value! })}
-                  />
-                </IonItem>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">New Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    value={passwords.newPassword}
-                    onIonChange={(e) => setPasswords({ ...passwords, newPassword: e.detail.value! })}
-                  />
-                </IonItem>
-                <IonItem className="mb-3">
-                  <IonLabel position="stacked">Confirm Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    value={passwords.confirmPassword}
-                    onIonChange={(e) => setPasswords({ ...passwords, confirmPassword: e.detail.value! })}
-                  />
-                </IonItem>
-                <div className="flex gap-4 mt-4">
-                  <IonButton expand="block" className="bg-pink-600 text-white" onClick={handleChangePassword}>
-                    Change
-                  </IonButton>
-                  <IonButton expand="block" fill="outline" onClick={() => setIsPasswordModalOpen(false)}>
-                    Cancel
-                  </IonButton>
-                </div>
-              </div>
-            </div>
-          </IonModal>
         </IonContent>
       </IonPage>
+
+      {/* PASSWORD MODAL */}
+ <IonModal isOpen={isPasswordOpen} backdropDismiss={true}>
+  <div className="min-h-screen flex items-start justify-center p-6 relative">
+
+    {/* Dark overlay */}
+    <div className="absolute inset-0 bg-black/40"></div>
+
+    {/* Modal Card */}
+    <div className="relative z-10 w-full max-w-md bg-linear-to-br from-slate-700 to-purple-700 rounded-3xl shadow-2xl p-8 text-white translate-y-10">
+      
+      {/* Header */}
+      <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent bg-linear-to-r from-purple-300 to-pink-300">
+        Change Password
+      </h2>
+
+      {/* Old Password */}
+      <IonItem className="mb-4 bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+        <IonLabel position="stacked" className="text-white/90 font-medium">Old Password</IonLabel>
+        <IonInput
+          type="password"
+          value={passwords.oldPassword}
+          className="text-white placeholder-white"
+          onIonChange={(e) => setPasswords({ ...passwords, oldPassword: e.detail.value! })}
+        />
+      </IonItem>
+
+      {/* New Password */}
+      <IonItem className="mb-4 bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+        <IonLabel position="stacked" className="text-white/90 font-medium">New Password</IonLabel>
+        <IonInput
+          type="password"
+          value={passwords.newPassword}
+          className="text-white placeholder-white"
+          onIonChange={(e) => setPasswords({ ...passwords, newPassword: e.detail.value! })}
+        />
+      </IonItem>
+
+      {/* Confirm Password */}
+      <IonItem className="mb-6 bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+        <IonLabel position="stacked" className="text-white/90 font-medium">Confirm Password</IonLabel>
+        <IonInput
+          type="password"
+          value={passwords.confirmPassword}
+          className="text-white placeholder-white"
+          onIonChange={(e) => setPasswords({ ...passwords, confirmPassword: e.detail.value! })}
+        />
+      </IonItem>
+
+    
+<div className="flex justify-center gap-4 mt-6">
+  {/* Update Password Button */}
+  <IonButton
+    fill="solid"
+    className="w-40 "
+    onClick={handleChangePassword}
+  >
+    Update Password
+  </IonButton>
+
+  {/* Cancel Button */}
+  <IonButton
+    fill="outline"
+    className="w-40 text-white border-white/30 hover:border-white/50 rounded-xl py-2"
+    onClick={() => setIsPasswordOpen(false)}
+  >
+    Cancel
+  </IonButton>
+</div>
+
+
+
+    </div>
+  </div>
+</IonModal>
+
+
+
     </>
   );
 };
