@@ -57,7 +57,7 @@ const ProfilePage: React.FC = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://api.gshbe.transev.site/profiles/me",
+          "http://192.168.0.187:9830/profiles/me",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

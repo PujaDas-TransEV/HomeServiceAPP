@@ -78,63 +78,95 @@ const AdminHome: React.FC = () => {
   const redirect = (path: string) => {
     window.location.href = path; // simple redirect, can use react-router if available
   };
+ const handleLogout = () => {
+  // Remove only the access token
+  localStorage.removeItem("access_token");
+
+  // Optional: remove any other related keys if needed
+  // localStorage.removeItem("refresh_token");
+
+  // Redirect to login page
+  redirect("/login");
+};
 
   return (
     <>
       {/* SIDE MENU */}
-    <IonMenu side="end" menuId="adminMenu" contentId="adminContent" className="bg-white">
+   
+
+      <IonMenu side="end" menuId="adminMenu" contentId="adminContent">
+  {/* Header */}
   <IonHeader>
-    <IonToolbar className="bg-pink-600 text-white flex justify-between items-center">
-      <IonTitle>Admin Menu</IonTitle>
-      {/* Close Button */}
-      <IonButtons slot="end">
-        <IonButton onClick={() => (window as any).document.querySelector("ion-menu")?.close()}>
-          <IonIcon icon={closeOutline} className="text-blue-500 text-xl" />
+    <IonToolbar className="bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 text-white px-4">
+      <div className="flex justify-between items-center w-full">
+        <IonTitle className="text-lg font-semibold tracking-wide">
+          Admin Panel
+        </IonTitle>
+        <IonButton
+          fill="clear"
+          onClick={() =>
+            (window as any).document.querySelector("ion-menu")?.close()
+          }
+        >
+          <IonIcon icon={closeOutline} className="text-red-600 text-xl" />
         </IonButton>
-      </IonButtons>
+      </div>
     </IonToolbar>
   </IonHeader>
-  
-  <IonContent className="bg-pink-50">
-    <IonList className="mt-4">
-      <IonMenuToggle autoHide={true}>
-        <IonItem button onClick={() => redirect("/admin-profile")}>
-          <IonIcon icon={personCircleOutline} className="mr-2 text-pink-600" />
-          <IonLabel>Profile</IonLabel>
-        </IonItem>
-      </IonMenuToggle>
 
-      <IonMenuToggle autoHide={true}>
-        <IonItem button onClick={() => redirect("/admin-home")}>
-          <IonIcon icon={homeOutline} className="mr-2 text-pink-600" />
-          <IonLabel>Dashboard</IonLabel>
-        </IonItem>
-      </IonMenuToggle>
+  {/* Menu Content */}
+  <IonContent className="bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="p-4 space-y-3">
 
-      <IonMenuToggle autoHide={true}>
-        <IonItem button onClick={() => redirect("/admin-service")}>
-          <IonIcon icon={settingsOutline} className="mr-2 text-pink-600" />
-          <IonLabel>Services</IonLabel>
-        </IonItem>
-      </IonMenuToggle>
-
-      <IonMenuToggle autoHide={true}>
-        <IonItem
-          button
-          onClick={() => {
-            localStorage.clear();
-            redirect("/login");
-          }}
+      {/* Profile */}
+      <IonMenuToggle autoHide>
+        <div
+          onClick={() => redirect("/admin-profile")}
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
         >
-          <IonIcon icon={logOutOutline} className="mr-2 text-red-500" />
-          <IonLabel className="text-red-500">Logout</IonLabel>
-        </IonItem>
+          <IonIcon icon={personCircleOutline} className="text-purple-400 text-xl" />
+          <span className="font-medium tracking-wide">Profile</span>
+        </div>
       </IonMenuToggle>
-    </IonList>
+
+      {/* Dashboard */}
+      <IonMenuToggle autoHide>
+        <div
+          onClick={() => redirect("/admin-home")}
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-blue-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+        >
+          <IonIcon icon={homeOutline} className="text-blue-400 text-xl" />
+          <span className="font-medium tracking-wide">Dashboard</span>
+        </div>
+      </IonMenuToggle>
+
+      {/* Services */}
+      <IonMenuToggle autoHide>
+        <div
+          onClick={() => redirect("/admin-service")}
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+        >
+          <IonIcon icon={settingsOutline} className="text-pink-400 text-xl" />
+          <span className="font-medium tracking-wide">Services</span>
+        </div>
+      </IonMenuToggle>
+
+      {/* Logout */}
+      <IonMenuToggle autoHide>
+        <div
+          onClick={handleLogout}
+          className="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 hover:bg-red-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+        >
+          <IonIcon icon={logOutOutline} className="text-red-400 text-xl" />
+          <span className="font-medium tracking-wide text-red-400">
+            Logout
+          </span>
+        </div>
+      </IonMenuToggle>
+
+    </div>
   </IonContent>
 </IonMenu>
-
-
       <IonPage>
         {/* NAVBAR */}
         <div id="adminContent" className="sticky top-0 z-50 bg-white shadow flex items-center justify-between px-5 py-3">
