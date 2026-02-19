@@ -36,7 +36,9 @@ import {
   leafOutline,
   schoolOutline,
   constructOutline,
-  flashOutline
+  flashOutline,
+  peopleOutline,
+
 } from "ionicons/icons";
 
 import logoImg from "../../assets/logo.jpg";
@@ -246,15 +248,23 @@ const handleDelete = async (id: number) => {
           <span className="font-medium tracking-wide">Dashboard</span>
         </div>
       </IonMenuToggle>
-
+ <IonMenuToggle autoHide>
+        <div
+          onClick={() => redirect("/manage-users")}
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+        >
+          <IonIcon icon={peopleOutline} className="text-pink-400 text-xl" />
+          <span className="font-medium tracking-wide">Manage Users</span>
+        </div>
+      </IonMenuToggle>
       {/* Services */}
       <IonMenuToggle autoHide>
         <div
           onClick={() => redirect("/admin-service")}
-          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-blue-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
         >
-          <IonIcon icon={settingsOutline} className="text-pink-400 text-xl" />
-          <span className="font-medium tracking-wide">Services</span>
+          <IonIcon icon={settingsOutline} className="text-purple-400 text-xl" />
+          <span className="font-medium tracking-wide"> Manage Services</span>
         </div>
       </IonMenuToggle>
 

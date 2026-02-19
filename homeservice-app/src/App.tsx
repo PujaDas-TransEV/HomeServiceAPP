@@ -103,6 +103,7 @@ import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreferenc
 import LoginPage from './components/Authentication/Login';
 import UpsertProfile from './components/Authentication/Profile';
 import ForgetPassword from './components/Authentication/ForgetPassword';
+import ManageUsers from './components/Admin/Pages/ManageUsers';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -156,6 +157,7 @@ const App: React.FC = () => {
                   <Route exact path="/user-workpreferences" component={UserPreference} />
                   <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} />
                   <Route exact path="/forget-password" component={ForgetPassword} />
+                    <Route exact path="/manage-users" component={ManageUsers} />
 
 
 
