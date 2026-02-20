@@ -171,7 +171,7 @@ const ProfilePage: React.FC = () => {
         >
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-          <div className="relative w-full max-w-md space-y-4 bg-white/90 p-6 rounded-3xl shadow-2xl">
+         <div className="relative w-full max-w-md space-y-4 bg-white/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
             <h1 className="text-3xl font-bold text-pink-600 text-center">
               Complete Your Profile
             </h1>
