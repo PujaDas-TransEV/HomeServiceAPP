@@ -28,7 +28,7 @@ import {
   FaCogs, 
 } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { closeOutline, peopleOutline, settingsOutline } from "ionicons/icons";
+import { chatbubblesOutline, closeOutline, peopleOutline, settingsOutline } from "ionicons/icons";
 const AdminProfile: React.FC = () => {
   const history = useHistory();
 
@@ -216,7 +216,18 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     Manage Services
   </span>
 </div>
-
+<div
+  onClick={() => history.push("/manage-support")}
+  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+>
+  <IonIcon
+    icon={chatbubblesOutline}
+    className="text-pink-400 text-xl group-hover:scale-110 transition-all duration-300"
+  />
+  <span className="font-medium tracking-wide group-hover:text-white-300">
+    Manage Support
+  </span>
+</div>
 
     {/* Logout */}
     <div

@@ -21,6 +21,7 @@ import {
   logOutOutline,
   closeOutline,
   peopleOutline,
+  chatbubblesOutline,
 } from "ionicons/icons";
 
 
@@ -261,7 +262,15 @@ if (helperCountRes.ok && helperCountJson.summary) {
                 <span className="font-medium tracking-wide"> Manage Services</span>
               </div>
             </IonMenuToggle>
-
+<IonMenuToggle autoHide>
+  <div
+    onClick={() => redirect("/manage-support")}
+    className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+  >
+    <IonIcon icon={chatbubblesOutline} className="text-purple-400 text-xl" />
+    <span className="font-medium tracking-wide">Manage Support</span>
+  </div>
+</IonMenuToggle>
             {/* Logout */}
             <IonMenuToggle autoHide>
               <div
