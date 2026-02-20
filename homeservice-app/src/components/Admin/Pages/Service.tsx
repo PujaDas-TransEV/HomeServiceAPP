@@ -206,7 +206,7 @@ const handleDelete = async (id: number) => {
       <IonMenu side="end" menuId="adminMenu" contentId="adminContent">
   {/* Header */}
   <IonHeader>
-    <IonToolbar className="bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 text-white px-4">
+    <IonToolbar className="bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 text-purple-300 px-4">
       <div className="flex justify-between items-center w-full">
         <IonTitle className="text-lg font-semibold tracking-wide">
           Admin Panel

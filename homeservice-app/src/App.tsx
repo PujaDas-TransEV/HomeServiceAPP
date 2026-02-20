@@ -96,8 +96,7 @@ import MaidPreferences from './components/Helpers/Pages/ServicePreferences';
 import AdminHome from './components/Admin/Home';
 import AdminProfile from './components/Admin/Pages/Profile';
 import AdminServicePage from './components/Admin/Pages/Service';
-import Maiddetails from './components/Admin/Pages/Maiddetails';
-import Userdetails from './components/Admin/Pages/Userdetails'
+
 import UserPreference from './components/users/pages/Userpreference';
 import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Authentication/Login';
@@ -152,8 +151,7 @@ const App: React.FC = () => {
                   <Route exact path="/admin-home" component={AdminHome} />
                   <Route exact path="/admin-profile" component={AdminProfile} />
                   <Route exact path="/admin-service" component={AdminServicePage} />
-                  <Route exact path="/admin-maiddetsils" component={Maiddetails} />
-                  <Route exact path="/admin-userdetails" component={Userdetails} />
+                
                   <Route exact path="/user-workpreferences" component={UserPreference} />
                   <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} />
                   <Route exact path="/forget-password" component={ForgetPassword} />
