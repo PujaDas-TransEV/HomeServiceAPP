@@ -12,6 +12,7 @@ import {
   IonMenuToggle,
   IonModal,
   IonSpinner,
+  useIonToast,
 } from "@ionic/react";
 
 import {
@@ -49,9 +50,9 @@ const AdminUsers: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
+ const [present] = useIonToast();
   const token = localStorage.getItem("access_token");
-
+const [blockedUsers, setBlockedUsers] = useState<string[]>([]);
   // ================= FETCH USERS =================
   const fetchUsers = async () => {
     setLoading(true);
@@ -77,6 +78,31 @@ const AdminUsers: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+// ================= FETCH BLOCKED USERS =================
+  const fetchBlockedUsers = async () => {
+    try {
+      const res = await fetch(
+        "http://192.168.0.187:9830/admin/blocked-users",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error();
+      const data: { account_id: string }[] = await res.json();
+      setBlockedUsers(data.map((u) => u.account_id));
+    } catch {
+      present({
+        message: "Failed to fetch blocked users",
+        duration: 2000,
+        color: "danger",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchBlockedUsers();
+  }, []);
 
   // ================= DELETE USER =================
   const deleteUser = async (accountId: string) => {
@@ -100,7 +126,41 @@ const AdminUsers: React.FC = () => {
       console.error("Delete failed:", err);
     }
   };
+  // ================= BLOCK USER =================
+  const handleBlock = async (accountId: string) => {
+    try {
+      const res = await fetch(
+        `http://192.168.0.187:9830/admin/users/${accountId}/block`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error();
+      setBlockedUsers((prev) => [...prev, accountId]);
+      present({ message: "User Blocked", duration: 2000, color: "danger" });
+    } catch {
+      present({ message: "Block Failed", duration: 2000, color: "danger" });
+    }
+  };
 
+  // ================= UNBLOCK USER =================
+  const handleUnblock = async (accountId: string) => {
+    try {
+      const res = await fetch(
+        `http://192.168.0.187:9830/admin/users/${accountId}/unblock`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error();
+      setBlockedUsers((prev) => prev.filter((id) => id !== accountId));
+      present({ message: "User Unblocked", duration: 2000, color: "success" });
+    } catch {
+      present({ message: "Unblock Failed", duration: 2000, color: "danger" });
+    }
+  };
   // const filteredUsers = users
   //   .filter((u) => filter === "all" || u.role === filter)
   //   .filter((u) =>
@@ -288,132 +348,86 @@ return (
               <IonSpinner name="crescent" />
             </div>
           )}
+           {/* USER CARDS */}
+           <div className="grid md:grid-cols-2 gap-6">
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
+                <div
+                  key={user.account_id}
+                  className="bg-linear-to-r from-white to-indigo-50 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-indigo-100"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-bold text-indigo-700">{user.name}</h3>
+                      <p className="text-sm text-gray-600">{user.phone}</p>
 
-          {/* USER CARDS
-          <div className="grid md:grid-cols-2 gap-6">
-            {filteredUsers.map((user) => (
-              <div
-                key={user.account_id}
-                className="bg-linear-to-r from-white to-indigo-50 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-indigo-100"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-bold text-indigo-700">
-                      {user.name}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {user.phone}
-                    </p>
+                      <div className="mt-3 flex gap-2">
+                        <span className="text-xs px-3 py-1 rounded-full bg-indigo-100 text-indigo-600">
+                          {user.role}
+                        </span>
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full ${
+                            user.is_active ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                          }`}
+                        >
+                          {user.is_active ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </div>
 
-                    <div className="mt-3 flex gap-2">
-                      <span className="text-xs px-3 py-1 rounded-full bg-indigo-100 text-indigo-600">
-                        {user.role}
-                      </span>
-
-                      <span
-                        className={`text-xs px-3 py-1 rounded-full ${
-                          user.is_active
-                            ? "bg-green-100 text-green-600"
-                            : "bg-red-100 text-red-600"
-                        }`}
+                    {/* ACTION BUTTONS */}
+                    <div className="flex gap-2">
+                      <IonButton
+                        size="small"
+                        fill="clear"
+                        className="text-indigo-600"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setShowModal(true);
+                        }}
                       >
-                        {user.is_active ? "Active" : "Inactive"}
-                      </span>
+                        <IonIcon icon={eyeOutline} />
+                      </IonButton>
+
+                      <IonButton
+                        size="small"
+                        fill="clear"
+                        className="text-red-600"
+                        onClick={() => deleteUser(user.account_id)}
+                      >
+                        <IonIcon icon={trashOutline} />
+                      </IonButton>
+
+                      {/* BLOCK / UNBLOCK */}
+                      {blockedUsers.includes(user.account_id) ? (
+                        <IonButton
+                          size="small"
+                          fill="outline"
+                          color="success"
+                          onClick={() => handleUnblock(user.account_id)}
+                        >
+                          Unblock
+                        </IonButton>
+                      ) : (
+                        <IonButton
+                          size="small"
+                          fill="outline"
+                          color="danger"
+                          onClick={() => handleBlock(user.account_id)}
+                        >
+                          Block
+                        </IonButton>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex gap-2">
-                   
-                    <IonButton
-                      size="small"
-                      fill="clear"
-                      className="text-indigo-600"
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setShowModal(true);
-                      }}
-                    >
-                      <IonIcon icon={eyeOutline} />
-                    </IonButton>
-
-                   
-                    <IonButton
-                      size="small"
-                      fill="clear"
-                      className="text-red-600"
-                      onClick={() => deleteUser(user.account_id)}
-                    >
-                      <IonIcon icon={trashOutline} />
-                    </IonButton>
-                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500 text-lg font-medium py-10">
+                No users found.
               </div>
-              
-            ))}
-          </div> */}
-{/* USER CARDS */}
-<div className="grid md:grid-cols-2 gap-6">
-  {filteredUsers.length > 0 ? (
-    filteredUsers.map((user) => (
-      <div
-        key={user.account_id}
-        className="bg-linear-to-r from-white to-indigo-50 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-indigo-100"
-      >
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-lg font-bold text-indigo-700">{user.name}</h3>
-            <p className="text-sm text-gray-600">{user.phone}</p>
-
-            <div className="mt-3 flex gap-2">
-              <span className="text-xs px-3 py-1 rounded-full bg-indigo-100 text-indigo-600">
-                {user.role}
-              </span>
-
-              <span
-                className={`text-xs px-3 py-1 rounded-full ${
-                  user.is_active
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600"
-                }`}
-              >
-                {user.is_active ? "Active" : "Inactive"}
-              </span>
-            </div>
+            )}
           </div>
-
-          <div className="flex gap-2">
-            {/* VIEW */}
-            <IonButton
-              size="small"
-              fill="clear"
-              className="text-indigo-600"
-              onClick={() => {
-                setSelectedUser(user);
-                setShowModal(true);
-              }}
-            >
-              <IonIcon icon={eyeOutline} />
-            </IonButton>
-
-            {/* DELETE */}
-            <IonButton
-              size="small"
-              fill="clear"
-              className="text-red-600"
-              onClick={() => deleteUser(user.account_id)}
-            >
-              <IonIcon icon={trashOutline} />
-            </IonButton>
-          </div>
-        </div>
-      </div>
-    ))
-  ) : (
-    <div className="col-span-full text-center text-gray-500 text-lg font-medium py-10">
-      No users found.
-    </div>
-  )}
-</div>
           {/* MODAL */}
           <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
             <div className="p-8 bg-linear-to-br from-indigo-600 to-purple-600 min-h-full text-white">
@@ -448,3 +462,5 @@ return (
 };
 
 export default AdminUsers;
+
+
