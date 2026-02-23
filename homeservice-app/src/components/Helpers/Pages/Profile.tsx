@@ -135,7 +135,7 @@ const HelperProfilePage: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    history.push("/landing");
+    history.push("/login");
   };
 
  
