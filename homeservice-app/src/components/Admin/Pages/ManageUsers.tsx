@@ -289,7 +289,7 @@ return (
             </div>
           )}
 
-          {/* USER CARDS */}
+          {/* USER CARDS
           <div className="grid md:grid-cols-2 gap-6">
             {filteredUsers.map((user) => (
               <div
@@ -323,7 +323,7 @@ return (
                   </div>
 
                   <div className="flex gap-2">
-                    {/* VIEW */}
+                   
                     <IonButton
                       size="small"
                       fill="clear"
@@ -336,7 +336,7 @@ return (
                       <IonIcon icon={eyeOutline} />
                     </IonButton>
 
-                    {/* DELETE */}
+                   
                     <IonButton
                       size="small"
                       fill="clear"
@@ -348,9 +348,72 @@ return (
                   </div>
                 </div>
               </div>
+              
             ))}
+          </div> */}
+{/* USER CARDS */}
+<div className="grid md:grid-cols-2 gap-6">
+  {filteredUsers.length > 0 ? (
+    filteredUsers.map((user) => (
+      <div
+        key={user.account_id}
+        className="bg-linear-to-r from-white to-indigo-50 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-indigo-100"
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-bold text-indigo-700">{user.name}</h3>
+            <p className="text-sm text-gray-600">{user.phone}</p>
+
+            <div className="mt-3 flex gap-2">
+              <span className="text-xs px-3 py-1 rounded-full bg-indigo-100 text-indigo-600">
+                {user.role}
+              </span>
+
+              <span
+                className={`text-xs px-3 py-1 rounded-full ${
+                  user.is_active
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600"
+                }`}
+              >
+                {user.is_active ? "Active" : "Inactive"}
+              </span>
+            </div>
           </div>
 
+          <div className="flex gap-2">
+            {/* VIEW */}
+            <IonButton
+              size="small"
+              fill="clear"
+              className="text-indigo-600"
+              onClick={() => {
+                setSelectedUser(user);
+                setShowModal(true);
+              }}
+            >
+              <IonIcon icon={eyeOutline} />
+            </IonButton>
+
+            {/* DELETE */}
+            <IonButton
+              size="small"
+              fill="clear"
+              className="text-red-600"
+              onClick={() => deleteUser(user.account_id)}
+            >
+              <IonIcon icon={trashOutline} />
+            </IonButton>
+          </div>
+        </div>
+      </div>
+    ))
+  ) : (
+    <div className="col-span-full text-center text-gray-500 text-lg font-medium py-10">
+      No users found.
+    </div>
+  )}
+</div>
           {/* MODAL */}
           <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
             <div className="p-8 bg-linear-to-br from-indigo-600 to-purple-600 min-h-full text-white">
