@@ -29,7 +29,7 @@ const ManageReports: React.FC = () => {
         </IonButtons>
       </div>
 
-      <IonContent className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
+      <IonContent className="bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
         {/* Banner */}
         <div className="relative rounded-2xl overflow-hidden shadow-xl mb-8">
           <img src={bannerImg} className="w-full h-64 object-cover" />
@@ -45,7 +45,7 @@ const ManageReports: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* User Growth Report */}
           <div
-            className="bg-gradient-to-tr from-indigo-400 to-purple-400 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
+            className="bg-linear-to-tr from-indigo-400 to-purple-400 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
             onClick={() => redirect("/reports/user-growth")}
           >
             <div className="flex items-center gap-3">
@@ -59,7 +59,7 @@ const ManageReports: React.FC = () => {
 
           {/* Booking Report */}
           <div
-            className="bg-gradient-to-tr from-pink-400 to-pink-600 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
+            className="bg-linear-to-tr from-pink-400 to-pink-600 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
             onClick={() => redirect("/reports/booking")}
           >
             <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ const ManageReports: React.FC = () => {
 
           {/* Revenue Report */}
           <div
-            className="bg-gradient-to-tr from-green-400 to-green-600 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
+            className="bg-linear-to-tr from-green-400 to-green-600 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 cursor-pointer"
             onClick={() => redirect("/reports/revenue")}
           >
             <div className="flex items-center gap-3">
