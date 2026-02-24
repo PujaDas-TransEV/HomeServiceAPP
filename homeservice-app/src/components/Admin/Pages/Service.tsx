@@ -36,7 +36,10 @@ import {
   leafOutline,
   schoolOutline,
   constructOutline,
-  flashOutline
+  flashOutline,
+  peopleOutline,
+  chatbubblesOutline,
+
 } from "ionicons/icons";
 
 import logoImg from "../../assets/logo.jpg";
@@ -204,7 +207,7 @@ const handleDelete = async (id: number) => {
       <IonMenu side="end" menuId="adminMenu" contentId="adminContent">
   {/* Header */}
   <IonHeader>
-    <IonToolbar className="bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 text-white px-4">
+    <IonToolbar className="bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 text-purple-300 px-4">
       <div className="flex justify-between items-center w-full">
         <IonTitle className="text-lg font-semibold tracking-wide">
           Admin Panel
@@ -246,18 +249,34 @@ const handleDelete = async (id: number) => {
           <span className="font-medium tracking-wide">Dashboard</span>
         </div>
       </IonMenuToggle>
-
+ <IonMenuToggle autoHide>
+        <div
+          onClick={() => redirect("/manage-users")}
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+        >
+          <IonIcon icon={peopleOutline} className="text-pink-400 text-xl" />
+          <span className="font-medium tracking-wide">Manage Users</span>
+        </div>
+      </IonMenuToggle>
       {/* Services */}
       <IonMenuToggle autoHide>
         <div
           onClick={() => redirect("/admin-service")}
-          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+          className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-blue-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
         >
-          <IonIcon icon={settingsOutline} className="text-pink-400 text-xl" />
-          <span className="font-medium tracking-wide">Services</span>
+          <IonIcon icon={settingsOutline} className="text-purple-400 text-xl" />
+          <span className="font-medium tracking-wide"> Manage Services</span>
         </div>
       </IonMenuToggle>
-
+<IonMenuToggle autoHide>
+  <div
+    onClick={() => redirect("/manage-support")}
+    className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+  >
+    <IonIcon icon={chatbubblesOutline} className="text-purple-400 text-xl" />
+    <span className="font-medium tracking-wide">Manage Support</span>
+  </div>
+</IonMenuToggle>
       {/* Logout */}
       <IonMenuToggle autoHide>
         <div

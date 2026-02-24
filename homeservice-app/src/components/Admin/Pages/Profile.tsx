@@ -13,6 +13,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonIcon,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
@@ -27,6 +28,7 @@ import {
   FaCogs, 
 } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { chatbubblesOutline, closeOutline, peopleOutline, settingsOutline } from "ionicons/icons";
 const AdminProfile: React.FC = () => {
   const history = useHistory();
 
@@ -145,23 +147,30 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <>
       {/* SIDE MENU */}
-      <IonMenu contentId="main-content" side="start">
+      <IonMenu contentId="main-content" side="end">
     <IonContent className="bg-linear-to-b from-slate-900 via-purple-900 to-slate-900 text-white p-6 ">
 
   {/* Sidebar Header */}
-  <div className="mb-10 text-center">
-    <h2 className="text-xl font-bold tracking-wide text-purple-300">
-      Admin Panel
-    </h2>
-    <div className="w-16 h-1 bg-purple-500 mx-auto mt-2 rounded-full"></div>
-  </div>
 
-  <div className="space-y-4">
+<div className="mb-10 flex justify-between items-center">
+  <h2 className="text-xl font-bold tracking-wide text-purple-300 ml-5">
+    Admin Panel
+  </h2>
+
+  {/* Close Button on the right */}
+  <IonButton
+    fill="clear"
+    onClick={() => (window as any).document.querySelector("ion-menu")?.close()}
+  >
+    <IonIcon icon={closeOutline} className="text-pink-500 text-xl" />
+  </IonButton>
+</div>
+<div className="space-y-4">
 
     {/* Profile */}
     <div
       onClick={() => history.push("/admin-profile")}
-      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+        className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
     >
       <FaUserCircle className="text-purple-400 text-lg group-hover:scale-110 transition-all duration-300" />
       <span className="font-medium tracking-wide group-hover:text-white-300">
@@ -172,29 +181,58 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     {/* Dashboard */}
     <div
       onClick={() => history.push("/admin-home")}
-      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-indigo-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+        className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
     >
       <FaTachometerAlt className="text-indigo-400 text-lg group-hover:scale-110 transition-all duration-300" />
       <span className="font-medium tracking-wide group-hover:text-indigo-300">
         Dashboard
       </span>
     </div>
+  {/* Manage Users */}
+          {/* Manage Users */}
+<div
+  onClick={() => history.push("/manage-users")}
+  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+>
+  <IonIcon
+    icon={peopleOutline}
+    className="text-purple-400 text-xl group-hover:scale-110 transition-all duration-300"
+  />
+  <span className="font-medium tracking-wide group-hover:text-white-300">
+    Manage Users
+  </span>
+</div>
 
     {/* Manage Services */}
-    <div
-      onClick={() => history.push("/admin-service")}
-      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
-    >
-      <FaCogs className="text-pink-400 text-lg group-hover:scale-110 transition-all duration-300" />
-      <span className="font-medium tracking-wide group-hover:text-white-300">
-        Manage Services
-      </span>
-    </div>
+   <div
+  onClick={() => history.push("/admin-service")}
+  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+>
+  <IonIcon
+    icon={settingsOutline}
+    className="text-pink-400 text-xl group-hover:scale-110 transition-all duration-300"
+  />
+  <span className="font-medium tracking-wide group-hover:text-white-300">
+    Manage Services
+  </span>
+</div>
+<div
+  onClick={() => history.push("/manage-support")}
+  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-pink-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-white/10"
+>
+  <IonIcon
+    icon={chatbubblesOutline}
+    className="text-pink-400 text-xl group-hover:scale-110 transition-all duration-300"
+  />
+  <span className="font-medium tracking-wide group-hover:text-white-300">
+    Manage Support
+  </span>
+</div>
 
     {/* Logout */}
     <div
       onClick={handleLogout}
-      className="group flex items-center gap-4 p-4 rounded-xl bg-red-500/10 hover:bg-red-600/30 transition-all duration-300 cursor-pointer backdrop-blur-md border border-red-400/20 mt-8"
+         className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer backdrop-blur-sm"
     >
       <FaSignOutAlt className="text-red-400 text-lg group-hover:scale-110 transition-all duration-300" />
       <span className="font-medium tracking-wide text-red-400 group-hover:text-red-300">
@@ -205,6 +243,9 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   </div>
 
 </IonContent>
+
+
+
 
 
       </IonMenu>
