@@ -1041,7 +1041,7 @@ useEffect(() => {
             </IonItem>
  <IonItem button className="hover:bg-indigo-100 rounded-lg" routerLink="/maid-list">
               <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
-              <IonLabel>Maid List</IonLabel>
+              <IonLabel>Helper List</IonLabel>
             </IonItem>
             <IonItem button className="rounded-xl bg-indigo-100">
               <FaCog className="text-indigo-600 mr-3" />

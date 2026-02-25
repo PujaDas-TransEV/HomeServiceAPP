@@ -26,14 +26,15 @@ import AdminHome from './components/Admin/Home';
 import AdminProfile from './components/Admin/Pages/Profile';
 import AdminServicePage from './components/Admin/Pages/Service';
 
-import UserPreference from './components/users/pages/Userpreference';
+
 import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Authentication/Login';
 import UpsertProfile from './components/Authentication/Profile';
 import ForgetPassword from './components/Authentication/ForgetPassword';
 import ManageUsers from './components/Admin/Pages/ManageUsers';
 import ManageSupport from './components/Admin/Pages/Manage Support';
-
+import ServiceWiseHelper from './components/users/pages/ServiceHelperBooking';
+import HelperDetails from './components/users/pages/HelperDetails';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -83,12 +84,13 @@ const App: React.FC = () => {
                   <Route exact path="/admin-profile" component={AdminProfile} />
                   <Route exact path="/admin-service" component={AdminServicePage} />
                 
-                  <Route exact path="/user-workpreferences" component={UserPreference} />
+                
                   <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} />
                   <Route exact path="/forget-password" component={ForgetPassword} />
                   <Route exact path="/manage-support" component={ManageSupport} />
-             
-                  <Route exact path="/manage-users" component={ManageUsers} />
+               <Route exact path="/manage-users" component={ManageUsers} />
+                <Route exact path="/service/:id" component={ServiceWiseHelper} />
+                  <Route exact path="/helper/:id" component={HelperDetails} />
 
 
 
