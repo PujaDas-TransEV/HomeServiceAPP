@@ -138,13 +138,6 @@ useEffect(() => {
       if (serviceRes.ok) {
         setServiceInventory(serviceJson);
       }
-
-      /* ===============================
-         4️⃣ Active & Inactive Helpers Count
-      =============================== */
-      /* ===============================
-   4️⃣ Active & Inactive Helpers Count
-=============================== */
 const helperCountRes = await fetch(
   "http://192.168.0.187:9830/admin/helpers/counts",
   {
