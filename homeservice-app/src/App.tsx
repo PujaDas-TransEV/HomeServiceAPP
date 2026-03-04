@@ -27,7 +27,7 @@ import AdminProfile from './components/Admin/Pages/Profile';
 import AdminServicePage from './components/Admin/Pages/Service';
 
 
-import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
+// import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Authentication/Login';
 import UpsertProfile from './components/Authentication/Profile';
 import ForgetPassword from './components/Authentication/ForgetPassword';
@@ -85,7 +85,7 @@ const App: React.FC = () => {
                   <Route exact path="/admin-service" component={AdminServicePage} />
                 
                 
-                  <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} />
+                  {/* <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} /> */}
                   <Route exact path="/forget-password" component={ForgetPassword} />
                   <Route exact path="/manage-support" component={ManageSupport} />
                <Route exact path="/manage-users" component={ManageUsers} />
