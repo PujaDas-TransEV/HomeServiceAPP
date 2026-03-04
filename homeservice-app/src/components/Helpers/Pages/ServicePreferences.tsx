@@ -284,17 +284,17 @@ const savePreferences = async () => {
 
         <IonContent className="bg-gray-50">
           <div className="flex flex-col p-3 space-y-2">
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/home">
+            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/helper-home">
               <FaHome className="text-indigo-600 mr-3" />
               <IonLabel>Home</IonLabel>
             </IonItem>
 
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/profile">
+            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/maid-profile">
               <FaUser className="text-purple-600 mr-3" />
               <IonLabel>Profile</IonLabel>
             </IonItem>
 
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/chat">
+            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/maid-chat">
               <FaComment className="text-pink-500 mr-3" />
               <IonLabel>Chat</IonLabel>
             </IonItem>
