@@ -35,6 +35,7 @@ import ManageUsers from './components/Admin/Pages/ManageUsers';
 import ManageSupport from './components/Admin/Pages/Manage Support';
 import ServiceWiseHelper from './components/users/pages/ServiceHelperBooking';
 import HelperDetails from './components/users/pages/HelperDetails';
+import SeekerDetails from './components/Helpers/SeekerDetails';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -91,6 +92,7 @@ const App: React.FC = () => {
                <Route exact path="/manage-users" component={ManageUsers} />
                 <Route exact path="/service/:id" component={ServiceWiseHelper} />
                   <Route exact path="/helper/:id" component={HelperDetails} />
+                  <Route exact path="/seeker/:id" component={SeekerDetails} />
 
 
 
