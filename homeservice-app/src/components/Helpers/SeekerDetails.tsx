@@ -79,13 +79,17 @@ export default function SeekerDetails() {
       </IonPage>
     );
 
-  const profile = data.profile;
-  const account = data.account_info;
-  const location = data.location;
-  const work = data.work_details;
-  const requirements = data.requirements;
-  const services = data.services_required;
-  const notes = data.additional_notes;
+  
+ const account = data.account_info;
+const profile = {
+  ...data.profile,
+  image: account?.profile_picture || "https://i.pravatar.cc/150", // Use Base64 from API or fallback
+};
+const location = data.location;
+const work = data.work_details;
+const requirements = data.requirements;
+const services = data.services_required;
+const notes = data.additional_notes;
 
   return (
     <IonPage>
@@ -113,11 +117,12 @@ export default function SeekerDetails() {
         {/* Profile Card */}
         <IonCard className="rounded-2xl shadow-lg mb-5">
           <div className="flex flex-col items-center p-6">
-            <img
-              src="https://i.pravatar.cc/150"
-              alt={profile?.name}
-              className="w-28 h-28 rounded-full border-4 border-indigo-400 shadow-md mb-4"
-            />
+            
+         <img
+  src={profile.image}
+  alt={profile?.name}
+  className="w-28 h-28 rounded-full border-4 border-indigo-400 shadow-md mb-4 object-cover"
+/>
             <h2 className="text-xl font-bold text-gray-800">
               {profile?.name}
             </h2>
@@ -131,23 +136,26 @@ export default function SeekerDetails() {
         </IonCard>
 
         {/* Services Required */}
+      
         <IonCard className="rounded-xl shadow-md mb-4">
-          <IonCardHeader>
-            <IonCardTitle className="text-lg text-indigo-700">
-              Services Required
-            </IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent className="flex flex-wrap gap-2">
-            {services?.map((service: any) => (
-              <span
-                key={service.id}
-                className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold"
-              >
-                {service.name}
-              </span>
-            ))}
-          </IonCardContent>
-        </IonCard>
+  <IonCardHeader>
+    <IonCardTitle className="text-lg text-indigo-700">
+      Services Required
+    </IonCardTitle>
+  </IonCardHeader>
+  <IonCardContent>
+    <div className="flex flex-wrap items-center gap-2">
+      {services?.map((service: any) => (
+        <span
+          key={service.id}
+          className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold"
+        >
+          {service.name}
+        </span>
+      ))}
+    </div>
+  </IonCardContent>
+</IonCard>
 
         {/* Work Details */}
         <IonCard className="rounded-xl shadow-md mb-4">
