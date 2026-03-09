@@ -295,7 +295,8 @@ export default function SeekerHome() {
 
   const banners = [banner1, banner2, banner3];
   const [currentBanner, setCurrentBanner] = useState(0);
-
+const [recommendedHelpers, setRecommendedHelpers] = useState<any[]>([]);
+const [loadingHelpers, setLoadingHelpers] = useState(false);
   /* Banner Auto Slide */
   useEffect(() => {
     const interval = setInterval(() => {
@@ -304,13 +305,18 @@ export default function SeekerHome() {
     return () => clearInterval(interval);
   }, []);
 
-  /* Initial Load */
-  useEffect(() => {
-    fetchProfile();
-    fetchServices();
-    fetchRecommended();
-  }, []);
+ 
+useEffect(() => {
+  // Profile fetch
+  const fetchAll = async () => {
+    await fetchProfile();           // User profile
+    await fetchServices();          // Available services
+  
+    await fetchRecommendedHelpers(); // If seeker, fetch recommended helpers
+  };
 
+  fetchAll();
+}, []);
   /* FETCH PROFILE */
   const fetchProfile = async () => {
     try {
@@ -351,25 +357,27 @@ export default function SeekerHome() {
     }
   };
 
-  /* FETCH RECOMMENDED */
-  const fetchRecommended = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/helpers/recommended`);
-      const data = await res.json();
+  
+const fetchRecommendedHelpers = async () => {
+  try {
+    setLoadingHelpers(true); 
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
 
-      if (Array.isArray(data)) {
-        setRecommended(data);
-      } else if (Array.isArray(data?.helpers)) {
-        setRecommended(data.helpers);
-      } else {
-        setRecommended([]);
-      }
-    } catch (error) {
-      console.log("Recommended error:", error);
-      setRecommended([]);
-    }
-  };
+    const res = await fetch(`${API_BASE}/seeker/find-my-helpers`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
+    const data = await res.json();
+   
+    setRecommendedHelpers(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.log("Error fetching helpers:", error);
+    setRecommendedHelpers([]);
+  } finally {
+    setLoadingHelpers(false);
+  }
+};
   /* Service Colors */
   const serviceColors = [
     "from-pink-500 to-rose-500",
@@ -569,41 +577,81 @@ return (
         )}
       </div>
 
-      {/* Recommended Helpers */}
-      <div className="px-4 mt-10 pb-10">
-        <h2 className="text-lg font-bold mb-4 text-gray-700">Recommended Helpers</h2>
+   
+<div className="px-4 mt-6">
+  <h2 className="text-lg font-bold mb-4 text-blue-800">
+    Recommended Helpers 
+  </h2>
 
-        {recommended.length === 0 && (
-          <p className="text-gray-400 text-center">No recommended helpers found</p>
-        )}
+  {loadingHelpers ? (
+    <IonSpinner />
+  ) : recommendedHelpers.length === 0 ? (
+    <p className="text-gray-400 text-center">
+      No recommended helpers found 
+    </p>
+  ) : (
+    recommendedHelpers.map((h) => {
+      const helper = h.helper_info;
+      const loc = h.location;
+      return (
+        <div
+          key={helper.registration_id + h.match_details.matched_on_service}
+          className="bg-linear-to-r from-white to-gray-100 rounded-2xl shadow-md p-4 flex items-center gap-4 mb-4 hover:shadow-xl transition cursor-pointer"
+          onClick={() => history.push(`/helper/${helper.registration_id}`)}
+        >
+          {/* Helper Image */}
+          <img
+            src={helper.image || "https://i.pravatar.cc/100"}
+            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
+            alt={helper.name}
+          />
 
-        {recommended.map((helper) => (
-          <div
-            key={helper?.id}
-            className="bg-white rounded-2xl shadow-md p-4 flex items-center gap-4 mb-4 hover:shadow-xl transition"
-          >
-            <img
-              src={helper?.image || "https://i.pravatar.cc/100"}
-              className="w-16 h-16 rounded-full object-cover border-2 border-pink-300"
-              alt="helper"
-            />
-            <div className="flex-1">
-              <p className="font-semibold text-gray-800">{helper?.name}</p>
-              <p className="text-sm text-gray-500">
-                {helper?.city || "Dhaka"} • {helper?.experience || 0} yrs exp
+          {/* Helper Info */}
+          <div className="flex-1">
+            <p className="font-semibold text-gray-800">{helper.name}</p>
+            <p className="text-sm text-gray-600">{loc.city}, {loc.area}</p>
+
+            <div>
+              <p className="text-blue-600 text-sm font-medium mb-1">
+                Match Score: {h.match_details.score}
               </p>
-              <p className="text-yellow-500 text-sm">⭐⭐⭐⭐⭐</p>
+              <div className="flex flex-wrap gap-2">
+                {h.match_details.matched_services.map((service: string) => (
+                  <span
+                    key={service}
+                    className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs font-semibold"
+                  >
+                    {service}
+                  </span>
+                ))}
+              </div>
             </div>
-            <button
-              onClick={() => history.push(`/helper/${helper?.id}`)}
-              className="bg-pink-500 text-white px-4 py-1 rounded-full text-xs font-semibold"
-            >
-              View
-            </button>
           </div>
-        ))}
-      </div>
 
+          {/* View Button */}
+        <IonButton
+  fill="solid"
+  color="primary"
+  size="small"
+  onClick={(e) => {
+    e.stopPropagation(); // prevent parent click events
+    const helperId = helper.registration_id; // make sure this exists
+    if (helperId) {
+      history.push(`/helper/${helperId}`); // matches route /helper/:helperId
+    } else {
+      console.warn("Helper ID is missing!");
+    }
+  }}
+  className="flex items-center gap-1"
+>
+  <IonIcon slot="start" icon={searchOutline} />
+  View
+</IonButton>
+        </div>
+      );
+    })
+  )}
+</div>
     </IonContent>
   </IonPage>
 )

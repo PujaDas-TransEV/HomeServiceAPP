@@ -91,7 +91,7 @@ const App: React.FC = () => {
                   <Route exact path="/manage-support" component={ManageSupport} />
                <Route exact path="/manage-users" component={ManageUsers} />
                 <Route exact path="/service/:id" component={ServiceWiseHelper} />
-                  <Route exact path="/helper/:id" component={HelperDetails} />
+                 <Route path="/helper/:helperId" component={HelperDetails} />
                   <Route exact path="/seeker/:id" component={SeekerDetails} />
 
 
