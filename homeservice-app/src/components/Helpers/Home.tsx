@@ -146,9 +146,9 @@ export default function HelperHome() {
         <IonHeader>
           <IonToolbar className="bg-linear-to-r from-red-500 to-pink-600 px-4">
             <div className="flex items-center justify-between w-full">
-              <IonTitle className="text-white font-bold text-lg">HelperGo</IonTitle>
+              <IonTitle className="text-indigo-500 font-bold text-lg">HelperGo</IonTitle>
               <IonButton fill="clear" onClick={() => document.querySelector("ion-menu")?.close()}>
-                <IonIcon icon={closeOutline} className="text-white text-xl" />
+                <IonIcon icon={closeOutline} className="text-pink-500 text-xl" />
               </IonButton>
             </div>
           </IonToolbar>

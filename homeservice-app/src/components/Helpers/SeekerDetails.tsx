@@ -172,7 +172,17 @@ export default function SeekerDetails() {
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent className="text-sm text-gray-700 space-y-2">
-            <p><b>Salary Budget:</b> ₹{requirements?.salary_budget}</p>
+            {/* <p><b>Salary Budget:</b> ₹{requirements?.salary_budget}</p> */}
+            <p>
+  <b>Salary Budget:</b>{" "}
+  {requirements?.salary_min && requirements?.salary_max
+    ? `₹${requirements.salary_min.toLocaleString()} - ₹${requirements.salary_max.toLocaleString()}`
+    : requirements?.salary_min
+    ? `From ₹${requirements.salary_min.toLocaleString()}`
+    : requirements?.salary_max
+    ? `Up to ₹${requirements.salary_max.toLocaleString()}`
+    : "Not specified"}
+</p>
             <p><b>Gender Preference:</b> {requirements?.gender_pref}</p>
             <p><b>Age Range:</b> {requirements?.age_range}</p>
             <p><b>Experience Required:</b> {requirements?.experience_required}</p>

@@ -18,11 +18,11 @@ import {
 } from "@ionic/react";
 import { starOutline, locationOutline, personOutline, mapOutline, closeOutline } from "ionicons/icons";
 import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useHistory } from "react-router-dom";
 import DefaultAvatar from "../../assets/profile.png";
 import Logo from "../../assets/logo.jpg";
-
+import { addOutline, cameraOutline } from "ionicons/icons";
 const ProfilePage: React.FC = () => {
   const history = useHistory();
 
@@ -39,49 +39,68 @@ const ProfilePage: React.FC = () => {
   const [role, setRole] = useState("");
   const [capacity, setCapacity] = useState("");
   const [profileKind, setProfileKind] = useState("");
-
+const [profileImage, setProfileImage] = useState<string | null>(null);
+const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
   const [passwords, setPasswords] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
 
   // Fetch profile info
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        history.push("/login");
-        return;
-      }
+useEffect(() => {
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      history.push("/login");
+      return;
+    }
 
-      setLoading(true);
-      try {
-        const response = await fetch("http://192.168.0.187:9830/profiles/me", {
+    setLoading(true);
+
+    try {
+      // Profile data API
+      const response = await fetch("http://192.168.0.187:9830/profiles/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error("Failed to load profile");
+
+      setRegistrationId(data.registration_id || "");
+      setRole(data.role || "");
+      setCapacity(data.capacity || "");
+      setProfileKind(data.profile_kind || "");
+
+      const profile = data.profile;
+
+      setName(profile?.name || "");
+      setCity(profile?.city || "");
+      setArea(profile?.area || "");
+      setAvgRating(profile?.avg_rating || "0");
+      setRatingCount(profile?.rating_count || 0);
+
+      // Profile image API
+      const imageRes = await fetch(
+        "http://192.168.0.187:9830/profiles/picture/base64",
+        {
+          method: "GET",
           headers: { Authorization: `Bearer ${token}` },
-        });
+        }
+      );
 
-        const data = await response.json();
-        if (!response.ok) throw new Error("Failed to load profile");
+      const imageData = await imageRes.json();
 
-        setRegistrationId(data.registration_id || "");
-        setRole(data.role || "");
-        setCapacity(data.capacity || "");
-        setProfileKind(data.profile_kind || "");
-
-        const profile = data.profile;
-        setName(profile?.name || "");
-        setCity(profile?.city || "");
-        setArea(profile?.area || "");
-        setAvgRating(profile?.avg_rating || "0");
-        setRatingCount(profile?.rating_count || 0);
-      } catch (err: any) {
-        setToast(err.message || "Something went wrong");
-      } finally {
-        setLoading(false);
+      if (imageRes.ok && imageData?.image_base64) {
+        setProfileImage(imageData.image_base64);
       }
-    };
 
-    fetchProfile();
-  }, [history]);
+    } catch (err: any) {
+      setToast(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  fetchProfile();
+}, [history]);
   // Info row component
   const InfoRow = ({ icon, label, value }: any) => (
     <div className="flex items-center gap-3 bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-md">
@@ -134,6 +153,54 @@ const ProfilePage: React.FC = () => {
       alert(err.message || "Something went wrong");
     }
   };
+const handleProfileUpload = async (event: any) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    history.push("/login");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    let res = await fetch("http://192.168.0.187:9830/profiles/picture", {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    // If update fails → try create
+    if (!res.ok) {
+      res = await fetch("http://192.168.0.187:9830/profiles/picture", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+    }
+
+    const data = await res.json();
+
+    if (data?.image_base64) {
+      setProfileImage(data.image_base64);
+    }
+
+    setToast("Profile picture updated successfully");
+  } catch (error) {
+    console.error(error);
+    setToast("Image upload failed");
+  }
+};
+ const openFilePicker = () => {
+  fileInputRef.current?.click();
+};
 
   return (
     <IonPage>
@@ -240,9 +307,33 @@ const ProfilePage: React.FC = () => {
           <div className="relative z-10 flex items-center justify-center w-full">
             <div className="bg-linear-to-br from-indigo-700/40 via-purple-700/40 to-indigo-900/40 backdrop-blur-md border border-indigo-400/30 rounded-3xl shadow-2xl p-8 max-w-md w-full text-white">
               <div className="flex flex-col items-center">
-                <div className="w-32 h-32 -mt-16 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                {/* <div className="w-32 h-32 -mt-16 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
                   <img src={DefaultAvatar} alt="Profile" className="w-full h-full object-cover" />
-                </div>
+                </div> */}
+                <div className="relative w-32 h-32 -mt-16 mb-4">
+  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+    <img
+      src={profileImage || DefaultAvatar}
+      alt="Profile"
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+  <div
+    onClick={openFilePicker}
+    className="absolute bottom-0 right-0 bg-pink-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+  >
+    <IonIcon icon={addOutline} className="text-white text-xl" />
+  </div>
+
+  <input
+    type="file"
+    accept="image/*"
+    ref={fileInputRef}
+    onChange={handleProfileUpload}
+    hidden
+  />
+</div>
                 <h2 className="text-2xl font-bold text-indigo-100">{name || "User"}</h2>
 
                 {/* Badges */}
