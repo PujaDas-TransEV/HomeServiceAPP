@@ -334,7 +334,7 @@ useEffect(() => {
       const profile = data?.profile || {};
 
       setName(profile.name || "User");
-      setCity(profile.city || "Dhaka");
+      setCity(profile.city || "Kolkata");
       setArea(profile.area || "");
     } catch (error) {
       console.log("Profile error:", error);
@@ -593,6 +593,10 @@ return (
     recommendedHelpers.map((h) => {
       const helper = h.helper_info;
       const loc = h.location;
+      const helperImage = helper.profile_pic
+    ? helper.profile_pic
+    : "https://i.pravatar.cc/100";
+
       return (
         <div
           key={helper.registration_id + h.match_details.matched_on_service}
@@ -601,10 +605,10 @@ return (
         >
           {/* Helper Image */}
           <img
-            src={helper.image || "https://i.pravatar.cc/100"}
-            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
-            alt={helper.name}
-          />
+        src={helperImage}
+        className="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
+        alt={helper.name}
+      />
 
           {/* Helper Info */}
           <div className="flex-1">

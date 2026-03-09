@@ -80,7 +80,7 @@ export default function HelperHome() {
       const data = await res.json();
       const profile = data?.profile || {};
       setName(profile.name || "User");
-      setCity(profile.city || "Dhaka");
+      setCity(profile.city || "Kolkata");
       setArea(profile.area || "");
     } catch (error) {
       console.log("Profile error:", error);
@@ -283,6 +283,11 @@ export default function HelperHome() {
             recommendedSeekers.map((s) => {
               const seeker = s.seeker_info;
               const loc = s.location;
+              // Use profile_pic if available
+  const seekerImage = seeker.profile_pic
+    ? seeker.profile_pic
+    : "https://i.pravatar.cc/100";
+
               return (
                <div
   key={seeker.registration_id + s.match_details.matched_on_service}
@@ -290,11 +295,11 @@ export default function HelperHome() {
   onClick={() => history.push(`/seeker/${seeker.registration_id}`)}
 >
   {/* Seeker Image */}
-  <img
-    src={seeker.image || "https://i.pravatar.cc/100"}
-    className="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
-    alt={seeker.name}
-  />
+   <img
+        src={seekerImage}
+        className="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
+        alt={seeker.name}
+      />
 
   {/* Seeker Info */}
   <div className="flex-1">
