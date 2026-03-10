@@ -282,43 +282,38 @@ const savePreferences = async () => {
           </IonToolbar>
         </IonHeader>
 
-        <IonContent className="bg-gray-50">
+        <IonContent className="bg-red-50">
           <div className="flex flex-col p-3 space-y-2">
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/helper-home">
-              <FaHome className="text-indigo-600 mr-3" />
-              <IonLabel>Home</IonLabel>
+            <IonItem button routerLink="/helper-home" className="rounded-lg hover:bg-red-100">
+              <FaHome className="text-red-600 w-5 h-5 mr-3" />
+              <IonLabel>Home / হোম</IonLabel>
             </IonItem>
-
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/maid-profile">
-              <FaUser className="text-purple-600 mr-3" />
-              <IonLabel>Profile</IonLabel>
+            <IonItem button routerLink="/maid-profile" className="rounded-lg hover:bg-red-100">
+              <FaUser className="text-orange-600 w-5 h-5 mr-3" />
+              <IonLabel>Profile / প্রোফাইল</IonLabel>
             </IonItem>
-
-            <IonItem button className="rounded-xl hover:bg-indigo-100" routerLink="/maid-chat">
-              <FaComment className="text-pink-500 mr-3" />
-              <IonLabel>Chat</IonLabel>
+            <IonItem button routerLink="/maid-chat" className="rounded-lg hover:bg-red-100">
+              <FaComment className="text-pink-600 w-5 h-5 mr-3" />
+              <IonLabel>Chat / চ্যাট</IonLabel>
             </IonItem>
- <IonItem button className="hover:bg-indigo-100 rounded-lg" routerLink="/maid-list">
-              <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
-              <IonLabel>Helper List</IonLabel>
+            <IonItem button routerLink="/seeker-list" className="rounded-lg hover:bg-red-100">
+              <FaUsers className="text-purple-600 w-5 h-5 mr-3" />
+              <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
             </IonItem>
-            <IonItem button className="rounded-xl bg-indigo-100">
-              <FaCog className="text-indigo-600 mr-3" />
-              <IonLabel className="font-semibold text-indigo-600">
-                Preferences
-              </IonLabel>
+            <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">
+              <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
+              <IonLabel>Preferences / পছন্দসমূহ</IonLabel>
             </IonItem>
-
             <IonItem
               button
-              className="rounded-xl hover:bg-red-100"
+              className="rounded-lg hover:bg-red-200"
               onClick={() => {
                 localStorage.removeItem("access_token");
                 history.push("/login");
               }}
             >
-              <FaSignOutAlt className="text-red-500 mr-3" />
-              <IonLabel className="text-red-500">Logout</IonLabel>
+              <FaSignOutAlt className="text-red-500 w-5 h-5 mr-3" />
+              <IonLabel>Logout / লগ আউট</IonLabel>
             </IonItem>
           </div>
         </IonContent>
@@ -477,7 +472,7 @@ const savePreferences = async () => {
 {/* Salary & Age Section */}
 <div className="bg-linear-to-br from-pink-100/60 to-purple-100/60 rounded-3xl p-8 shadow-xl space-y-10">
 
-  <SectionTitle icon={cashOutline} title="Salary & Age Preference" />
+  <SectionTitle icon={cashOutline} title="Salary Preference" />
 
   <div className="grid md:grid-cols-2 gap-10">
 

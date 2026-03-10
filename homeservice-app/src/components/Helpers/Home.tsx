@@ -160,14 +160,14 @@ export default function HelperHome() {
               <IonLabel>Home / হোম</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-profile" className="rounded-lg hover:bg-red-100">
-              <FaUser className="text-orange-600 w-5 h-5 mr-3" />
+              <FaUser className="text-orange-400 w-5 h-5 mr-3" />
               <IonLabel>Profile / প্রোফাইল</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-chat" className="rounded-lg hover:bg-red-100">
               <FaComment className="text-pink-600 w-5 h-5 mr-3" />
               <IonLabel>Chat / চ্যাট</IonLabel>
             </IonItem>
-            <IonItem button routerLink="/services" className="rounded-lg hover:bg-red-100">
+            <IonItem button routerLink="/seeker-list" className="rounded-lg hover:bg-red-100">
               <FaUsers className="text-purple-600 w-5 h-5 mr-3" />
               <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
             </IonItem>

@@ -38,6 +38,8 @@ import HelperDetails from './components/users/pages/HelperDetails';
 import SeekerDetails from './components/Helpers/SeekerDetails';
 import HelperDetailsWiseChatPage from './components/users/pages/HelperChat';
 import HelperBookingPage from  './components/users/pages/HelperBook'; // Existing booking page
+import SeekerList from './components/Helpers/Pages/SeekerList';
+import SeekerChat from './components/Helpers/Pages/SeekerChat';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -95,7 +97,8 @@ const App: React.FC = () => {
                 <Route exact path="/service/:id" component={ServiceWiseHelper} />
                  <Route path="/helper/:helperId" component={HelperDetails} />
                   <Route exact path="/seeker/:id" component={SeekerDetails} />
-
+                  <Route exact path="/seeker-list" component={SeekerList} />
+             <Route exact path="/seeker-chat/:accountId" component={SeekerChat} />
 
 
 
