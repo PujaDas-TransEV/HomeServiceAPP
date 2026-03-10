@@ -36,6 +36,8 @@ import ManageSupport from './components/Admin/Pages/Manage Support';
 import ServiceWiseHelper from './components/users/pages/ServiceHelperBooking';
 import HelperDetails from './components/users/pages/HelperDetails';
 import SeekerDetails from './components/Helpers/SeekerDetails';
+import HelperDetailsWiseChatPage from './components/users/pages/HelperChat';
+import HelperBookingPage from  './components/users/pages/HelperBook'; // Existing booking page
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -84,8 +86,8 @@ const App: React.FC = () => {
                   <Route exact path="/admin-home" component={AdminHome} />
                   <Route exact path="/admin-profile" component={AdminProfile} />
                   <Route exact path="/admin-service" component={AdminServicePage} />
-                
-                
+                  <Route exact path="/chat/:id" component={HelperDetailsWiseChatPage} />
+                  <Route exact path="/booking/:id" component={HelperBookingPage} />
                   {/* <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} /> */}
                   <Route exact path="/forget-password" component={ForgetPassword} />
                   <Route exact path="/manage-support" component={ManageSupport} />

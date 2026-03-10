@@ -1,3 +1,4 @@
+
 import {
   IonPage,
   IonHeader,
@@ -7,239 +8,410 @@ import {
   IonContent,
   IonAvatar,
   IonButton,
+  IonIcon,
   IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonItem,
   IonLabel,
+  IonChip,
+  IonSpinner,
   IonMenu,
-  IonList,
-  IonModal,
-  IonIcon
+  IonTitle,
+  IonItem
 } from "@ionic/react";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { closeOutline, chatbubbleEllipsesOutline } from "ionicons/icons";
+
+
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import {
+  constructOutline,
+  restaurantOutline,
+  peopleOutline,
+  heartOutline,
+  carOutline,
+  cogOutline,
+  fitnessOutline,
+  leafOutline,
+  searchOutline,
+   appsOutline,
+   locationOutline,
+   chatbubbleOutline,
+   calendarOutline,
+   closeOutline
+} from "ionicons/icons";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
-import DefaultAvatar from "../../assets/profile.png";
-import { menuController } from "@ionic/core";
-interface Maid {
-  id: number;
-  name: string;
-  phone: string;
-  avatar: string;
-  services: string[];
-}
+// Map each service name to a unique Ionicon
+const serviceIcons: any = {
+  "Baby sitting": peopleOutline,     // Baby sitting
+  Cleaning: constructOutline,        // Cleaning
+  Cooking: restaurantOutline,        // Cooking
+  "Elderly Care": heartOutline,      // Elderly Care
+  Driver: carOutline,                // Driver / Transport
+  Laundry: cogOutline,               // Laundry / Tasks
+  Fitness: fitnessOutline,           // Fitness / Training
+  Gardening: leafOutline             // Gardening / Plants
+};
+const API_BASE = "http://192.168.0.187:9830";
 
-const dummyMaids: Maid[] = [
-  { id: 1, name: "Ayesha Begum", phone: "+880 1111 2222", avatar: DefaultAvatar, services: ["Cleaning", "Cooking"] },
-  { id: 2, name: "Fatima Akter", phone: "+880 3333 4444", avatar: DefaultAvatar, services: ["Babysitting"] },
-  { id: 3, name: "Sohana Rahman", phone: "+880 5555 6666", avatar: DefaultAvatar, services: ["Cleaning", "Laundry"] },
-  { id: 4, name: "Rina Khatun", phone: "+880 7777 8888", avatar: DefaultAvatar, services: ["Cooking"] },
-  { id: 5, name: "Salma Parvin", phone: "+880 9999 0000", avatar: DefaultAvatar, services: ["Cleaning", "Cooking", "Babysitting"] },
-];
-
-const MaidListPage: React.FC = () => {
+export default function HelperList() {
   const history = useHistory();
+
+  const [services, setServices] = useState<any[]>([]);
+  const [helpers, setHelpers] = useState<any[]>([]);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [serviceFilter, setServiceFilter] = useState("");
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [selectedMaid, setSelectedMaid] = useState<Maid | null>(null);
+  const [loading, setLoading] = useState(false);
+const [name, setName] = useState("");
+ const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
+  
+  const cardColors = [
+    "bg-blue-50",
+    "bg-green-50",
+    "bg-yellow-50",
+    "bg-pink-50",
+    "bg-purple-50",
+    "bg-orange-50"
+  ];
 
-  const filteredMaids = dummyMaids
-    .filter((maid) => maid.name.toLowerCase().includes(searchText.toLowerCase()))
-    .filter((maid) => (serviceFilter ? maid.services.includes(serviceFilter) : true))
-    .sort((a, b) => (sortOrder === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+  useEffect(() => {
+    fetchServices();
+    fetchHelpers();
+    fetchProfile();
+  }, []);
 
-  const handleLogout = () => {
-    setShowLogoutModal(false);
-    history.push("/"); // Redirect to landing page
+  /* ---------------- SERVICES ---------------- */
+  const fetchServices = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(`${API_BASE}/services/getall`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      setServices(data || []);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const Menu = (
-    <IonMenu side="end" menuId="main-menu" contentId="main-content">
-      <IonContent className="bg-white">
-        <IonList className="mt-4">
-          <IonItem button onClick={() => history.push("/home")}>
-            <IonLabel>🏠 Home</IonLabel>
-          </IonItem>
-          <IonItem button onClick={() => history.push("/profile")}>
-            <IonLabel>👤 Profile</IonLabel>
-          </IonItem>
-          <IonItem button onClick={() => history.push("/chat")}>
-            <IonLabel>💬 Chat</IonLabel>
-          </IonItem>
-          <IonItem button onClick={() => history.push("/maid-list")}>
-            <IonLabel>🧹 Maid List</IonLabel>
-          </IonItem>
-          <IonItem
-  button
-  onClick={() => {
-    history.push("/preferences"); // Navigate to preferences page
-    menuController.close("main-menu");
-  }}
->
-  <IonLabel className="text-lg">⚙️ Preferences</IonLabel>
-</IonItem>
+  /* ---------------- ALL HELPERS ---------------- */
+  const fetchHelpers = async () => {
+    setSelectedService(null);
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(`${API_BASE}/services/admin/user-report`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      const helperList = (data.users || []).filter(
+        (user: any) => user.role === "helper"
+      );
+      setHelpers(helperList);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
 
-          <IonItem button onClick={() => setShowLogoutModal(true)}>
-            <IonLabel className="text-red-500">🚪 Logout</IonLabel>
+  /* ---------------- SERVICE FILTER ---------------- */
+  const fetchServiceHelpers = async (serviceId: string) => {
+    setSelectedService(serviceId);
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(
+        `${API_BASE}/services/service-participants/${serviceId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await res.json();
+      setHelpers(data.helpers || []);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
+  /* ---------------- SEARCH ---------------- */
+  const filteredHelpers = helpers.filter((h) =>
+    (h.name || "").toLowerCase().includes(searchText.toLowerCase())
+  );
+ const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        history.push("/login");
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/profiles/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+      const profile = data?.profile || {};
+
+      setName(profile.name || "User");
+      setCity(profile.city || "Kolkata");
+      setArea(profile.area || "");
+    } catch (error) {
+      console.log("Profile error:", error);
+    }
+  };
+  return (
+   
+     <IonPage>
+
+    {/* ================= SIDE MENU ================= */}
+    <IonMenu side="end" contentId="main-content" type="overlay">
+      <IonHeader>
+        <IonToolbar className="bg-linear-to-r from-indigo-600 to-purple-600 px-4">
+          <div className="flex items-center justify-between w-full">
+            <IonTitle className="text-purple-600 font-bold text-lg">
+              HelperGo
+            </IonTitle>
+            <IonButton
+              fill="clear"
+              onClick={() => document.querySelector("ion-menu")?.close()}
+            >
+              <IonIcon icon={closeOutline} className="text-pink-600 text-xl" />
+            </IonButton>
+          </div>
+        </IonToolbar>
+      </IonHeader>
+
+      <IonContent className="bg-indigo-50">
+        <div className="flex flex-col p-3 space-y-2">
+          <IonItem button routerLink="/home" className="rounded-lg hover:bg-indigo-100">
+            <FaHome className="text-purple-600 w-5 h-5 mr-3" />
+            <IonLabel>Home</IonLabel>
           </IonItem>
-        </IonList>
+
+          <IonItem button routerLink="/profile" className="rounded-lg hover:bg-indigo-100">
+            <FaUser className="text-indigo-600 w-5 h-5 mr-3" />
+            <IonLabel>Profile</IonLabel>
+          </IonItem>
+
+          <IonItem button routerLink="/chat" className="rounded-lg hover:bg-indigo-100">
+            <FaComment className="text-pink-600 w-5 h-5 mr-3" />
+            <IonLabel>Chat</IonLabel>
+          </IonItem>
+
+          <IonItem button routerLink="/maid-list" className="rounded-lg hover:bg-indigo-100">
+            <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
+            <IonLabel>Helper List</IonLabel>
+          </IonItem>
+
+          <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">
+            <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
+            <IonLabel>Preferences</IonLabel>
+          </IonItem>
+
+          <IonItem
+            button
+            className="rounded-lg hover:bg-red-100"
+            onClick={() => {
+              localStorage.removeItem("access_token");
+              history.push("/login");
+            }}
+          >
+            <FaSignOutAlt className="text-red-500 w-5 h-5 mr-3" />
+            <IonLabel className="text-red-500">Logout</IonLabel>
+          </IonItem>
+        </div>
       </IonContent>
     </IonMenu>
-  );
 
-  return (
-    <>
-      {Menu}
-      <IonPage id="main-content" className="bg-linear-to-b from-pink-50 via-white to-yellow-50">
-        {/* Header */}
-        <IonHeader>
-          <IonToolbar className="flex justify-between items-center px-4 py-2 bg-pink-500 text-white shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
-                <img src={Logo} alt="logo" className="w-8 h-8 object-cover rounded-full" />
-              </div>
-              <h1 className="text-l font-bold text-indigo-400">HelperGo</h1>
+    {/* ================= HEADER ================= */}
+    <IonHeader>
+      <IonToolbar className="bg-linear-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3">
+        <div className="flex justify-between items-center w-full">
+
+          {/* LEFT → User Welcome */}
+          <div className="flex items-center gap-3">
+            <img
+              src={Logo}
+              className="w-10 h-10 rounded-full shadow-lg border-2 border-white"
+              alt="logo"
+            />
+            <div>
+              <p className="text-yellow-800 text-s opacity-80">Welcome back 👋</p>
+              <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p>
             </div>
-            <IonButtons slot="end">
-              <IonMenuButton menu="main-menu" className="text-white bg-yellow-500 p-2 rounded-lg shadow-md hover:bg-yellow-600" />
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-
-        {/* Content */}
-        <IonContent className="p-4">
-          {/* Search */}
-          <IonInput
-            value={searchText}
-            placeholder="Search maids..."
-            className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 mb-4 bg-white"
-            onIonInput={(e: any) => setSearchText(e.target.value)}
-          />
-
-          {/* Sort */}
-          <IonItem className="mb-4 bg-white rounded-xl shadow-md">
-            <IonLabel>Sort by Name</IonLabel>
-            <IonSelect value={sortOrder} onIonChange={(e: any) => setSortOrder(e.detail.value)}>
-              <IonSelectOption value="asc">A-Z</IonSelectOption>
-              <IonSelectOption value="desc">Z-A</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          {/* Filter by Service */}
-          <IonItem className="mb-4 bg-white rounded-xl shadow-md">
-            <IonLabel>Filter by Service</IonLabel>
-            <IonSelect value={serviceFilter} onIonChange={(e: any) => setServiceFilter(e.detail.value)}>
-              <IonSelectOption value="">All</IonSelectOption>
-              <IonSelectOption value="Cleaning">Cleaning</IonSelectOption>
-              <IonSelectOption value="Cooking">Cooking</IonSelectOption>
-              <IonSelectOption value="Laundry">Laundry</IonSelectOption>
-              <IonSelectOption value="Babysitting">Babysitting</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          {/* Maid List */}
-          <div className="space-y-4">
-            {filteredMaids.length > 0 ? (
-              filteredMaids.map((maid) => (
-                <div
-                  key={maid.id}
-                  className="flex items-center justify-between bg-white rounded-xl shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedMaid(maid)}
-                >
-                  <div className="flex items-center gap-3">
-                    <IonAvatar className="w-12 h-12">
-                      <img src={maid.avatar} alt={maid.name} />
-                    </IonAvatar>
-                    <div>
-                      <h2 className="font-semibold text-gray-800">{maid.name}</h2>
-                      <p className="text-gray-500 text-sm">{maid.phone}</p>
-                      <p className="text-gray-600 text-sm mt-1">
-                        Services: {maid.services.join(", ")}
-                      </p>
-                    </div>
-                  </div>
-                  <IonButton
-                    onClick={(e) => {
-                      e.stopPropagation(); // prevent triggering the modal
-                      history.push(`/chat?maidId=${maid.id}`);
-                    }}
-                    className="bg-pink-500 hover:bg-pink-600 text-white rounded-xl"
-                  >
-                    Chat
-                  </IonButton>
-                </div>
-              ))
-            ) : (
-              <p className="text-center text-gray-500">No maids found</p>
-            )}
           </div>
-        </IonContent>
 
-        {/* Logout Modal */}
-        {showLogoutModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
-              <h2 className="text-lg font-bold mb-4">Logout</h2>
-              <p className="text-gray-700 mb-6">Are you sure you want to logout?</p>
-              <div className="flex justify-end gap-4">
-                <IonButton
-                  fill="outline"
-                  color="medium"
-                  onClick={() => setShowLogoutModal(false)}
-                  className="px-6 py-2 rounded-xl hover:bg-gray-100"
-                >
-                  No
-                </IonButton>
-                <IonButton
-                  color="danger"
-                  onClick={handleLogout}
-                  className="px-6 py-2 rounded-xl hover:bg-red-600"
-                >
-                  Yes
-                </IonButton>
-              </div>
+          {/* RIGHT → Hamburger */}
+          <IonButton
+            fill="clear"
+            onClick={() => document.querySelector("ion-menu")?.open()}
+          >
+            <div className="w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full shadow-md hover:bg-white/30 transition">
+              <svg
+                className="w-6 h-6 text-pink-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm14 4H3a1 1 0 100 2h14a1 1 0 100-2zm0 6H3a1 1 0 100 2h14a1 1 0 100-2z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </div>
+          </IonButton>
+
+        </div>
+      </IonToolbar>
+    </IonHeader>
+
+      <IonContent className="p-4 bg-linear-to-b from-indigo-50 via-purple-50 to-pink-50">
+        {/* SEARCH */}
+      <div className="flex items-center bg-blue-50 rounded-2xl shadow-md px-4 py-3 mb-5 border border-blue-100">
+  <IonIcon icon={searchOutline} className="text-blue-500 text-xl mr-3" />
+  <IonInput
+    placeholder="Search helpers..."
+    value={searchText}
+    onIonInput={(e: any) => setSearchText(e.target.value)}
+    className="bg-blue-50 text-gray-700 placeholder-gray-400" // match background
+  />
+</div>
+<div className="mb-5 flex items-center space-x-3">
+  {/* Colored circle icon */}
+  <div className="bg-green-500 p-2 rounded-full shadow-md">
+    <IonIcon icon={appsOutline} className="text-white text-xl" />
+  </div>
+
+  {/* Title text */}
+  <h2 className="text-gray-900 font-extrabold text-lg tracking-wide">
+    Filter Helpers by Service
+  </h2>
+</div>
+      <div className="grid grid-cols-3 gap-3 mb-5">
+  {/* ALL */}
+  <div
+    onClick={() => fetchHelpers()}
+    className={`flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer transition 
+      ${!selectedService
+        ? "bg-indigo-600 text-white shadow-lg"
+        : "bg-white text-gray-700 shadow-md hover:bg-indigo-50"
+      }`}
+  >
+    <IonIcon icon={appsOutline} className="text-2xl mb-2" /> {/* Different icon for "All" */}
+    <p className="text-sm font-semibold text-center">All</p>
+  </div>
+
+  {services.map((service, index) => {
+    const colors = ["bg-blue-100","bg-green-100","bg-pink-100","bg-yellow-100","bg-purple-100","bg-orange-100"];
+    const bgColor = colors[index % colors.length];
+
+    return (
+      <div
+        key={service.id}
+        onClick={() => fetchServiceHelpers(service.id)}
+        className={`flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer transition
+          ${selectedService === service.id
+            ? "bg-indigo-600 text-white shadow-lg"
+            : `${bgColor} text-gray-700 shadow-md hover:brightness-95`
+          }`}
+      >
+        {/* Icon */}
+        <IonIcon
+          icon={serviceIcons[service.name] || searchOutline}
+          className={`text-2xl mb-2 ${selectedService === service.id ? "text-white" : "text-gray-700"}`}
+        />
+        {/* Label */}
+        <p className="text-sm font-semibold text-center">{service.name}</p>
+      </div>
+    );
+  })}
+</div>
+        {/* LOADING */}
+        {loading && (
+          <div className="flex justify-center items-center mt-16">
+            <IonSpinner color="primary" />
           </div>
         )}
 
-        {/* Maid Details Modal */}
-        <IonModal isOpen={selectedMaid !== null} onDidDismiss={() => setSelectedMaid(null)}>
-          {selectedMaid && (
-            <div className="p-5 bg-white h-full overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold">{selectedMaid.name}</h3>
-                <IonButton fill="clear" onClick={() => setSelectedMaid(null)}>
-                  <IonIcon icon={closeOutline} className="text-xl" />
-                </IonButton>
-              </div>
-              <IonAvatar className="w-32 h-32 mx-auto mb-4">
-                <img src={selectedMaid.avatar} alt={selectedMaid.name} />
-              </IonAvatar>
-              <p><strong>Phone:</strong> {selectedMaid.phone}</p>
-              <p><strong>Services:</strong> {selectedMaid.services.join(", ")}</p>
+        {/* HELPER LIST */}
+        {!loading && (
+          <>
+            <h2 className="text-gray-800 font-bold text-lg mb-3 tracking-wide">All Helper List</h2>
 
-              <IonButton
-                expand="block"
-                color="primary"
-                className="mt-5"
-                onClick={() => {
-                  setSelectedMaid(null);
-                  history.push(`/chat?maidId=${selectedMaid.id}`);
-                }}
-              >
-                <IonIcon icon={chatbubbleEllipsesOutline} slot="start" />
-                Chat with {selectedMaid.name}
-              </IonButton>
+            <div className="space-y-4">
+              {filteredHelpers.map((helper, index) => (
+                <div
+                  key={helper.account_id}
+                  className={`flex items-center justify-between p-4 rounded-2xl shadow-md hover:shadow-xl transition cursor-pointer border ${cardColors[index % cardColors.length]}`}
+                  onClick={() => history.push(`/helper/${helper.account_id}`)}
+                >
+                 
+               <div className="flex items-center gap-3">
+  {/* Circular avatar */}
+  <IonAvatar className="w-14 h-14">
+    <img
+      src={helper.profile_picture || "https://i.pravatar.cc/150"}
+      className="rounded-full object-cover w-full h-full"
+    />
+  </IonAvatar>
+
+
+  <div>
+    <h2 className="font-semibold text-gray-900 text-base">{helper.name}</h2>
+    <p className="text-sm text-gray-500">{helper.phone}</p>
+    <div className="flex items-center text-xs text-gray-500 mt-1">
+      <IonIcon icon={locationOutline} className="mr-1 text-gray-400" />
+      {helper.city} • {helper.area}
+    </div>
+    {helper.service_name && (
+      <IonChip color="secondary" className="mt-1 text-xs">
+        <IonLabel>{helper.service_name}</IonLabel>
+      </IonChip>
+    )}
+  </div>
+</div>
+
+                  {/* BUTTONS */}
+                  <div className="flex gap-2">
+                    <IonButton
+                      size="small"
+                      fill="solid"
+                      color="primary"
+                      className="rounded-full shadow"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/chat/${helper.account_id}`);
+                      }}
+                    >
+                      <IonIcon icon={chatbubbleOutline} />
+                    </IonButton>
+
+                    <IonButton
+                      size="small"
+                      fill="solid"
+                      color="success"
+                      className="rounded-full shadow"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/booking/${helper.account_id}`);
+                      }}
+                    >
+                      <IonIcon icon={calendarOutline} />
+                    </IonButton>
+                  </div>
+                </div>
+              ))}
+
+              {filteredHelpers.length === 0 && !loading && (
+                <div className="text-center text-gray-500 mt-20">
+                  <IonIcon icon={searchOutline} className="text-4xl mb-2" />
+                  <p>No helpers found</p>
+                </div>
+              )}
             </div>
-          )}
-        </IonModal>
-      </IonPage>
-    </>
+          </>
+        )}
+      </IonContent>
+    </IonPage>
   );
-};
+}
 
-export default MaidListPage;
+
