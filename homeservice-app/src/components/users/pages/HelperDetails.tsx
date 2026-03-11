@@ -17,7 +17,7 @@ import {
 import { chatbubbleOutline, calendarOutline, locationOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router";
-
+import { FaStar } from "react-icons/fa";
 const API_BASE = "http://192.168.0.187:9830";
 
 export default function HelperDetails() {
@@ -108,12 +108,20 @@ export default function HelperDetails() {
             </p>
 
             <p className="text-yellow-500 text-sm mt-1">
-              ⭐ {profile?.experience || 0} yrs experience
+               {profile?.experience || 0} yrs experience
             </p>
 
             <p className="text-green-600 text-sm mt-1">
               Capacity: {account?.capacity || "N/A"}
             </p>
+            <div className="flex items-center gap-1">
+  {[1,2,3,4,5].map((star)=>(
+    <FaStar
+      key={star}
+      className={account?.rating >= star ? "text-yellow-400" : "text-yellow-300"}
+    />
+  ))}
+</div>
           </div>
         </IonCard>
 

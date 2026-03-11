@@ -17,7 +17,7 @@ import {
   IonInput,
 } from "@ionic/react";
 import { starOutline, locationOutline, personOutline, mapOutline, closeOutline } from "ionicons/icons";
-import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaClipboardList } from "react-icons/fa";
 import { useEffect, useState,useRef } from "react";
 import { useHistory } from "react-router-dom";
 import DefaultAvatar from "../../assets/profile.png";
@@ -239,6 +239,10 @@ const handleProfileUpload = async (event: any) => {
             <IonItem button className="hover:bg-indigo-100 rounded-lg" routerLink="/maid-list">
               <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
               <IonLabel>Helper List</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
+              <FaClipboardList className="text-indigo-600 w-5 h-5 mr-3" />
+              <IonLabel>My Bookings</IonLabel>
             </IonItem>
             <IonItem button className="hover:bg-indigo-100 rounded-lg" routerLink="/preferences">
               <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
