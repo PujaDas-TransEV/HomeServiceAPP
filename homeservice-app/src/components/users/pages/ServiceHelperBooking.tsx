@@ -9,8 +9,8 @@ import {
   IonButton,
   IonIcon,
   IonSpinner,
-   IonBackButton,
-   IonButtons
+  IonBackButton,
+  IonButtons
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router";
 import { useEffect, useState } from "react";
@@ -36,9 +36,12 @@ export default function ServiceHelpers() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const res = await fetch(`${API_BASE}/services/service-participants/${serviceId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(
+        `${API_BASE}/services/service-participants/${serviceId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
 
       if (!res.ok) {
         console.error("API returned error:", res.status);
@@ -48,11 +51,9 @@ export default function ServiceHelpers() {
 
       const data = await res.json();
 
-      // handle different API formats safely
       if (Array.isArray(data)) setHelpers(data);
       else if (data.helpers) setHelpers(data.helpers);
       else setHelpers([]);
-
     } catch (err) {
       console.error("Fetch error:", err);
       setHelpers([]);
@@ -65,19 +66,30 @@ export default function ServiceHelpers() {
     fetchServiceHelpers();
   }, [serviceId]);
 
+  // redirect to helper profile
+  const goToHelperProfile = (e: any, helperId: string) => {
+    e.stopPropagation();
+    if (helperId) {
+      history.push(`/helper/${helperId}`);
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar className="bg-indigo-600 text-white">
-            <IonButtons slot="start">
-                      <IonBackButton defaultHref="/helper-home" className="text-black" />
-                    </IonButtons>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/helper-home" className="text-black" />
+          </IonButtons>
           <IonTitle>Available Helpers</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="p-4 bg-gray-100">
-          <IonTitle className="bg-purple-400 text-pink-600">Available Seekers</IonTitle>
+        <IonTitle className="bg-purple-400 text-pink-600">
+          Available Helpers
+        </IonTitle>
+
         {loading && (
           <div className="flex justify-center mt-10">
             <IonSpinner />
@@ -95,30 +107,48 @@ export default function ServiceHelpers() {
             key={helper.registration_id}
             className="bg-white rounded-2xl shadow-md p-4 mb-4 flex items-center gap-4 hover:shadow-lg transition"
           >
+            {/* Profile Image */}
             <img
               src={helper.profile_picture || "https://i.pravatar.cc/100"}
-              className="w-16 h-16 rounded-full object-cover border"
+              className="w-16 h-16 rounded-full object-cover border cursor-pointer"
               alt={helper.name}
+              onClick={(e) =>
+                goToHelperProfile(e, helper.registration_id)
+              }
             />
 
             <div className="flex-1">
-              <p className="font-semibold text-gray-800">{helper.name}</p>
+              {/* Name clickable */}
+              <p
+                className="font-semibold text-gray-800 cursor-pointer hover:text-indigo-600"
+                onClick={(e) =>
+                  goToHelperProfile(e, helper.registration_id)
+                }
+              >
+                {helper.name}
+              </p>
+
               <div className="flex items-center text-sm text-gray-500 mt-1">
                 <IonIcon icon={locationOutline} className="mr-1" />
                 {helper.city || "Unknown City"}
               </div>
             </div>
 
+            {/* Book Button */}
+           
             <IonButton
-              size="small"
-              color="primary"
-              onClick={() =>
-                history.push(`/book/${serviceId}/${helper.registration_id}`)
-              }
-            >
-              <IonIcon slot="start" icon={calendarOutline} />
-              Book Now
-            </IonButton>
+                      size="small"
+                      fill="solid"
+                      color="success"
+                      className="rounded-full shadow"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/booking/${helper.registration_id}`);
+                        // history.push(`/booking/${helper.helper_id}`);
+                      }}
+                    >
+                      <IonIcon icon={calendarOutline} />
+                    </IonButton>
           </div>
         ))}
       </IonContent>

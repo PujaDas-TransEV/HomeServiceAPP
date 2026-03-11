@@ -41,6 +41,7 @@ import HelperBookingPage from  './components/users/pages/HelperBook'; // Existin
 import SeekerList from './components/Helpers/Pages/SeekerList';
 import SeekerChat from './components/Helpers/Pages/SeekerChat';
 import ServiceWiseSeeker from './components/Helpers/Pages/ServiceWiseSeeker';
+import UserBooking from './components/users/pages/Mybooking';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -101,7 +102,7 @@ const App: React.FC = () => {
                   <Route exact path="/seeker/:id" component={SeekerDetails} />
                   <Route exact path="/seeker-list" component={SeekerList} />
              <Route exact path="/seeker-chat/:accountId" component={SeekerChat} />
-
+                  <Route exact path="/my-bookings" component={UserBooking} />
 
 
             {/* Home Page (Temporarily Always Allowed) */}

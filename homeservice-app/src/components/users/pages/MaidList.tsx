@@ -37,18 +37,18 @@ import {
    calendarOutline,
    closeOutline
 } from "ionicons/icons";
-import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaClipboardList } from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 // Map each service name to a unique Ionicon
 const serviceIcons: any = {
-  "Baby sitting": peopleOutline,     // Baby sitting
-  Cleaning: constructOutline,        // Cleaning
-  Cooking: restaurantOutline,        // Cooking
-  "Elderly Care": heartOutline,      // Elderly Care
-  Driver: carOutline,                // Driver / Transport
-  Laundry: cogOutline,               // Laundry / Tasks
-  Fitness: fitnessOutline,           // Fitness / Training
-  Gardening: leafOutline             // Gardening / Plants
+  "Baby sitting": peopleOutline,     
+  Cleaning: constructOutline,       
+  Cooking: restaurantOutline,        
+  "Elderly Care": heartOutline,      
+  Driver: carOutline,              
+  Laundry: cogOutline,             
+  Fitness: fitnessOutline,          
+  Gardening: leafOutline            
 };
 const API_BASE = "http://192.168.0.187:9830";
 
@@ -200,7 +200,10 @@ const [name, setName] = useState("");
             <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
             <IonLabel>Helper List</IonLabel>
           </IonItem>
-
+<IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
+  <FaClipboardList className="text-indigo-600 w-5 h-5 mr-3" />
+  <IonLabel>My Bookings</IonLabel>
+</IonItem>
           <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>
@@ -391,7 +394,8 @@ const [name, setName] = useState("");
                       className="rounded-full shadow"
                       onClick={(e) => {
                         e.stopPropagation();
-                        history.push(`/booking/${helper.account_id}`);
+                        history.push(`/booking/${helper.registration_id}`);
+                        // history.push(`/booking/${helper.helper_id}`);
                       }}
                     >
                       <IonIcon icon={calendarOutline} />

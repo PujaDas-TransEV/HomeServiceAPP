@@ -1,246 +1,4 @@
 
-// import {
-//   IonPage,
-//   IonHeader,
-//   IonToolbar,
-//   IonButtons,
-//   IonMenuButton,
-//   IonContent,
-//   IonIcon,
-//   IonSpinner
-// } from "@ionic/react";
-
-// import { locationOutline, searchOutline } from "ionicons/icons";
-
-// import {
-//   FaBroom,
-//   FaUtensils,
-//   FaBaby,
-//   FaUserNurse,
-//   FaHandsHelping,
-//   FaHome
-// } from "react-icons/fa";
-
-// import { useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
-
-// import banner1 from "../assets/dashboard1.jpg";
-// import banner2 from "../assets/home3.jpg";
-// import banner3 from "../assets/maid1.jpg";
-// import Logo from "../assets/logo.jpg";
-
-// const API_BASE = "http://192.168.0.187:9830";
-
-// export default function SeekerHome() {
-//   const history = useHistory();
-
-//   const [name, setName] = useState("");
-//   const [city, setCity] = useState("");
-//   const [area, setArea] = useState("");
-//   const [services, setServices] = useState<any[]>([]);
-//   const [loading, setLoading] = useState(false);
-
-//   const banners = [banner1, banner2, banner3];
-//   const [currentBanner, setCurrentBanner] = useState(0);
-
-//   /* Banner Auto Slide */
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setCurrentBanner((prev) => (prev + 1) % banners.length);
-//     }, 3500);
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   /* Fetch Profile */
-//   useEffect(() => {
-//     const fetchProfile = async () => {
-//       const token = localStorage.getItem("access_token");
-//       if (!token) return history.push("/login");
-
-//       const res = await fetch(`${API_BASE}/profiles/me`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       const data = await res.json();
-//       const profile = data.profile;
-
-//       setName(profile?.name || "");
-//       setCity(profile?.city || "");
-//       setArea(profile?.area || "");
-//     };
-
-//     fetchProfile();
-//     fetchServices();
-//   }, []);
-
-//   const fetchServices = async () => {
-//     setLoading(true);
-//     const res = await fetch(`${API_BASE}/services/getall`);
-//     const data = await res.json();
-//     setServices(data);
-//     setLoading(false);
-//   };
-
-//   /* Color Mapping */
-//   const serviceColors = [
-//     "from-pink-500 to-rose-500",
-//     "from-indigo-500 to-purple-500",
-//     "from-orange-400 to-amber-500",
-//     "from-green-400 to-emerald-500",
-//     "from-blue-400 to-cyan-500",
-//     "from-fuchsia-500 to-purple-600"
-//   ];
-
-//   const getServiceIcon = (name: string) => {
-//     switch (name.toLowerCase()) {
-//       case "cleaning":
-//         return <FaBroom size={22} />;
-//       case "cooking":
-//         return <FaUtensils size={22} />;
-//       case "baby sitting":
-//         return <FaBaby size={22} />;
-//       case "elder care":
-//         return <FaUserNurse size={22} />;
-//       case "home care":
-//         return <FaHome size={22} />;
-//       default:
-//         return <FaHandsHelping size={22} />;
-//     }
-//   };
-
-//   return (
-//     <IonPage>
-
-//       {/* HEADER */}
-//       <IonHeader>
-//         <IonToolbar className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3">
-//           <div className="flex justify-between items-center w-full">
-//             <div className="flex items-center gap-3">
-//               <img src={Logo} className="w-10 h-10 rounded-full shadow-lg border-2 border-white" />
-//               <div>
-//                 <p className="text-white text-xs">Welcome back 👋</p>
-//                 <p className="text-white font-bold text-lg">{name}</p>
-//               </div>
-//             </div>
-//             <IonButtons>
-//               <IonMenuButton />
-//             </IonButtons>
-//           </div>
-//         </IonToolbar>
-//       </IonHeader>
-
-//       {/* CONTENT */}
-//       <IonContent className="bg-gradient-to-b from-pink-50 to-indigo-50">
-
-//         {/* SLIDER */}
-//         <div className="relative h-56">
-//           <img
-//             src={banners[currentBanner]}
-//             className="w-full h-full object-cover"
-//           />
-//           <div className="absolute inset-0 bg-black/40" />
-//         </div>
-
-//         {/* LOCATION CARD (FIXED POSITION) */}
-//         <div className="px-4 mt-4">
-//           <div className="bg-white rounded-2xl shadow-xl p-4 flex items-center gap-4">
-//             <div className="bg-indigo-100 p-3 rounded-full">
-//               <IonIcon icon={locationOutline} className="text-indigo-600 text-xl" />
-//             </div>
-//             <div>
-//               <p className="text-xs text-gray-500">Your Location</p>
-//               <p className="font-semibold text-gray-800">
-//                 {city}, {area}
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* SEARCH */}
-//         <div className="px-4 mt-6">
-//           <div className="bg-white rounded-full shadow-lg p-3 flex items-center">
-//             <IonIcon icon={searchOutline} className="text-gray-400 text-xl" />
-//             <input
-//               type="text"
-//               placeholder="Search service or helper..."
-//               className="ml-3 w-full outline-none bg-transparent"
-//             />
-//           </div>
-//         </div>
-
-//         {/* SERVICES */}
-//         <div className="px-4 mt-8">
-//           <h2 className="text-lg font-bold mb-4 text-gray-700">
-//             Book a Service
-//           </h2>
-
-//           {loading ? (
-//             <IonSpinner />
-//           ) : (
-//             <div className="grid grid-cols-3 gap-4">
-//               {services.map((service, index) => (
-//                 <div
-//                   key={service.id}
-//                   onClick={() => history.push(`/service/${service.id}`)}
-//                   className="rounded-2xl p-4 shadow-lg text-white flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300"
-//                   style={{
-//                     background: `linear-gradient(to right, var(--tw-gradient-stops))`,
-//                   }}
-//                 >
-//                   <div
-//                     className={`bg-gradient-to-r ${serviceColors[index % serviceColors.length]} p-5 rounded-2xl w-full flex flex-col items-center`}
-//                   >
-//                     {getServiceIcon(service.name)}
-//                     <p className="text-xs font-semibold mt-2 text-center">
-//                       {service.name}
-//                     </p>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-//           )}
-//         </div>
-
-//         {/* RECOMMENDED */}
-//         <div className="px-4 mt-10 pb-10">
-//           <h2 className="text-lg font-bold mb-4 text-gray-700">
-//             Recommended Helpers
-//           </h2>
-
-//           <div className="space-y-4">
-//             {[1, 2, 3].map((item, i) => (
-//               <div
-//                 key={i}
-//                 className="bg-white rounded-2xl shadow-md p-4 flex items-center gap-4 hover:shadow-xl transition"
-//               >
-//                 <img
-//                   src="https://i.pravatar.cc/100"
-//                   className="w-16 h-16 rounded-full object-cover border-2 border-pink-300"
-//                 />
-//                 <div className="flex-1">
-//                   <p className="font-semibold text-gray-800">
-//                     Sita Devi
-//                   </p>
-//                   <p className="text-sm text-gray-500">
-//                     Dhaka • 5 yrs exp
-//                   </p>
-//                   <p className="text-yellow-500 text-sm">
-//                     ⭐⭐⭐⭐⭐
-//                   </p>
-//                 </div>
-//                 <div className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-semibold">
-//                   View
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//       </IonContent>
-//     </IonPage>
-//   );
-// }
-
 import {
   IonPage,
   IonHeader,
@@ -270,7 +28,8 @@ import {
   FaComment,
   FaUsers,
   FaCog,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaClipboardList
 } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
@@ -450,7 +209,10 @@ return (
             <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
             <IonLabel>Helper List</IonLabel>
           </IonItem>
-
+<IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
+  <FaClipboardList className="text-indigo-600 w-5 h-5 mr-3" />
+  <IonLabel>My Bookings</IonLabel>
+</IonItem>
           <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>
@@ -567,22 +329,7 @@ return (
                 No services available
               </p>
             )}
-            {/* {services.map((service, index) => ( */}
-               {/* {filteredServices.map((service, index) => (
-              <div
-                key={service?.id}
-                onClick={() => history.push(`/service/${service?.id}`)}
-                className={`cursor-pointer bg-linear-to-r ${serviceColors[index % serviceColors.length]} text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300`}
-              >
-                <div className="bg-white/20 p-3 rounded-full mb-2">
-                  {getServiceIcon(service?.name)}
-                </div>
-                <p className="text-xs font-semibold text-center">{service?.name}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div> */}
+          
 {filteredServices.map((service, index) => {
   const serviceId = service?.id; // make sure this is the correct id field
 
