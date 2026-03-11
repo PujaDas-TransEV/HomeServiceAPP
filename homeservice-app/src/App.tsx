@@ -36,6 +36,11 @@ import ManageSupport from './components/Admin/Pages/Manage Support';
 import ServiceWiseHelper from './components/users/pages/ServiceHelperBooking';
 import HelperDetails from './components/users/pages/HelperDetails';
 import SeekerDetails from './components/Helpers/SeekerDetails';
+import HelperDetailsWiseChatPage from './components/users/pages/HelperChat';
+import HelperBookingPage from  './components/users/pages/HelperBook'; // Existing booking page
+import SeekerList from './components/Helpers/Pages/SeekerList';
+import SeekerChat from './components/Helpers/Pages/SeekerChat';
+import ServiceWiseSeeker from './components/Helpers/Pages/ServiceWiseSeeker';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -84,16 +89,18 @@ const App: React.FC = () => {
                   <Route exact path="/admin-home" component={AdminHome} />
                   <Route exact path="/admin-profile" component={AdminProfile} />
                   <Route exact path="/admin-service" component={AdminServicePage} />
-                
-                
+                  <Route exact path="/chat/:id" component={HelperDetailsWiseChatPage} />
+                  <Route exact path="/booking/:id" component={HelperBookingPage} />
                   {/* <Route exact path="/helper-workpreferences" component={ HelperWorkPreference} /> */}
                   <Route exact path="/forget-password" component={ForgetPassword} />
                   <Route exact path="/manage-support" component={ManageSupport} />
                <Route exact path="/manage-users" component={ManageUsers} />
-                <Route exact path="/service/:id" component={ServiceWiseHelper} />
+                <Route exact path="/service/:serviceId" component={ServiceWiseHelper} />
+                 <Route exact path="/service-seeker/:serviceId" component={ServiceWiseSeeker} />
                  <Route path="/helper/:helperId" component={HelperDetails} />
                   <Route exact path="/seeker/:id" component={SeekerDetails} />
-
+                  <Route exact path="/seeker-list" component={SeekerList} />
+             <Route exact path="/seeker-chat/:accountId" component={SeekerChat} />
 
 
 
