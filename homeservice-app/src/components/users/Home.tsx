@@ -297,6 +297,7 @@ export default function SeekerHome() {
   const [currentBanner, setCurrentBanner] = useState(0);
 const [recommendedHelpers, setRecommendedHelpers] = useState<any[]>([]);
 const [loadingHelpers, setLoadingHelpers] = useState(false);
+const [searchText, setSearchText] = useState("");
   /* Banner Auto Slide */
   useEffect(() => {
     const interval = setInterval(() => {
@@ -404,7 +405,9 @@ const fetchRecommendedHelpers = async () => {
         return <FaHandsHelping size={24} />;
     }
   };
-
+const filteredServices = services.filter((service) =>
+  service?.name?.toLowerCase().includes(searchText.toLowerCase())
+);
 return (
   <IonPage>
 
@@ -537,17 +540,20 @@ return (
       </div>
 
       {/* Search Bar */}
-      <div className="px-4 mt-6">
-        <div className="bg-white rounded-full shadow-lg p-3 flex items-center border-2 border-indigo-300 focus-within:border-purple-500 transition">
-          <IonIcon icon={searchOutline} className="text-indigo-500 text-xl" />
-          <input
-            type="text"
-            placeholder="Search service or helper..."
-            className="ml-3 w-full outline-none bg-transparent text-gray-700"
-          />
-        </div>
-      </div>
+     
+<div className="px-4 mt-6">
+  <div className="bg-white rounded-full shadow-lg p-3 flex items-center border-2 border-indigo-300 focus-within:border-purple-500 transition">
+    <IonIcon icon={searchOutline} className="text-indigo-500 text-xl" />
 
+    <input
+      type="text"
+      placeholder="Search service..."
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+      className="ml-3 w-full outline-none bg-transparent text-gray-700"
+    />
+  </div>
+</div>
       {/* Services */}
       <div className="px-4 mt-8">
         <h2 className="text-lg font-bold mb-4 text-gray-700">Book a Service</h2>
@@ -556,12 +562,13 @@ return (
           <IonSpinner />
         ) : (
           <div className="grid grid-cols-3 gap-4">
-            {services.length === 0 && (
+            {filteredServices.length === 0 && (
               <p className="text-gray-400 col-span-3 text-center">
                 No services available
               </p>
             )}
-            {services.map((service, index) => (
+            {/* {services.map((service, index) => ( */}
+               {/* {filteredServices.map((service, index) => (
               <div
                 key={service?.id}
                 onClick={() => history.push(`/service/${service?.id}`)}
@@ -575,9 +582,29 @@ return (
             ))}
           </div>
         )}
-      </div>
+      </div> */}
+{filteredServices.map((service, index) => {
+  const serviceId = service?.id; // make sure this is the correct id field
 
-   
+  return (
+    <div
+      key={serviceId}
+      onClick={() => {
+        if (!serviceId) return; // prevent undefined navigation
+        history.push(`/service/${serviceId}`);
+      }}
+      className={`cursor-pointer bg-linear-to-r ${serviceColors[index % serviceColors.length]} text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300`}
+    >
+      <div className="bg-white/20 p-3 rounded-full mb-2">
+        {getServiceIcon(service?.name)}
+      </div>
+      <p className="text-xs font-semibold text-center">{service?.name}</p>
+    </div>
+  );
+})}
+  </div>
+        )}
+      </div>
 <div className="px-4 mt-6">
   <h2 className="text-lg font-bold mb-4 text-blue-800">
     Recommended Helpers 

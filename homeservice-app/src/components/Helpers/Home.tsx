@@ -48,7 +48,7 @@ export default function HelperHome() {
   const [recommendedSeekers, setRecommendedSeekers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingSeekers, setLoadingSeekers] = useState(false);
-
+const [searchText, setSearchText] = useState("");
   const banners = [banner1, banner2, banner3];
   const [currentBanner, setCurrentBanner] = useState(0);
 
@@ -137,7 +137,9 @@ export default function HelperHome() {
       default: return <FaHandsHelping size={24} />;
     }
   };
-
+const filteredServices = services.filter((service) =>
+  service?.name?.toLowerCase().includes(searchText.toLowerCase())
+);
   return (
     <IonPage>
 
@@ -234,17 +236,21 @@ export default function HelperHome() {
           </div>
         </div>
 
+
         {/* Search Bar */}
-        <div className="px-4 mt-6">
-          <div className="bg-white rounded-full shadow-lg p-3 flex items-center border-2 border-green-300 focus-within:border-teal-500 transition">
-            <IonIcon icon={searchOutline} className="text-green-500 text-xl" />
-            <input
-              type="text"
-              placeholder="Search service or seeker / সার্ভিস বা খোঁজকারী খুঁজুন..."
-              className="ml-3 w-full outline-none bg-transparent text-gray-700"
-            />
-          </div>
-        </div>
+<div className="px-4 mt-6">
+  <div className="bg-white rounded-full shadow-lg p-3 flex items-center border-2 border-indigo-300 focus-within:border-purple-500 transition">
+    <IonIcon icon={searchOutline} className="text-indigo-500 text-xl" />
+
+    <input
+      type="text"
+      placeholder="Search service..."
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+      className="ml-3 w-full outline-none bg-transparent text-gray-700"
+    />
+  </div>
+</div>
 
         {/* Services */}
         <div className="px-4 mt-8">
@@ -253,24 +259,37 @@ export default function HelperHome() {
             <IonSpinner />
           ) : (
             <div className="grid grid-cols-3 gap-4">
-              {services.length === 0 && (
+              {/* {services.length === 0 && ( */}
+              {filteredServices.length === 0 && (
                 <p className="text-gray-400 col-span-3 text-center">No services available / কোন সার্ভিস নেই</p>
               )}
-              {services.map((service, index) => (
-                <div
-                  key={service?.id}
-                  onClick={() => history.push(`/service/${service?.id}`)}
-                  className={`cursor-pointer bg-linear-to-r ${serviceColors[index % serviceColors.length]} text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300`}
-                >
-                  <div className="bg-white/20 p-3 rounded-full mb-2">
-                    {getServiceIcon(service?.name)}
-                  </div>
-                  <p className="text-xs font-semibold text-center">{service?.name}</p>
-                </div>
-              ))}
-            </div>
-          )}
+              {/* {services.map((service, index) => ( */}
+           {filteredServices.map((service, index) => {
+    const serviceId = service?.id; // Make sure this is the correct ID field
+
+    return (
+      <div
+        key={serviceId || index} // fallback to index if id missing
+        onClick={() => {
+          if (!serviceId) {
+            console.warn("Service ID is missing!");
+            return; // prevent navigation if no ID
+          }
+          // Navigate to the service-seeker page with correct ID
+          history.push(`/service-seeker/${serviceId}`);
+        }}
+        className={`cursor-pointer bg-linear-to-r ${serviceColors[index % serviceColors.length]} text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300`}
+      >
+        <div className="bg-white/20 p-3 rounded-full mb-2">
+          {getServiceIcon(service?.name)}
         </div>
+        <p className="text-xs font-semibold text-center">{service?.name}</p>
+      </div>
+    );
+  })}
+</div>
+  )}
+      </div>
 
         {/* Recommended Seekers */}
         <div className="px-4 mt-10 pb-10">
