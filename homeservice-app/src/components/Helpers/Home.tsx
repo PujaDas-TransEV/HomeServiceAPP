@@ -25,7 +25,8 @@ import {
   FaComment,
   FaUsers,
   FaCog,
-  FaSignOutAlt
+  FaSignOutAlt,FaClipboardList,
+  FaCalendarAlt
 } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
@@ -172,6 +173,10 @@ const filteredServices = services.filter((service) =>
             <IonItem button routerLink="/seeker-list" className="rounded-lg hover:bg-red-100">
               <FaUsers className="text-purple-600 w-5 h-5 mr-3" />
               <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
+            </IonItem>
+               <IonItem button routerLink="/helper-bookings" className="rounded-lg hover:bg-red-100">
+              <FaCalendarAlt className="text-purple-600 w-5 h-5 mr-3" />
+              <IonLabel>Bookings / বুকিংসমূহ</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">
               <FaCog className="text-indigo-600 w-5 h-5 mr-3" />

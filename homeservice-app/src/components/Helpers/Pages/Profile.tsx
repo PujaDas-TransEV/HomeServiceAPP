@@ -303,6 +303,13 @@ const handleProfileUpload = async (event: any) => {
   path: "/seeker-list",
   color: "purple-600"         // Tailwind or custom color class
 },
+ {
+  icon: calendarOutline,      // Ionicon
+  label: "Bookings / বুকিংসমূহ",
+  path: "/helper-bookings",
+  color: "purple-600"         // Tailwind or custom color class
+},
+
             { icon: callOutline, label: "চ্যাট / Chat", path: "/maid-chat" },
             { icon: briefcaseOutline, label: "প্রেফারেন্সেস / Preferences", path: "/maid-preferences" },
           ].map((item, idx) => (

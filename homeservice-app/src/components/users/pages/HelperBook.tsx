@@ -36,7 +36,7 @@ import {
   FaUsers,
   FaCog,
   FaSignOutAlt,
-  FaClipboardList
+FaCalendarAlt
 } from "react-icons/fa";
 import { closeOutline, locationOutline, searchOutline } from "ionicons/icons";
 const API_BASE = "http://192.168.0.187:9830";
@@ -274,7 +274,7 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
             <IonLabel>Helper List</IonLabel>
           </IonItem>
 <IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
-  <FaClipboardList className="text-indigo-600 w-5 h-5 mr-3" />
+  <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
   <IonLabel>My Bookings</IonLabel>
 </IonItem>
           <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">
