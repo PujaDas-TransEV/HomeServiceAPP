@@ -50,6 +50,7 @@ interface Booking {
   payment_method: string;
   total_price: string;
   status: string;
+   created_at?: string;
 }
 
 const HelperBookingsPage: React.FC = () => {
@@ -104,9 +105,9 @@ const HelperBookingsPage: React.FC = () => {
         <IonHeader>
           <IonToolbar className="bg-linear-to-r from-red-500 to-pink-600 px-4">
             <div className="flex items-center justify-between w-full">
-              <IonTitle className="text-white font-bold text-lg">HelperGo</IonTitle>
+              <IonTitle className="text-indigo-500 font-bold text-lg">HelperGo</IonTitle>
               <IonButton fill="clear" onClick={() => document.querySelector("ion-menu")?.close()}>
-                <IonIcon icon={closeOutline} className="text-white text-xl" />
+                <IonIcon icon={closeOutline} className="text-pink-600 text-xl" />
               </IonButton>
             </div>
           </IonToolbar>
@@ -130,7 +131,7 @@ const HelperBookingsPage: React.FC = () => {
               <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
             </IonItem>
             <IonItem button routerLink="/helper-bookings" className="rounded-lg hover:bg-red-100">
-              <FaCalendarAlt className="text-purple-600 w-5 h-5 mr-3" />
+              <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
               <IonLabel>Bookings / বুকিংসমূহ</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">
@@ -175,6 +176,17 @@ const HelperBookingsPage: React.FC = () => {
 
       {/* CONTENT */}
       <IonContent className="p-4 bg-gray-50">
+      <div className="bg-linear-to-r from-blue-400 to-indigo-400 text-white shadow-lg rounded-xl p-4 mb-6 flex items-center">
+  
+  <div className="bg-white/20 p-2 rounded-lg mr-3">
+    📅
+  </div>
+
+  <h1 className="text-xl md:text-2xl font-bold">
+    My Booking Request
+  </h1>
+
+</div>
         {loading ? (
           <div className="flex justify-center py-20">
             <IonSpinner name="crescent" />
@@ -200,10 +212,11 @@ const HelperBookingsPage: React.FC = () => {
                 <IonCard key={b.id} className="mb-4 border-l-4 border-indigo-500 shadow-lg hover:shadow-xl transition-all bg-white">
                  <IonCardHeader className="flex items-center justify-between">
   <IonCardTitle className="text-lg font-bold text-indigo-700 flex-1">
-    {b.service_name} - {b.customer_name}
+    {b.service_name} 
   </IonCardTitle>
-  <IonBadge
-    className={`px-3 py-1 text-sm font-semibold rounded-full ${
+
+   <IonBadge
+    className={`ml-auto px-3 py-1 text-sm font-semibold rounded-full ${
       b.status === "pending"
         ? "bg-yellow-100 text-yellow-800"
         : b.status === "accepted"
@@ -217,15 +230,66 @@ const HelperBookingsPage: React.FC = () => {
   </IonBadge>
 </IonCardHeader>
 
-                  <IonCardContent className="space-y-2 text-gray-700">
-                    <p><span className="font-semibold">Booking ID:</span> {b.id}</p>
-                    <p><span className="font-semibold">Customer Phone:</span> {b.customer_phone}</p>
-                    <p><span className="font-semibold">Date:</span> {b.booking_date} | <span className="font-semibold">Time Slot:</span> {b.time_slot}</p>
-                    <p><span className="font-semibold">Duration:</span> {b.duration || "N/A"}</p>
-                    <p><span className="font-semibold">Address:</span> {b.address}, {b.area}, {b.city} - {b.pin_code}</p>
+                  
+                    <IonCardContent className="bg-gray-50 p-4 rounded-xl shadow-sm space-y-3">
 
-                    {workDetails.description && <p><span className="font-semibold text-purple-700">Work:</span> {workDetails.description}</p>}
-                    {workDetails.instructions && <p><span className="font-semibold text-purple-700">Instructions:</span> {workDetails.instructions}</p>}
+  <div className="bg-white p-3 rounded-lg border border-gray-100">
+    <p className="text-sm">
+      <span className="font-semibold text-indigo-600">Booking ID:</span> 
+      <span className="ml-2 text-gray-800">{b.id}</span>
+    </p>
+  </div>
+
+  <div className="bg-white p-3 rounded-lg border border-gray-100">
+    <p className="text-sm">
+      <span className="font-semibold text-blue-600">Customer Name:</span> 
+      <span className="ml-2 text-gray-800">{b.customer_name}</span>
+    </p>
+
+    <p className="text-sm mt-1">
+      <span className="font-semibold text-blue-600">Customer Phone:</span> 
+      <span className="ml-2 text-gray-800">{b.customer_phone}</span>
+    </p>
+  </div>
+
+  <div className="bg-white p-3 rounded-lg border border-gray-100">
+    <p className="text-sm">
+      <span className="font-semibold text-green-600"> Booking Date:</span> 
+      <span className="ml-2">{b.booking_date}</span>
+
+      <span className="font-semibold text-green-600 ml-4">Time Slot:</span> 
+      <span className="ml-2">{b.time_slot}</span>
+    </p>
+
+    <p className="text-sm mt-1">
+      <span className="font-semibold text-purple-600">Duration:</span> 
+      <span className="ml-2">{b.duration || "N/A"}Hours </span>
+    </p>
+  </div>
+  <div className="flex flex-col md:flex-row md:gap-4">
+    <p>
+      <span className="font-semibold text-indigo-700">Created At:</span>{" "}
+      <span className="text-gray-800">
+        {b.created_at
+          ? new Date(b.created_at).toLocaleString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "N/A"}
+      </span>
+    </p>
+    </div>
+  <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+    <p className="text-sm">
+      <span className="font-semibold text-blue-700">Address:</span>
+    </p>
+    <p className="text-sm text-gray-700 mt-1">
+      {b.area}, {b.city} - {b.pin_code}
+    </p>
+  </div>
 
                     {preferences && (
                       <div className="bg-purple-50 p-3 rounded-lg space-y-1">
@@ -235,6 +299,23 @@ const HelperBookingsPage: React.FC = () => {
                         <p><span className="font-semibold text-purple-800">Experienced:</span> {preferences.experienced ? "Yes" : "No"}</p>
                       </div>
                     )}
+{workDetails && (workDetails.description || workDetails.instructions) && (
+  <div className="bg-blue-50 p-3 rounded-lg space-y-1">
+    <h2 className="font-bold text-blue-700">Work Details:</h2>
+    {workDetails.description && (
+      <p>
+        <span className="font-semibold text-purple-600">Description:</span>{" "}
+        {workDetails.description}
+      </p>
+    )}
+    {workDetails.instructions && (
+      <p>
+        <span className="font-semibold text-purple-600">Instructions:</span>{" "}
+        {workDetails.instructions}
+      </p>
+    )}
+  </div>
+)}
 
                     <p><span className="font-semibold">Payment:</span> {b.payment_method?.trim() || "After On Service"}</p>
 

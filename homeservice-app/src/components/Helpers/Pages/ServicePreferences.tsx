@@ -301,7 +301,7 @@ const savePreferences = async () => {
               <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
             </IonItem>
                <IonItem button routerLink="/helper-bookings" className="rounded-lg hover:bg-red-100">
-              <FaCalendarAlt className="text-purple-600 w-5 h-5 mr-3" />
+              <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
               <IonLabel>Bookings / বুকিংসমূহ</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">

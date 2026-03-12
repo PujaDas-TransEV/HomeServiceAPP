@@ -307,7 +307,7 @@ const handleProfileUpload = async (event: any) => {
   icon: calendarOutline,      // Ionicon
   label: "Bookings / বুকিংসমূহ",
   path: "/helper-bookings",
-  color: "purple-600"         // Tailwind or custom color class
+  color: "yellow-600"         // Tailwind or custom color class
 },
 
             { icon: callOutline, label: "চ্যাট / Chat", path: "/maid-chat" },

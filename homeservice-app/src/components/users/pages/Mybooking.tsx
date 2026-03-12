@@ -205,7 +205,17 @@ const MyBookingsPage: React.FC = () => {
     </IonHeader>
 
       <IonContent className="p-4 bg-gray-50">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">My Bookings</h1>
+     <div className="bg-linear-to-r from-blue-400 to-indigo-400 text-white shadow-lg rounded-xl p-4 mb-6 flex items-center">
+  
+  <div className="bg-white/20 p-2 rounded-lg mr-3">
+    📅
+  </div>
+
+  <h1 className="text-xl md:text-2xl font-bold">
+    My Bookings
+  </h1>
+
+</div>
 
         {loading ? (
           <div className="flex justify-center py-20">
@@ -277,13 +287,13 @@ const MyBookingsPage: React.FC = () => {
     {b.duration && (
     <p>
       <span className="font-semibold text-indigo-700">Duration:</span>{" "}
-      <span className="text-gray-800">{b.duration}</span>
+      <span className="text-gray-800">{b.duration} Hour</span>
     </p>
   )}
 
   {/* Address */}
   <p>
-    <span className="font-semibold text-indigo-700">Address:</span>{" "}
+    <span className="font-semibold text-indigo-700"> Booking Address:</span>{" "}
     <span className="text-gray-800">
       {b.area}, {b.city} - {b.pin_code}
     </span>
