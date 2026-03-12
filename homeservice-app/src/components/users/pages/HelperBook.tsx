@@ -224,7 +224,7 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
 
       if (!res.ok) throw new Error("Booking failed");
       alert("Booking submitted successfully!");
-      history.push("/home");
+      history.push("/my-bookings");
     } catch (err) {
       console.log(err);
       alert("Booking failed!");

@@ -52,15 +52,21 @@ interface Booking {
   status: string;
    created_at?: string;
 }
-
+interface Review {
+  booking_id: string;
+  helper_id: string;
+  rating: number;
+  comment: string;
+}
 const HelperBookingsPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<{ [key: string]: number }>({});
   const token = localStorage.getItem("access_token");
   const history = useHistory();
-
-  const fetchBookings = async () => {
+  const [reviews, setReviews] = useState<{ [key: string]: Review }>({});
+  
+ const fetchBookings = async () => {
     try {
       setLoading(true);
       const res = await axios.get(
@@ -69,9 +75,12 @@ const HelperBookingsPage: React.FC = () => {
       );
       setBookings(res.data);
 
+      // Booking summary
       const sum: { [key: string]: number } = {};
       res.data.forEach((b: Booking) => {
         sum[b.status] = (sum[b.status] || 0) + 1;
+        // Fetch review for each booking
+        fetchBookingReview(b.id);
       });
       setSummary(sum);
     } catch (err) {
@@ -81,6 +90,22 @@ const HelperBookingsPage: React.FC = () => {
     }
   };
 
+  // Fetch review for a specific booking
+  const fetchBookingReview = async (bookingId: string) => {
+    if (!bookingId) return;
+    try {
+      const res = await axios.get(
+        `http://192.168.0.187:9830/ratings/booking/${bookingId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data) {
+        setReviews((prev) => ({ ...prev, [bookingId]: res.data }));
+      }
+    } catch (err) {
+      console.error("Error fetching booking review:", err);
+    }
+  };
+  
   const respondBooking = async (bookingId: string, newStatus: string) => {
     try {
       await axios.patch(
@@ -206,6 +231,7 @@ const HelperBookingsPage: React.FC = () => {
             </div>
 
             {bookings.map((b) => {
+               const review = reviews[b.id]; // ✅ fetch review for this booking
               const workDetails = JSON.parse(b.work_details || "{}");
               const preferences = JSON.parse(b.preferences || "{}");
               return (
@@ -318,7 +344,24 @@ const HelperBookingsPage: React.FC = () => {
 )}
 
                     <p><span className="font-semibold">Payment:</span> {b.payment_method?.trim() || "After On Service"}</p>
-
+     {/* Review Section */}
+{b.status === "accepted" ? (
+  review ? (
+    <div className="mt-3 p-4 rounded-lg bg-linear-to-r from-blue-200 via-blue-100 to-blue-300 shadow-md">
+      <p className="font-semibold text-orange-800 mb-1">
+        User Rating:{" "}
+        <span className="text-2xl text-yellow-500">
+          {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
+        </span>
+      </p>
+      <p className="text-orange-900">{review.comment || "No comment"}</p>
+    </div>
+  ) : (
+    <div className="mt-3 p-4 rounded-lg bg-gray-100 text-gray-600 shadow-sm">
+      No review yet
+    </div>
+  )
+) : null}
                     {b.status === "pending" && (
                       <div className="flex gap-3 mt-2">
                         <IonButton color="success" expand="block" onClick={() => respondBooking(b.id, "accepted")}>Accept</IonButton>
