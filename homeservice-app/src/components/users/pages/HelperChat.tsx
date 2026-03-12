@@ -18,7 +18,7 @@ import { attachOutline, closeOutline, sendOutline } from "ionicons/icons";
 import { useState, useEffect, useRef } from "react";
 
 import Logo from "../../assets/logo.jpg";
-import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaCalendarAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 interface Message {
   id: number;
@@ -126,7 +126,10 @@ const history = useHistory();
             <FaUsers className="text-purple-400 w-5 h-5 mr-3" />
             <IonLabel>Helper List</IonLabel>
           </IonItem>
-
+<IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
+  <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
+  <IonLabel>My Bookings</IonLabel>
+</IonItem>
           <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>

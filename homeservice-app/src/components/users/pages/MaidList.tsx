@@ -37,7 +37,7 @@ import {
    calendarOutline,
    closeOutline
 } from "ionicons/icons";
-import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaClipboardList } from "react-icons/fa";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaCalendarAlt} from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 // Map each service name to a unique Ionicon
 const serviceIcons: any = {
@@ -201,7 +201,7 @@ const [name, setName] = useState("");
             <IonLabel>Helper List</IonLabel>
           </IonItem>
 <IonItem button routerLink="/my-bookings" className="rounded-lg hover:bg-indigo-100">
-  <FaClipboardList className="text-indigo-600 w-5 h-5 mr-3" />
+  <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
   <IonLabel>My Bookings</IonLabel>
 </IonItem>
           <IonItem button routerLink="/preferences" className="rounded-lg hover:bg-indigo-100">

@@ -38,7 +38,7 @@ import {
   FaUserNurse,
   FaProcedures,
   FaBuilding,
-  FaUsers,
+  FaUsers,FaClipboardList,FaCalendarAlt
 } from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 import { useHistory } from "react-router-dom";
@@ -299,6 +299,10 @@ const savePreferences = async () => {
             <IonItem button routerLink="/seeker-list" className="rounded-lg hover:bg-red-100">
               <FaUsers className="text-purple-600 w-5 h-5 mr-3" />
               <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
+            </IonItem>
+               <IonItem button routerLink="/helper-bookings" className="rounded-lg hover:bg-red-100">
+              <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
+              <IonLabel>Bookings / বুকিংসমূহ</IonLabel>
             </IonItem>
             <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">
               <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
