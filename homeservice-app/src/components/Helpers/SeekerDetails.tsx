@@ -201,7 +201,7 @@ const notes = data.additional_notes;
         {/* Action Buttons */}
         <div className="flex flex-col gap-3 mb-10 mt-6">
 
-          <IonButton
+          {/* <IonButton
             expand="block"
             color="success"
             className="h-12 text-base font-semibold"
@@ -209,7 +209,7 @@ const notes = data.additional_notes;
           >
             <IonIcon icon={calendarOutline} slot="start" />
             Book Now
-          </IonButton>
+          </IonButton> */}
 
           <IonButton
             expand="block"
