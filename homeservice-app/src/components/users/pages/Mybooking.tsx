@@ -455,6 +455,7 @@ helper_reg_id: string;
   status: string;
   created_at?: string;
   helper_name:string;
+  helper_address:string;
 }
 import {
   FaBroom,
@@ -468,7 +469,8 @@ import {
   FaUsers,
   FaCog,
   FaSignOutAlt,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaHeadset
 } from "react-icons/fa";
 import axios from "axios";
 
@@ -490,6 +492,9 @@ const MyBookingsPage: React.FC = () => {
   const [ratingInput, setRatingInput] = useState<{ [key: string]: number }>({});
   const [comments, setComments] = useState<{ [key: string]: string }>({});
   const token = localStorage.getItem("access_token");
+   const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
    const history = useHistory();
   // Fetch all bookings
   const fetchBookings = async () => {
@@ -564,9 +569,32 @@ const MyBookingsPage: React.FC = () => {
       console.error("Error cancelling booking:", err);
     }
   };
+const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        history.push("/login");
+        return;
+      }
+
+      const res = await fetch(`http://192.168.0.187:9830/profiles/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+      const profile = data?.profile || {};
+
+      setName(profile.name || "User");
+      setCity(profile.city || "Kolkata");
+      setArea(profile.area || "");
+    } catch (error) {
+      console.log("Profile error:", error);
+    }
+  };
 
   useEffect(() => {
     fetchBookings();
+    fetchProfile();
   }, []);
   return (
     <IonPage>
@@ -616,7 +644,10 @@ const MyBookingsPage: React.FC = () => {
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>
           </IonItem>
-
+  <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
+  <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+  <IonLabel>Helper Desk</IonLabel>
+</IonItem>
           <IonItem
             button
             className="rounded-lg hover:bg-red-100"
@@ -646,7 +677,7 @@ const MyBookingsPage: React.FC = () => {
             />
             <div>
               <p className="text-yellow-800 text-s opacity-80">Welcome back 👋</p>
-              {/* <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p> */}
+              <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p>
             </div>
           </div>
 
@@ -741,6 +772,10 @@ const MyBookingsPage: React.FC = () => {
     <p>
       <span className="font-semibold text-indigo-700">Helper Name:</span>{" "}
       <span className="text-gray-800">{b.helper_name || "N/A"}</span>
+    </p>
+    <p>
+      <span className="font-semibold text-indigo-700">Helper Address:</span>{" "}
+      <span className="text-gray-800">{b.helper_address || "N/A"}</span>
     </p>
     <p>
       <span className="font-semibold text-indigo-700">Service:</span>{" "}

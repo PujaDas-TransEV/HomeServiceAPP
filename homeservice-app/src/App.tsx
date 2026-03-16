@@ -20,7 +20,7 @@ import Preferences from './components/users/pages/Preferences';
 import HelperHome from './components/Helpers/Home';
 
 import MaidProfile from './components/Helpers/Pages/Profile'
-import HelperChat from './components/Helpers/Pages/Chat';
+import HelperChat from './components/users/pages/HelperChat';
 import MaidPreferences from './components/Helpers/Pages/ServicePreferences';
 import AdminHome from './components/Admin/Home';
 import AdminProfile from './components/Admin/Pages/Profile';
@@ -43,6 +43,9 @@ import SeekerChat from './components/Helpers/Pages/SeekerChat';
 import ServiceWiseSeeker from './components/Helpers/Pages/ServiceWiseSeeker';
 import UserBooking from './components/users/pages/Mybooking';
 import HelperBooking from './components/Helpers/Pages/Booking';
+import SeekerHelpDesk from './components/users/pages/HelpDesk';
+import HelperHelpDesk from './components/Helpers/Pages/Helpdesk';
+
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -86,7 +89,7 @@ const App: React.FC = () => {
                   <Route exact path="/helper-home" component={HelperHome} />
                    <Route exact path="/upsertprofile" component={UpsertProfile} />
                   <Route exact path="/maid-profile" component={MaidProfile} />
-                   <Route exact path="/maid-chat" component={HelperChat} />
+                   {/* <Route exact path="/maid-chat" component={HelperChat} /> */}
                   <Route exact path="/maid-preferences" component={MaidPreferences} />
                   <Route exact path="/admin-home" component={AdminHome} />
                   <Route exact path="/admin-profile" component={AdminProfile} />
@@ -103,8 +106,11 @@ const App: React.FC = () => {
                   <Route exact path="/seeker/:id" component={SeekerDetails} />
                   <Route exact path="/seeker-list" component={SeekerList} />
              <Route exact path="/seeker-chat/:accountId" component={SeekerChat} />
+                <Route exact path="/helper-chat/:registration_id" component={HelperChat} />
                   <Route exact path="/my-bookings" component={UserBooking} />
                     <Route exact path="/helper-bookings" component={HelperBooking} />
+                    <Route exact path="/support" component={SeekerHelpDesk} />
+                    <Route exact path="/support-system" component={HelperHelpDesk} />
 
 
             {/* Home Page (Temporarily Always Allowed) */}

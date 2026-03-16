@@ -37,7 +37,7 @@ import {
    calendarOutline,
    closeOutline
 } from "ionicons/icons";
-import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaCalendarAlt} from "react-icons/fa";
+import { FaCog, FaComment, FaHome, FaSignOutAlt, FaUser, FaUsers,FaCalendarAlt, FaHeadset} from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 // Map each service name to a unique Ionicon
 const serviceIcons: any = {
@@ -208,7 +208,10 @@ const [name, setName] = useState("");
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>
           </IonItem>
-
+  <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
+  <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+  <IonLabel>Helper Desk</IonLabel>
+</IonItem>
           <IonItem
             button
             className="rounded-lg hover:bg-red-100"
@@ -362,7 +365,7 @@ const [name, setName] = useState("");
     <p className="text-sm text-gray-500">{helper.phone}</p>
     <div className="flex items-center text-xs text-gray-500 mt-1">
       <IonIcon icon={locationOutline} className="mr-1 text-gray-400" />
-      {helper.city} • {helper.area}
+      {helper.location.city} • {helper.location.area}
     </div>
     {helper.service_name && (
       <IonChip color="secondary" className="mt-1 text-xs">

@@ -49,7 +49,10 @@ const AdminHome: React.FC = () => {
   helpers_details: [],
   seekers_details: [],
 });
-
+ const [summary, setSummary] = useState({
+    total_helpers: 0,
+    total_seekers: 0,
+  });
 
   const [serviceInventory, setServiceInventory] = useState<ServiceInventory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,8 +93,8 @@ useEffect(() => {
       const userReportData = await userReportRes.json();
 
       if (userReportRes.ok) {
-        setTotalHelpers(userReportData.total_helpers || 0);
-        setTotalSeekers(userReportData.total_seekers || 0);
+        setTotalHelpers(userReportData.summary.total_helpers || 0);
+        setTotalSeekers(userReportData.summary.total_seekers || 0);
         setTotalUsers(userReportData.total_users || 0);
       }
 
@@ -319,7 +322,10 @@ if (helperCountRes.ok && helperCountJson.summary) {
   {/* Total Users */}
   <div className="flex flex-col items-center justify-center bg-linear-to-r from-pink-400 via-pink-500 to-pink-600 text-white p-6 rounded-2xl shadow-xl min-h-[220px] text-center">
     <IonIcon icon={clipboardOutline} className="text-5xl mb-3" />
-    <h3 className="text-3xl font-bold">{loading ? "..." : totalSeekers}</h3>
+    {/* <h3 className="text-3xl font-bold">{loading ? "..." : totalSeekers}</h3> */}
+     <h3 className="text-3xl font-bold">
+  {loading ? "..." : totalSeekers}
+</h3>
     <p className="mt-2">Total Users</p>
   </div>
 

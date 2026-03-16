@@ -41,7 +41,8 @@ import {
   FaProcedures,
   FaBuilding,
   FaUsers,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaHeadset
 } from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 import { useHistory } from "react-router-dom";
@@ -315,7 +316,10 @@ const savePreferences = async () => {
                 Preferences
               </IonLabel>
             </IonItem>
-
+  <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
+  <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+  <IonLabel>Helper Desk</IonLabel>
+</IonItem>
             <IonItem
               button
               className="rounded-xl hover:bg-red-100"

@@ -15,7 +15,7 @@ import {
   IonLabel
 } from "@ionic/react";
 
-import { closeOutline, locationOutline, searchOutline } from "ionicons/icons";
+import { closeOutline, headsetOutline, locationOutline, searchOutline } from "ionicons/icons";
 
 import {
   FaBroom,
@@ -29,7 +29,8 @@ import {
   FaUsers,
   FaCog,
   FaSignOutAlt,
-FaCalendarAlt
+FaCalendarAlt,
+FaHeadset
 } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
@@ -217,6 +218,10 @@ return (
             <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
             <IonLabel>Preferences</IonLabel>
           </IonItem>
+          <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
+  <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+  <IonLabel>Helper Desk</IonLabel>
+</IonItem>
 
           <IonItem
             button

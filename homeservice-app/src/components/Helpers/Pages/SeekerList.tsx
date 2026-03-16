@@ -29,7 +29,7 @@ import {
   calendarOutline
 } from "ionicons/icons";
 
-import { FaHome, FaUser, FaComment, FaSignOutAlt, FaUsers, FaCog , FaClipboardList,FaCalendarAlt} from "react-icons/fa";
+import { FaHome, FaUser, FaComment, FaSignOutAlt, FaUsers, FaCog , FaClipboardList,FaCalendarAlt, FaHeadset} from "react-icons/fa";
 import Logo from "../../assets/logo.jpg";
 
 const serviceIcons: Record<string, any> = {
@@ -184,6 +184,10 @@ const fetchSeekers = async () => {
               <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
               <IonLabel>Preferences / পছন্দসমূহ</IonLabel>
             </IonItem>
+            <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
+              <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+            </IonItem>
             <IonItem
               button
               className="rounded-lg hover:bg-red-200"
@@ -305,7 +309,7 @@ const fetchSeekers = async () => {
                     <p className="text-sm text-gray-500">{seeker.phone}</p>
                     <div className="flex items-center text-xs text-gray-500 mt-1">
                       <IonIcon icon={locationOutline} className="mr-1 text-gray-400" />
-                      {seeker.city} • {seeker.area || "-"}
+                      {seeker.location.city} • {seeker.location.area || "-"}
                     </div>
                   </div>
                 </div>
