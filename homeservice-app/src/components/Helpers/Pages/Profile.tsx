@@ -29,6 +29,7 @@ import {
   closeOutline,
   homeOutline,
   logOutOutline,
+  helpCircleOutline,
 
 } from "ionicons/icons";
 import { useEffect, useState,useRef } from "react";
@@ -312,6 +313,7 @@ const handleProfileUpload = async (event: any) => {
 
             { icon: callOutline, label: "চ্যাট / Chat", path: "/maid-chat" },
             { icon: briefcaseOutline, label: "প্রেফারেন্সেস / Preferences", path: "/maid-preferences" },
+            { icon: helpCircleOutline, label: "হেল্পডেস্ক / Helpdesk", path: "/support-system" }
           ].map((item, idx) => (
             <div
               key={idx}

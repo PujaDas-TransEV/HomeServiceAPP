@@ -30,7 +30,8 @@ import {
   FaUsers,
   FaCog,
   FaSignOutAlt,
-FaCalendarAlt
+FaCalendarAlt,
+FaHeadset
 } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
@@ -168,7 +169,10 @@ const fetchProfile = async () => {
                <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
                <IonLabel>Preferences</IonLabel>
              </IonItem>
-   
+     <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
+     <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+     <IonLabel>Helper Desk</IonLabel>
+   </IonItem>
              <IonItem
                button
                className="rounded-lg hover:bg-red-100"

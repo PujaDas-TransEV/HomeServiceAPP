@@ -21,15 +21,14 @@ import {
   womanOutline,
   personAddOutline,
   logInOutline,
-
+  star,
+  starHalf,
 } from "ionicons/icons";
 
 import logoImg from "../../assets/logo.jpg";
 import bannerImg from "../../assets/boise-house-cleaners.jpg";
-
- import victoriaImg from '../../assets/Victoria-Memorial-Kolkata-An-iconic-marble-structure-of-the-British-era-FB-1200x700-compressed.jpg';
- import aboutUsImg from '../../assets/cook-services.jpg';
- import { star, starHalf } from 'ionicons/icons';
+import victoriaImg from "../../assets/Victoria-Memorial-Kolkata-An-iconic-marble-structure-of-the-British-era-FB-1200x700-compressed.jpg";
+import aboutUsImg from "../../assets/cook-services.jpg";
 
 /* Render Stars Without Extra Empty Stars */
 const renderStars = (rating: number) => {
@@ -47,6 +46,7 @@ const renderStars = (rating: number) => {
 
   return stars;
 };
+
 const API_BASE = "http://192.168.0.187:9830";
 
 const LandingPage: React.FC = () => {
@@ -56,15 +56,10 @@ const LandingPage: React.FC = () => {
   const [helpers, setHelpers] = useState<any[]>([]);
   const [loadingServices, setLoadingServices] = useState(false);
   const [loadingHelpers, setLoadingHelpers] = useState(false);
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   const token = localStorage.getItem("access_token");
-
-const faqs = [
-  { question: "How do I book a maid?", answer: "Simply sign up, select your service, and choose an available maid to book instantly." },
-  { question: "Are the maids verified?", answer: "Yes! All maids are verified and have ratings from previous clients." },
-  { question: "Can I schedule in advance?", answer: "Absolutely, you can select date and time as per your convenience." },
-];
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   // Fetch services
   const fetchServices = async () => {
@@ -90,16 +85,28 @@ const faqs = [
       const helperList = (data.users || []).filter(
         (user: any) => user.role === "helper"
       );
-      setHelpers(helperList.slice(0, 8)); // show first 6–8
+      setHelpers(helperList.slice(0, 8)); // show first 8
     } catch (err) {
       console.log("Error fetching helpers:", err);
     }
     setLoadingHelpers(false);
   };
 
+  // Fetch FAQ from API
+  const fetchFaqs = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/faq/admin/all`);
+      const data = await res.json();
+      setFaqs(data || []);
+    } catch (err) {
+      console.log("Error fetching FAQs:", err);
+    }
+  };
+
   useEffect(() => {
     fetchServices();
     fetchHelpers();
+    fetchFaqs();
   }, []);
 
   // Service icon mapper
@@ -145,38 +152,22 @@ const faqs = [
         <div className="flex items-center justify-between p-4 bg-white shadow sticky top-0 z-50">
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-full flex items-center justify-center bg-pink-500 p-1 shadow-md">
-              <img
-                src={logoImg}
-                alt="Logo"
-                className="w-12 h-12 object-cover rounded-full"
-              />
+              <img src={logoImg} alt="Logo" className="w-12 h-12 object-cover rounded-full" />
             </div>
-            <span className="font-bold text-lg md:text-2xl text-indigo-600">
-              HelperGo
-            </span>
+            <span className="font-bold text-lg md:text-2xl text-indigo-600">HelperGo</span>
           </div>
-         
-          <div className="flex gap-2">
-  <IonButton
-    size="small"
-    color="primary"
-    className="flex items-center gap-2"
-    onClick={() => history.push("/login")}
-  >
-    <IonIcon icon={logInOutline} />
-    Login
-  </IonButton>
 
-  <IonButton
-    size="small"
-    color="secondary"
-    className="flex items-center gap-2"
-    onClick={() => history.push("/signup")}
-  >
-    <IonIcon icon={personAddOutline} />
-    Signup
-  </IonButton>
-</div>
+          <div className="flex gap-2">
+            <IonButton size="small" color="primary" className="flex items-center gap-2" onClick={() => history.push("/login")}>
+              <IonIcon icon={logInOutline} />
+              Login
+            </IonButton>
+
+            <IonButton size="small" color="secondary" className="flex items-center gap-2" onClick={() => history.push("/signup")}>
+              <IonIcon icon={personAddOutline} />
+              Signup
+            </IonButton>
+          </div>
         </div>
 
         {/* Banner */}
@@ -196,10 +187,9 @@ const faqs = [
         </div>
 
         <div className="p-4">
-          {/* Services */}
+          {/* Services Section */}
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Choose a Service</h2>
-
             {loadingServices ? (
               <div className="flex justify-center pb-8">
                 <IonSpinner name="crescent" />
@@ -222,13 +212,12 @@ const faqs = [
             )}
           </section>
 
-          {/* Available Helpers */}
          <section className="mb-8">
-  {/* Header */}
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-xl font-semibold text-gray-800">
-      Available Helpers in Kolkata
-    </h2>
+   {/* Header */}
+   <div className="flex justify-between items-center mb-4">
+     <h2 className="text-xl font-semibold text-gray-800">
+       Available Helpers in Kolkata
+     </h2>
     <button
       className="flex items-center text-pink-500 font-semibold text-sm hover:underline transition"
       onClick={() =>
@@ -385,4 +374,3 @@ const faqs = [
 };
 
 export default LandingPage;
-      
