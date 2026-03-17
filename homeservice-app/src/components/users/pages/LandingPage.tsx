@@ -58,9 +58,21 @@ const LandingPage: React.FC = () => {
   const [loadingHelpers, setLoadingHelpers] = useState(false);
   const [faqs, setFaqs] = useState<any[]>([]);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
+const [user, setUser] = useState<any>(null); // logged-in user info
   const token = localStorage.getItem("access_token");
+ 
 
+  // Fetch logged-in user profile
+  useEffect(() => {
+    if (token) {
+      fetch(`${API_BASE}/profiles/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => setUser(data))
+        .catch(() => setUser(null));
+    }
+  }, [token]);
   // Fetch services
   const fetchServices = async () => {
     setLoadingServices(true);
@@ -157,7 +169,7 @@ const LandingPage: React.FC = () => {
             <span className="font-bold text-lg md:text-2xl text-indigo-600">HelperGo</span>
           </div>
 
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <IonButton size="small" color="primary" className="flex items-center gap-2" onClick={() => history.push("/login")}>
               <IonIcon icon={logInOutline} />
               Login
@@ -168,7 +180,46 @@ const LandingPage: React.FC = () => {
               Signup
             </IonButton>
           </div>
-        </div>
+        </div> */}
+           <div className="flex gap-2 items-center">
+  {user ? (
+    <button
+      className="font-semibold text-gray-700 hover:text-pink-500 transition"
+      onClick={() => {
+        if (user.role === "helper") {
+          history.push("/helper-home"); // helper landing page
+        } else {
+          history.push("/home"); // seeker landing page
+        }
+      }}
+    >
+      Hi, {user.profile?.name || "User"}
+    </button>
+  ) : (
+    <>
+      <IonButton
+        size="small"
+        color="primary"
+        className="flex items-center gap-2"
+        onClick={() => history.push("/login")}
+      >
+        <IonIcon icon={logInOutline} />
+        Login
+      </IonButton>
+
+      <IonButton
+        size="small"
+        color="secondary"
+        className="flex items-center gap-2"
+        onClick={() => history.push("/signup")}
+      >
+        <IonIcon icon={personAddOutline} />
+        Signup
+      </IonButton>
+    </>
+  )}
+</div>
+</div>
 
         {/* Banner */}
         <div className="relative w-full h-72 md:h-96">
@@ -374,3 +425,4 @@ const LandingPage: React.FC = () => {
 };
 
 export default LandingPage;
+

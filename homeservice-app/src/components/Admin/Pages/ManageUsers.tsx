@@ -33,6 +33,7 @@ import logoImg from "../../assets/logo.jpg";
 import bannerImg from "../../assets/manageusers.jpg";
 
 interface User {
+  location: any;
   account_id: string;
   phone: string;
   role: string;
@@ -445,8 +446,8 @@ return (
                   <p><strong>Role:</strong> {selectedUser.role}</p>
                   <p><strong>Capacity:</strong> {selectedUser.capacity}</p>
                   <p><strong>Status:</strong> {selectedUser.is_active ? "Active" : "Inactive"}</p>
-                  <p><strong>City:</strong> {selectedUser.city}</p>
-                  <p><strong>Area:</strong> {selectedUser.area}</p>
+                  <p><strong>City:</strong> {selectedUser.location.city}</p>
+                  <p><strong>Area:</strong> {selectedUser.location.area}</p>
                   <p className="text-s text-gray-500">
                    Account  ID: {selectedUser.account_id}
                   </p>
