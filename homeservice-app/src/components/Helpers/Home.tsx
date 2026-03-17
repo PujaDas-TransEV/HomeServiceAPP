@@ -210,7 +210,7 @@ const filteredServices = services.filter((service) =>
             <div className="flex items-center gap-3">
               <img src={Logo} className="w-10 h-10 rounded-full shadow-lg border-2 border-white" alt="logo"/>
               <div>
-                <p className="text-pink-500 text-s opacity-80">Welcome back 👋 / স্বাগতম</p>
+                <p className="text-pink-500 text-s opacity-80">Welcome 👋 / স্বাগতম</p>
                 <p className="font-bold text-lg text-red-600">{name || "User"}</p>
               </div>
             </div>
