@@ -187,17 +187,16 @@ const [showFaqModal, setShowFaqModal] = useState(false);
   };
 
   /* ================= FILTERED COMPLAINTS ================= */
-
 const filteredComplaints = useMemo(() => {
   return complaints.filter((c) => {
     // Status filter
     const matchFilter = filter === "all" ? true : c.status === filter;
-    
-    // Search by complaint ID (case-insensitive)
+
+    // Search by Booking ID (case-insensitive)
     const matchSearch = searchId
-      ? c.id.toLowerCase().includes(searchId.toLowerCase())
+      ? String(c.booking_id).toLowerCase().includes(searchId.toLowerCase())
       : true;
-      
+
     return matchFilter && matchSearch;
   });
 }, [complaints, filter, searchId]);
@@ -357,8 +356,8 @@ const filteredComplaints = useMemo(() => {
                   {c.status}
                 </span>
               </div>
-              <p className="font-semibold text-gray-700">{c.category}</p>
-              <p className="text-xs text-gray-500 mb-3">{c.phone}</p>
+              <p className="font-semibold text-gray-700">Subject: {c.category}</p>
+              <p className="text-xs text-gray-500 mb-3">Filled By : {c.user_name}</p>
               <div className="flex flex-wrap gap-2">
                 <IonButton
                   size="small"
@@ -392,7 +391,7 @@ const filteredComplaints = useMemo(() => {
                       </IonButton>
               </div>
               <p className="text-xs text-gray-400 mt-2">
-                {new Date(c.created_at).toLocaleString()}
+                Date & Time: {new Date(c.created_at).toLocaleString()}
               </p>
             </div>
           ))
@@ -426,7 +425,7 @@ const filteredComplaints = useMemo(() => {
             {selectedComplaint.description}
           </p>
           <p>
-            <span className="font-semibold text-indigo-600">Customer Name:</span>{" "}
+            <span className="font-semibold text-indigo-600">Filled By Customer Name:</span>{" "}
             {selectedComplaint.user_name}
           </p>
           <p>
@@ -434,15 +433,15 @@ const filteredComplaints = useMemo(() => {
             {selectedComplaint.phone}
           </p>
           <p>
-            <span className="font-semibold text-indigo-600">Helper Id:</span>{" "}
+            <span className="font-semibold text-indigo-600">Against User Id:</span>{" "}
             {selectedComplaint.helper_id}
           </p>
           <p>
-            <span className="font-semibold text-indigo-600">Helper Name:</span>{" "}
+            <span className="font-semibold text-indigo-600">Against User Name:</span>{" "}
             {selectedComplaint.helper_name}
           </p>
           <p>
-            <span className="font-semibold text-indigo-600">Helper Phone:</span>{" "}
+            <span className="font-semibold text-indigo-600">Against User Phone:</span>{" "}
             {selectedComplaint.helper_phone}
           </p>
           {selectedComplaint.proof_image && (
@@ -568,3 +567,6 @@ const filteredComplaints = useMemo(() => {
 
 export default AdminComplaints;
 
+
+
+             
