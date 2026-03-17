@@ -310,15 +310,24 @@ const [name, setName] = useState("");
     const bgColor = colors[index % colors.length];
 
     return (
-      <div
-        key={service.id}
-        onClick={() => fetchServiceHelpers(service.id)}
-        className={`flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer transition
-          ${selectedService === service.id
-            ? "bg-indigo-600 text-white shadow-lg"
-            : `${bgColor} text-gray-700 shadow-md hover:brightness-95`
-          }`}
-      >
+      // <div
+      //   key={service.id}
+      //   onClick={() => fetchServiceHelpers(service.id)}
+      //   className={`flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer transition
+      //     ${selectedService === service.id
+      //       ? "bg-indigo-600 text-white shadow-lg"
+      //       : `${bgColor} text-gray-700 shadow-md hover:brightness-95`
+      //     }`}
+      // >
+        <div
+  key={service.id}
+  onClick={() => history.push(`/service/${service.id}`)}
+  className={`flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer transition
+    ${selectedService === service.id
+      ? "bg-indigo-600 text-white shadow-lg"
+      : `${bgColor} text-gray-700 shadow-md hover:brightness-95`
+    }`}
+>
         {/* Icon */}
         <IonIcon
           icon={serviceIcons[service.name] || searchOutline}
@@ -420,5 +429,4 @@ const [name, setName] = useState("");
     </IonPage>
   );
 }
-
 
