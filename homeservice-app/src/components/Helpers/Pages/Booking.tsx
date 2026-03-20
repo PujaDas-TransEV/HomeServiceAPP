@@ -35,6 +35,8 @@ import {
 } from "react-icons/fa";
 
 interface Booking {
+  seeker_account_id: any;
+  seeker_reg_id: any;
   id: string;
   customer_name: string;
   customer_phone: string;
@@ -373,6 +375,17 @@ const HelperBookingsPage: React.FC = () => {
                         <IonButton color="danger" expand="block" onClick={() => respondBooking(b.id, "rejected")}>Reject</IonButton>
                       </div>
                     )}
+                   {b.status?.toLowerCase() === "accepted" && b.seeker_reg_id && (
+  <IonButton
+    size="small"
+    className="mt-3 w-full bg-linear-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-md hover:scale-[1.02] transition-all"
+    onClick={() => {
+      history.push(`/seeker-chat/${b.id}/${b.seeker_account_id}`);
+    }}
+  >
+    💬 Chat with Customer
+  </IonButton>
+)}
                   </IonCardContent>
                 </IonCard>
               );
