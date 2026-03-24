@@ -1,29 +1,31 @@
-
-
-import React, { useState } from "react";
 import {
   IonPage,
   IonContent,
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonSearchbar,
   IonButton,
   IonIcon,
   IonAvatar,
   IonModal,
+  IonItem,
+  IonLabel,
+
+  IonMenu,
 } from "@ionic/react";
-import { menu, send, personCircle, chatbubbles, logOut, home,settings } from "ionicons/icons";
-import { useHistory } from "react-router-dom";
+import { menu, send, personCircle, chatbubbles, logOut, home, settings, closeOutline } from "ionicons/icons";
+import { useHistory, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 import Logo from "../../assets/logo.jpg";
-import UserImg from "../../assets/profile.png";
+import { FaCalendarAlt, FaCog, FaComment, FaHeadset, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 
-interface Client {
+interface Booking {
+  booking_id: string;
+  regId: string;
+  accountId: string;
   name: string;
-  need: string;
-  profilePic: string;
-  services: string[];
+  profile_picture: string;
 }
 
 interface Message {
@@ -32,41 +34,84 @@ interface Message {
   attachment?: { url: string; name: string; type: string };
 }
 
+const API_BASE = "http://192.168.0.187:9830"; // Your API base
+const token = localStorage.getItem("access_token");
+
 const MaidChat: React.FC = () => {
-  const [searchText, setSearchText] = useState("");
-  const [chatUser, setChatUser] = useState<Client | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newMsg, setNewMsg] = useState("");
+  const history = useHistory();
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const { bookingId, receiverId } = useParams<{ bookingId: string; receiverId: string }>();
+
   const [openMenu, setOpenMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const history = useHistory();
+  const [chatBookings, setChatBookings] = useState<Booking[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMsg, setNewMsg] = useState("");
+  const [chatUser, setChatUser] = useState<Booking | null>(null);
 
-  const clients: Client[] = [
-    { name: "Rahul Verma", need: "Cooking (রান্না)", profilePic: UserImg, services: ["Cooking"] },
-    { name: "Priya Sharma", need: "Cleaning (পরিষ্কার)", profilePic: UserImg, services: ["Cleaning"] },
-    { name: "Aditi Roy", need: "Babysitting (শিশু দেখাশোনা)", profilePic: UserImg, services: ["Babysitting"] },
-    { name: "Rohan Sen", need: "Elderly Care (বয়স্কদের যত্ন)", profilePic: UserImg, services: ["Elderly Care"] },
-    { name: "Sunita Das", need: "Cooking & Babysitting", profilePic: UserImg, services: ["Cooking", "Babysitting"] },
-  ];
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  const recommendedClients = clients.slice(0, 3); // initial preference/recommended clients
-  const services = ["Cooking", "Cleaning", "Babysitting", "Elderly Care"];
+  // Fetch chat bookings and seeker details
+  useEffect(() => {
+    const fetchChatBookings = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/chat/bookings`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
 
-  // Filter by search + selected services
-  const filteredClients = clients.filter(
-    (client) =>
-      client.name.toLowerCase().includes(searchText.toLowerCase()) &&
-      (selectedServices.length === 0 || client.services.some((s) => selectedServices.includes(s)))
-  );
+        if (data.status === "success") {
+          const enriched: Booking[] = [];
 
-  const handleServiceToggle = (service: string) => {
-    if (selectedServices.includes(service)) {
-      setSelectedServices(selectedServices.filter((s) => s !== service));
-    } else {
-      setSelectedServices([...selectedServices, service]);
-    }
-  };
+          for (const chat of data.chats) {
+            const regId = chat.other_party_registration_id;
+            const accountId = chat.other_party_account_id;
+
+            // Skip invalid or None IDs
+            if (!regId || regId === "None" || !accountId || accountId === "None") continue;
+
+            // Fetch seeker details using accountId
+            const seekerRes = await fetch(`${API_BASE}/seeker/seeker-details/${accountId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            const seekerData = await seekerRes.json();
+
+            const img =
+              seekerData.account_info?.profile_picture ||
+              "https://i.pravatar.cc/150?img=22";
+
+            const name = seekerData.profile?.name || "Seeker";
+
+            enriched.push({
+              booking_id: chat.booking_id,
+              regId: regId,
+              accountId: accountId,
+              name: name,
+              profile_picture: img,
+            });
+          }
+
+          setChatBookings(enriched);
+
+          // Open chat automatically if URL params exist
+          if (bookingId && receiverId) {
+            const selected = enriched.find((b) => b.booking_id === bookingId);
+            if (selected) {
+              setChatUser(selected);
+              setMessages([{ sender: "client", text: "হ্যালো, আমি সাহায্য চাই!" }]);
+            }
+          }
+        }
+      } catch (err) {
+        console.log("Bookings fetch error:", err);
+      }
+    };
+
+    fetchChatBookings();
+  }, [bookingId, receiverId]);
 
   const handleSend = (attachment?: { url: string; name: string; type: string }) => {
     if (!newMsg.trim() && !attachment) return;
@@ -80,6 +125,7 @@ const MaidChat: React.FC = () => {
     setMessages([...messages, newMessage]);
     setNewMsg("");
 
+    // Mock reply
     setTimeout(() => {
       setMessages((prev) => [...prev, { sender: "client", text: "ধন্যবাদ, আমি বুঝেছি!" }]);
     }, 1000);
@@ -91,191 +137,136 @@ const MaidChat: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      {/* NAVBAR */}
+   
+  <IonPage>
+      {/* SIDE MENU */}
+      <IonMenu side="end" contentId="main-content" type="overlay">
+        <IonHeader>
+          <IonToolbar className="bg-linear-to-r from-red-500 to-pink-600 px-4">
+            <div className="flex items-center justify-between w-full">
+              <IonTitle className="text-indigo-500 font-bold text-lg">HelperGo</IonTitle>
+              <IonButton fill="clear" onClick={() => document.querySelector("ion-menu")?.close()}>
+                <IonIcon icon={closeOutline} className="text-pink-600 text-xl" />
+              </IonButton>
+            </div>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="bg-red-50">
+          <div className="flex flex-col p-3 space-y-2">
+            <IonItem button routerLink="/helper-home" className="rounded-lg hover:bg-red-100">
+              <FaHome className="text-red-600 w-5 h-5 mr-3" />
+              <IonLabel>Home / হোম</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/maid-profile" className="rounded-lg hover:bg-red-100">
+              <FaUser className="text-orange-400 w-5 h-5 mr-3" />
+              <IonLabel>Profile / প্রোফাইল</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/maid-chat" className="rounded-lg hover:bg-red-100">
+              <FaComment className="text-pink-600 w-5 h-5 mr-3" />
+              <IonLabel>Chat / চ্যাট</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/seeker-list" className="rounded-lg hover:bg-red-100">
+              <FaUsers className="text-purple-600 w-5 h-5 mr-3" />
+              <IonLabel>Seeker List / খোঁজকারী তালিকা</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/helper-bookings" className="rounded-lg hover:bg-red-100">
+              <FaCalendarAlt className="text-yellow-600 w-5 h-5 mr-3" />
+              <IonLabel>Bookings / বুকিংসমূহ</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/maid-preferences" className="rounded-lg hover:bg-red-100">
+              <FaCog className="text-indigo-600 w-5 h-5 mr-3" />
+              <IonLabel>Preferences / পছন্দসমূহ</IonLabel>
+            </IonItem>
+            <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
+              <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
+              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+            </IonItem>
+            <IonItem
+              button
+              className="rounded-lg hover:bg-red-200"
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                history.push("/login");
+              }}
+            >
+              <FaSignOutAlt className="text-red-500 w-5 h-5 mr-3" />
+              <IonLabel>Logout / লগ আউট</IonLabel>
+            </IonItem>
+          </div>
+        </IonContent>
+      </IonMenu>
+
+      {/* HEADER */}
       <IonHeader>
-        <IonToolbar className="bg-white">
-          <div className="flex justify-between items-center w-full px-4 py-2">
-            <IonAvatar>
-              <img src={Logo} alt="Logo" className="object-contain" />
-            </IonAvatar>
-            <IonTitle className="text-indigo-400 text-xl font-bold">Maidigo (মেইডিগো)</IonTitle>
-            <IonIcon
-              icon={menu}
-              className="text-pink-600 text-2xl"
-              onClick={() => setOpenMenu(true)}
-            />
+        <IonToolbar className="bg-linear-to-r from-yellow-400 via-red-400 to-pink-500 px-4 py-3">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center gap-3">
+              <img src={Logo} className="w-10 h-10 rounded-full shadow-lg border-2 border-white" alt="logo"/>
+              <div>
+                <p className="text-pink-500 text-s opacity-80">Welcome back 👋 / স্বাগতম</p>
+              </div>
+            </div>
+            <IonButton fill="clear" onClick={() => document.querySelector("ion-menu")?.open()}>
+              <div className="w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full shadow-md hover:bg-white/30 transition">
+                <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm14 4H3a1 1 0 100 2h14a1 1 0 100-2zm0 6H3a1 1 0 100 2h14a1 1 0 100-2z" clipRule="evenodd"/>
+                </svg>
+              </div>
+            </IonButton>
           </div>
         </IonToolbar>
       </IonHeader>
-
-      {/* SIDE MENU */}
-      {openMenu && (
-        <div className="fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50">
-          <div className="p-4 border-b flex justify-end">
-            <button className="text-gray-600 font-bold text-xl" onClick={() => setOpenMenu(false)}>
-              ✕
-            </button>
-          </div>
-          <div className="p-4 space-y-4">
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => {
-                setOpenMenu(false);
-                history.push("/helper-home");
-              }}
-            >
-              <IonIcon icon={home} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Home (হোম)</span>
-            </div>
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => {
-                setOpenMenu(false);
-                history.push("/maid-profile");
-              }}
-            >
-              <IonIcon icon={personCircle} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Profile (প্রোফাইল)</span>
-            </div>
-             
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => {
-                setOpenMenu(false);
-                setChatUser(null);
-              }}
-            >
-              <IonIcon icon={chatbubbles} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Chat (চ্যাট)</span>
-            </div>
-             <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => { setOpenMenu(false); history.push("/maid-preferences"); }}
-            >
-              <IonIcon icon={settings} className="text-2xl text-pink-600" />
-              <span className="text-lg font-medium">Preferences (পছন্দসমূহ)</span>
-            </div>
-            <div
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg"
-              onClick={() => {
-                setOpenMenu(false);
-                setShowLogoutModal(true);
-              }}
-            >
-              <IonIcon icon={logOut} className="text-2xl text-red-500" />
-              <span className="text-lg font-medium text-red-500">Logout (লগআউট)</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* OVERLAY */}
-      {openMenu && <div className="fixed inset-0 bg-black bg-opacity-40 z-40" onClick={() => setOpenMenu(false)}></div>}
-
       <IonContent className="ion-padding bg-pink-50">
         {!chatUser && (
           <>
-            <IonSearchbar
-              placeholder="Search client (ক্লায়েন্ট খুঁজুন)"
-              value={searchText}
-              onIonChange={(e) => setSearchText(e.detail.value!)}
-              className="mb-4 rounded-xl shadow"
-            />
-
-            <h3 className="font-bold text-gray-700 mb-2">Recommended Clients</h3>
-            {recommendedClients.map((client, i) => (
-              <div key={i} className="bg-white p-3 rounded-xl mb-2 shadow flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  <IonAvatar>
-                    <img src={client.profilePic} alt={client.name} />
-                  </IonAvatar>
-                  <div>
-                    <p className="font-bold text-gray-800">{client.name}</p>
-                    <p className="text-gray-500 text-sm">{client.need}</p>
-                  </div>
-                </div>
-                <IonButton
-                  color="primary"
-                  onClick={() => {
-                    setChatUser(client);
-                    setMessages([{ sender: "client", text: "হ্যালো, আমি সাহায্য চাই!" }]);
-                  }}
-                >
-                  <IonIcon icon={send} className="mr-1" /> Chat
-                </IonButton>
-              </div>
-            ))}
-
-            <h3 className="font-bold text-gray-700 mt-4 mb-2">Filter by Service</h3>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {services.map((service) => (
-                <button
-                  key={service}
-                  className={`px-4 py-2 rounded-full border ${
-                    selectedServices.includes(service)
-                      ? "bg-pink-500 text-white border-pink-500"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
-                  onClick={() => handleServiceToggle(service)}
-                >
-                  {service}
-                </button>
-              ))}
-            </div>
-
-            {filteredClients.length > 0 ? (
-              filteredClients.map((client, i) => (
-                <div key={i} className="bg-white p-3 rounded-xl mb-2 shadow flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <IonAvatar>
-                      <img src={client.profilePic} alt={client.name} />
+            <h3 className="font-bold text-gray-700 mb-2">Chat Bookings</h3>
+            {chatBookings.length > 0 ? (
+              chatBookings.map((c, i) => (
+                <div key={i} className="bg-white rounded-xl p-3 mb-2 shadow flex justify-between items-center cursor-pointer hover:bg-gray-100">
+                  <div className="flex items-center space-x-3" onClick={() => history.push(`/seeker-chat/${c.booking_id}/${c.accountId}`)}>
+                    <IonAvatar style={{ width: "35px", height: "35px" }}>
+                      <img src={c.profile_picture} alt={c.name}  style={{ width: "35px", height: "35px", objectFit: "cover", borderRadius: "50%" }} />
                     </IonAvatar>
                     <div>
-                      <p className="font-bold text-gray-800">{client.name}</p>
-                      <p className="text-gray-500 text-sm">{client.need}</p>
+                      <p className="font-bold text-gray-800">{c.name}</p>
+                      <p className="text-gray-500 text-sm">Chat</p>
                     </div>
                   </div>
                   <IonButton
                     color="primary"
-                    onClick={() => {
-                      setChatUser(client);
-                      setMessages([{ sender: "client", text: "হ্যালো, আমি সাহায্য চাই!" }]);
-                    }}
+                    onClick={() => history.push(`/seeker-chat/${c.booking_id}/${c.accountId}`)}
                   >
-                    <IonIcon icon={send} className="mr-1" /> Chat
+                    💬 Chat
                   </IonButton>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No clients match the selected filter.</p>
+              <p className="text-gray-500 mb-3">No chats yet.</p>
             )}
           </>
         )}
 
-        {/* CHAT WINDOW */}
         {chatUser && (
           <div className="flex flex-col h-full justify-between" style={{ minHeight: "70vh" }}>
-            {/* Header */}
-            <div className="bg-white p-3 rounded-xl shadow mb-3 flex items-center space-x-3">
-              <IonAvatar>
-                <img src={chatUser.profilePic} alt={chatUser.name} />
-              </IonAvatar>
-              <div>
-                <p className="font-bold text-gray-800">{chatUser.name}</p>
-                <p className="text-gray-500 text-sm">{chatUser.need}</p>
-              </div>
-            </div>
+            {/* Chat header */}
+           <div className="bg-white p-3 rounded-xl shadow mb-3 flex items-center space-x-3">
+  <IonAvatar style={{ width: "20px", height: "20px" }}>
+    <img
+      src={chatUser.profile_picture}
+      alt={chatUser.name}
+      style={{ width: "20px", height: "20px", objectFit: "cover", borderRadius: "50%" }}
+    />
+  </IonAvatar>
+  <div>
+    <p className="font-bold text-gray-800">{chatUser.name}</p>
+    <p className="text-gray-500 text-sm">Chat</p>
+  </div>
+</div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto mb-3 space-y-2">
               {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`p-2 rounded-lg max-w-xs ${
-                    msg.sender === "maid" ? "bg-pink-200 self-end" : "bg-gray-200 self-start"
-                  }`}
-                >
+                <div key={i} className={`p-2 rounded-lg max-w-xs ${msg.sender === "maid" ? "bg-pink-200 self-end" : "bg-gray-200 self-start"}`}>
                   {msg.attachment ? (
                     <div className="flex flex-col space-y-1">
                       <p>{msg.text}</p>
@@ -292,6 +283,7 @@ const MaidChat: React.FC = () => {
                   )}
                 </div>
               ))}
+              <div ref={bottomRef} />
             </div>
 
             {/* Input + Attachment */}
@@ -303,7 +295,6 @@ const MaidChat: React.FC = () => {
                 placeholder="Type message... (মেসেজ লিখুন)"
                 className="flex-1 p-3 rounded-xl border border-gray-300"
               />
-
               <label className="bg-gray-200 p-3 rounded-xl cursor-pointer">
                 📎
                 <input
@@ -318,7 +309,6 @@ const MaidChat: React.FC = () => {
                   }}
                 />
               </label>
-
               <IonButton color="primary" onClick={() => handleSend()}>
                 <IonIcon icon={send} />
               </IonButton>
@@ -330,7 +320,7 @@ const MaidChat: React.FC = () => {
           </div>
         )}
 
-        {/* LOGOUT MODAL */}
+        {/* Logout Modal */}
         <IonModal isOpen={showLogoutModal}>
           <div className="flex items-center justify-center h-full w-full bg-black/30">
             <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center">
@@ -350,3 +340,4 @@ const MaidChat: React.FC = () => {
 };
 
 export default MaidChat;
+

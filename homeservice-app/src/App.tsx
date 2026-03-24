@@ -47,6 +47,7 @@ import SeekerHelpDesk from './components/users/pages/HelpDesk';
 import HelperHelpDesk from './components/Helpers/Pages/Helpdesk';
 import BookingWiseHelperChat from './components/users/pages/BookingWiseChat';
 import HelperBookingWisechat from './components/Helpers/Pages/HelperBookingwisechat';
+import MaidChatList from './components/Helpers/Pages/Chat';
 /* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -90,7 +91,7 @@ const App: React.FC = () => {
                   <Route exact path="/helper-home" component={HelperHome} />
                    <Route exact path="/upsertprofile" component={UpsertProfile} />
                   <Route exact path="/maid-profile" component={MaidProfile} />
-                   {/* <Route exact path="/maid-chat" component={HelperChat} /> */}
+                   <Route exact path="/maid-chat" component={MaidChatList} />
                   <Route exact path="/maid-preferences" component={MaidPreferences} />
                   <Route exact path="/admin-home" component={AdminHome} />
                   <Route exact path="/admin-profile" component={AdminProfile} />

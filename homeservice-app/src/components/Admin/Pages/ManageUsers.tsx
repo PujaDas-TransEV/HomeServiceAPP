@@ -444,7 +444,7 @@ return (
                   <p><strong>Name:</strong> {selectedUser.name}</p>
                   <p><strong>Phone:</strong> {selectedUser.phone}</p>
                   <p><strong>Role:</strong> {selectedUser.role}</p>
-                  <p><strong>Capacity:</strong> {selectedUser.capacity}</p>
+                  {/* <p><strong>Capacity:</strong> {selectedUser.capacity}</p> */}
                   <p><strong>Status:</strong> {selectedUser.is_active ? "Active" : "Inactive"}</p>
                   <p><strong>City:</strong> {selectedUser.location.city}</p>
                   <p><strong>Area:</strong> {selectedUser.location.area}</p>
