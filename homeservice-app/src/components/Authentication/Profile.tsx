@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import {
   IonPage,
@@ -66,7 +68,6 @@ const ProfilePage: React.FC = () => {
     helper_institutional: ['phone'], // address mandatory
   };
 
-  // Initialize token/kind and profile state
   useEffect(() => {
     const storedToken = localStorage.getItem('access_token') || '';
     const storedKind = localStorage.getItem('kind') || '';
@@ -83,7 +84,7 @@ const ProfilePage: React.FC = () => {
       });
       setProfile(initialProfile);
     }
-  }, []);
+  }, [token, kind]);
 
   const fields = kind ? fieldsByKind[kind] : ['name', 'city', 'area'];
   const optionalFields = kind ? optionalFieldsByKind[kind] : [];
@@ -104,9 +105,10 @@ const ProfilePage: React.FC = () => {
   const handleSubmit = async () => {
     if (!token) return showToast('Authorization token missing. Please login.');
 
-    // Validate mandatory fields
+    // Validate mandatory fields only for empty values
     for (let f of fields) {
-      if (!optionalFields.includes(f) && !profile[f as keyof ProfileData]) {
+      const val = profile[f as keyof ProfileData];
+      if (!optionalFields.includes(f) && (val === '' || val === undefined)) {
         showToast(`Please enter ${f.replace('_', ' ')}`);
         return;
       }
@@ -116,11 +118,9 @@ const ProfilePage: React.FC = () => {
 
     try {
       const payload: any = { kind };
-
       Object.entries(profile).forEach(([key, value]) => {
         if (value !== '' && value !== undefined) {
-          payload[key] =
-            key === 'years_of_experience' ? Number(value) : value;
+          payload[key] = key === 'years_of_experience' ? Number(value) : value;
         }
       });
 
@@ -140,7 +140,6 @@ const ProfilePage: React.FC = () => {
       localStorage.setItem('access_token', token);
       localStorage.setItem('kind', kind);
 
-      // Redirect to login after 1.2 seconds
       setTimeout(() => history.push('/login'), 1200);
     } catch (err: any) {
       showToast(err.message || 'Something went wrong');
@@ -169,17 +168,21 @@ const ProfilePage: React.FC = () => {
           className="min-h-screen flex items-center justify-center px-4 py-8 bg-cover bg-center relative"
           style={{ backgroundImage: `url(${Image})` }}
         >
+          {/* Dark overlay */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-         <div className="relative w-full max-w-md space-y-4 bg-white/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-            <h1 className="text-3xl font-bold text-pink-600 text-center">
+          {/* Profile form card */}
+          <div className="relative w-full max-w-md space-y-4 p-6 rounded-3xl shadow-2xl backdrop-blur-md
+                          bg-white/90 text-gray-800 dark:bg-gray-800/90 dark:text-white transition-colors duration-500">
+            <h1 className="text-3xl font-bold text-pink-600 text-center dark:text-pink-400">
               Complete Your Profile
             </h1>
 
             {fields.map((f) => (
               <div
                 key={f}
-                className="bg-white p-4 rounded-2xl shadow flex items-center space-x-3"
+                className="flex items-center space-x-3 p-4 rounded-2xl shadow
+                           bg-white dark:bg-gray-700 transition-colors duration-500"
               >
                 <IonIcon icon={iconByField[f]} className="text-pink-500 text-xl" />
                 <IonInput
@@ -196,14 +199,17 @@ const ProfilePage: React.FC = () => {
                       ? ''
                       : profile[f as keyof ProfileData]?.toString()
                   }
-                  onIonChange={(e) => handleInputChange(f, e.detail.value || '')}
+                  // onIonChange={(e) => handleInputChange(f, e.detail.value || '')}
+                  onIonInput={(e) => handleInputChange(f, e.detail.value ?? '')}
                 />
               </div>
             ))}
 
             <IonButton
               expand="block"
-              className="h-12 text-lg font-semibold rounded-xl mt-4 bg-linear-to-r from-pink-500 to-purple-500"
+              className="h-12 text-lg font-semibold rounded-xl mt-4
+                         bg-linear-to-r from-pink-500 to-purple-500
+                         dark:from-pink-600 dark:to-purple-700"
               onClick={handleSubmit}
             >
               Save Profile
@@ -224,3 +230,4 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+

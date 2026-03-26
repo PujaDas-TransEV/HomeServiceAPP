@@ -537,7 +537,7 @@ const formatDateLabel = (ts?: string | null) => {
               className="rounded-lg hover:bg-indigo-100"
             >
               <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-              <IonLabel>Helper Desk</IonLabel>
+              <IonLabel>Help Desk</IonLabel>
             </IonItem>
 
             <IonItem
@@ -567,7 +567,7 @@ const formatDateLabel = (ts?: string | null) => {
               />
               <div>
                 <p className="text-yellow-800 text-s opacity-80">
-                  Welcome back 👋
+                  Welcome  👋
                 </p>
                 <p className="text-indigo-500 font-bold text-lg">
                   {name || "User"}
@@ -598,7 +598,7 @@ const formatDateLabel = (ts?: string | null) => {
       </IonHeader>
 
       {/* ================= OTHER USER BAR ================= */}
-      <div className="flex items-center gap-3 p-3 border-b bg-gray-100">
+      <div className="flex items-center gap-3 p-3 border-b bg-gray-100 dark:bg-blue-900 ">
         <IonAvatar className="w-10 h-10">
           <img
             src={otherUser.profile_picture}
@@ -670,7 +670,7 @@ const formatDateLabel = (ts?: string | null) => {
           <div className="relative max-w-[70%]">
             <div
               className={`p-2 rounded-lg ${
-                isOwn ? "bg-green-500 text-white" : "bg-gray-200"
+                isOwn ? "bg-green-500 text-white" : "bg-gray-200  dark:text-gray-900 "
               } ${msg.pending ? "opacity-80" : ""}`}
             >
               {msg.message ? (

@@ -208,7 +208,7 @@ useEffect(() => {
              </IonItem>
      <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
      <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-     <IonLabel>Helper Desk</IonLabel>
+     <IonLabel>Help Desk</IonLabel>
    </IonItem>
              <IonItem
                button

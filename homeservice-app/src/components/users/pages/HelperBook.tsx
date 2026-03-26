@@ -62,7 +62,7 @@ const getServiceIcon = (name: string) => {
 const HelperBookingPage: React.FC = () => {
   const { id: helperId } = useParams<{ id: string }>();
   const history = useHistory();
-
+const [toast, setToast] = useState("");
   const [loading, setLoading] = useState(false);
   const [helper, setHelper] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
@@ -70,6 +70,7 @@ const HelperBookingPage: React.FC = () => {
   const [bookingDate, setBookingDate] = useState<string>("");
   const [timeSlot, setTimeSlot] = useState<string | null>(null);
 const [duration, setDuration] = useState<string>(""); // string by default
+const [name, setName] = useState("");
   const [workDetails, setWorkDetails] = useState({
    
     instructions: "",
@@ -90,10 +91,10 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
     pinCode: "",
     area:""
   });
-
+ const [registrationId, setRegistrationId] = useState("");
   // Busy dates with slots
   const [busySlots, setBusySlots] = useState<{ date: string; slot: string }[]>([]);
-
+const [profileImage, setProfileImage] = useState<string | null>(null);
   // Fetch helper details
   useEffect(() => {
     const fetchHelperDetails = async () => {
@@ -233,7 +234,62 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
       setLoading(false);
     }
   };
+useEffect(() => {
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      history.push("/login");
+      return;
+    }
 
+    setLoading(true);
+
+    try {
+      // Profile data API
+      const response = await fetch("http://192.168.0.187:9830/profiles/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error("Failed to load profile");
+
+      setRegistrationId(data.registration_id || "");
+      // setRole(data.role || "");
+      // setCapacity(data.capacity || "");
+      // setProfileKind(data.profile_kind || "");
+
+      const profile = data.profile;
+
+      setName(profile?.name || "");
+      // setCity(profile?.city || "");
+      // setArea(profile?.area || "");
+      // setAvgRating(profile?.avg_rating || "0");
+      // setRatingCount(profile?.rating_count || 0);
+
+      // Profile image API
+      const imageRes = await fetch(
+        "http://192.168.0.187:9830/profiles/picture/base64",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const imageData = await imageRes.json();
+
+      if (imageRes.ok && imageData?.image_base64) {
+        setProfileImage(imageData.image_base64);
+      }
+
+    } catch (err: any) {
+      setToast(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProfile();
+}, [history]);
   return (
     <IonPage>
        <IonMenu side="end" contentId="main-content" type="overlay">
@@ -314,8 +370,8 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
               alt="logo"
             />
             <div>
-              <p className="text-yellow-800 text-s opacity-80">Welcome back 👋</p>
-              {/* <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p> */}
+              <p className="text-yellow-800 text-s opacity-80">Welcome 👋</p>
+              <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p>
             </div>
           </div>
 
@@ -355,19 +411,37 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
   </h2>
 
   {/* Full Name */}
-  <div className="mb-4 flex flex-col">
-    <label className="font-semibold text-gray-700 mb-2 text-base">
+  {/* <div className="mb-4 flex flex-col">
+    <label className="font-semibold text-gray-700 mb-2 text-base ">
       Full Name <span className="text-red-500">*</span>
     </label>
     <IonInput
       value={userProfile.name}
       placeholder="Enter your full name"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 "
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, name: e.target.value })
       }
     />
-  </div>
+  </div> */}
+  <div className="mb-4 flex flex-col">
+  <label className="font-semibold text-gray-700 dark:text-gray-300 mb-2 text-base">
+    Full Name <span className="text-red-500">*</span>
+  </label>
+  <IonInput
+    value={userProfile.name}
+    placeholder="Enter your full name"
+    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
+    onIonInput={(e: any) =>
+      setUserProfile({ ...userProfile, name: e.target.value })
+    }
+  />
+</div>
 
   {/* Phone */}
   <div className="mb-4 flex flex-col">
@@ -378,7 +452,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
       value={userProfile.phone}
       placeholder="Enter your phone number"
       type="tel"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, phone: e.target.value })
       }
@@ -394,7 +473,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
       value={userProfile.email}
       placeholder="Enter your email (optional)"
       type="email"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, email: e.target.value })
       }
@@ -409,7 +493,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
     <IonInput
       value={userProfile.area}
       placeholder="Enter your area or address"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, area: e.target.value })
       }
@@ -424,7 +513,13 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
     <IonInput
       value={userProfile.city}
       placeholder="Enter your city"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      // className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+     className=" w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, city: e.target.value })
       }
@@ -440,7 +535,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
       value={userProfile.pinCode}
       placeholder="Enter your pin code"
       type="number"
-      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900
+               text-gray-800 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+               focus:border-blue-500 dark:focus:border-blue-400"
       onIonInput={(e: any) =>
         setUserProfile({ ...userProfile, pinCode: e.target.value })
       }
@@ -449,37 +549,61 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
 </div>
 {loading && <IonSpinner />}
 {/* Helper Info */}
+
 {helper && (
   <div className="p-6 mb-6 bg-linear-to-r from-pink-50 to-pink-100 rounded-2xl shadow-lg border border-pink-200">
-    <h2 className="font-extrabold text-2xl mb-5 text-pink-800 border-b border-pink-300 pb-3">
+    
+    {/* Profile Image */}
+  <div className="flex justify-center mb-4">
+  <img
+    src={helper.account_info?.profile_picture}
+    alt="Helper Profile"
+    className="w-24 h-24 object-cover rounded-full border-2 border-pink-300 shadow-md"
+  />
+</div>
+
+    <h2 className="font-extrabold text-2xl mb-5 text-pink-800 border-b border-pink-300 pb-3 text-center">
       Helper Info
     </h2>
 
     <div className="space-y-3 text-pink-700">
       <p className="flex justify-between items-center">
         <span className="font-semibold text-pink-900">Name:</span>
-        <span className="text-pink-800">{helper.profile?.name || helper.name}</span>
+        <span className="text-pink-800">
+          {helper.profile?.name || helper.name}
+        </span>
       </p>
+
       <p className="flex justify-between items-center">
         <span className="font-semibold text-pink-900">Age:</span>
-        <span className="text-pink-800">{helper.profile?.age || "-"}</span>
+        <span className="text-pink-800">
+          {helper.profile?.age || "-"}
+        </span>
       </p>
+
       <p className="flex justify-between items-center">
         <span className="font-semibold text-pink-900">Experience:</span>
-        <span className="text-pink-800">{helper.profile?.experience || "-"} years</span>
+        <span className="text-pink-800">
+          {helper.profile?.experience || "-"} years
+        </span>
       </p>
+
       <p className="flex justify-between items-center">
         <span className="font-semibold text-pink-900">City:</span>
-        <span className="text-pink-800">{helper.profile?.city || "-"}</span>
+        <span className="text-pink-800">
+          {helper.profile?.city || "-"}
+        </span>
       </p>
+
       <p className="flex justify-between items-center">
         <span className="font-semibold text-pink-900">Area:</span>
-        <span className="text-pink-800">{helper.profile?.area || "-"}</span>
+        <span className="text-pink-800">
+          {helper.profile?.area || "-"}
+        </span>
       </p>
     </div>
   </div>
 )}
-
         
         {/* Service Selection */}
         <div className="p-4 mb-4 bg-green-50 rounded-xl shadow-md">
@@ -527,9 +651,9 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
   </IonItem>
 </div>
 
-        {/* Time Slot */}
-      <div className="p-6 mb-6 bg-linear-to-r from-purple-50 to-purple-100 rounded-2xl shadow-lg border border-purple-200">
-  <h2 className="font-extrabold text-xl mb-4 text-purple-800 border-b border-purple-300 pb-2">
+{/* Time Slot */}
+<div className="p-6 mb-6 bg-linear-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-2xl shadow-lg border border-purple-200 dark:border-purple-700">
+  <h2 className="font-extrabold text-xl mb-4 text-purple-800 dark:text-purple-200 border-b border-purple-300 dark:border-purple-600 pb-2">
     Time Slot
   </h2>
 
@@ -539,25 +663,27 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
       return (
         <div
           key={slot}
-          className={`flex items-center justify-between mb-3 px-4 py-3 rounded-lg border ${
-            disabled
-              ? "border-red-300 bg-red-100 text-red-600 cursor-not-allowed"
-              : "border-purple-300 bg-white hover:bg-purple-50"
-          }`}
+          className={`flex items-center justify-between mb-3 px-4 py-3 rounded-lg border
+            ${
+              disabled
+                ? "border-red-300 bg-red-100 text-red-600 cursor-not-allowed dark:border-red-700 dark:bg-red-900 dark:text-red-400"
+                : "border-purple-300 bg-white hover:bg-purple-50 dark:border-purple-600 dark:bg-purple-900 dark:hover:bg-purple-800 dark:text-purple-100"
+            }`}
         >
-          <span className={`font-medium ${disabled ? "line-through" : ""}`}>{slot}</span>
+          <span className={`font-medium ${disabled ? "line-through" : ""}`}>
+            {slot}
+          </span>
           <IonRadio slot="start" value={slot} disabled={disabled} />
-          {disabled && <span className="ml-3 text-sm font-semibold text-red-500">Booked</span>}
+          {disabled && <span className="ml-3 text-sm font-semibold text-red-500 dark:text-red-400">Booked</span>}
         </div>
       );
     })}
   </IonRadioGroup>
 </div>
-
     {/* Duration */}
 {timeSlot !== "Live-in" && (
-  <div className="p-6 mb-6 bg-linear-to-r from-orange-50 to-orange-100 rounded-2xl shadow-lg border border-orange-200">
-    <h2 className="font-extrabold text-xl mb-4 text-orange-800 border-b border-orange-300 pb-2">
+  <div className="p-6 mb-6 bg-linear-to-r from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-2xl shadow-lg border border-orange-200 dark:border-orange-700">
+    <h2 className="font-extrabold text-xl mb-4 text-orange-800 dark:text-orange-200 border-b border-orange-300 dark:border-orange-600 pb-2">
       Duration
     </h2>
 
@@ -567,11 +693,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
         <button
           key={hour}
           onClick={() => setDuration(hour)}
-          className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium border transition-all ${
-            duration === hour
-              ? "bg-orange-500 text-white border-orange-500"
-              : "bg-white border-orange-300 hover:bg-orange-50"
-          }`}
+          className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium border transition-all
+            ${
+              duration === hour
+                ? "bg-orange-500 text-white border-orange-500 dark:bg-orange-600"
+                : "bg-white border-orange-300 hover:bg-orange-50 dark:bg-orange-900 dark:border-orange-600 dark:hover:bg-orange-800 dark:text-orange-100"
+            }`}
         >
           ⏱ {hour} Hours
         </button>
@@ -584,11 +711,12 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
             setDuration(""); // reset for custom input
           }
         }}
-        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium border transition-all ${
-          duration !== "" && !["2","4","6","8","10"].includes(duration.toString())
-            ? "bg-orange-500 text-white border-orange-500"
-            : "bg-white border-orange-300 hover:bg-orange-50"
-        }`}
+        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium border transition-all
+          ${
+            duration !== "" && !["2","4","6","8","10"].includes(duration.toString())
+              ? "bg-orange-500 text-white border-orange-500 dark:bg-orange-600"
+              : "bg-white border-orange-300 hover:bg-orange-50 dark:bg-orange-900 dark:border-orange-600 dark:hover:bg-orange-800 dark:text-orange-100"
+          }`}
       >
         ✏️ {duration !== "" && !["2","4","6","8","10"].includes(duration.toString()) ? `${duration} Hours` : "Other"}
       </button>
@@ -596,22 +724,21 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
 
     {/* Custom Duration Input */}
     {(duration === "" || (!["2","4","6","8","10"].includes(duration.toString()) && duration !== null)) && (
-      <IonItem className="mt-4 bg-white rounded-lg shadow-inner border border-orange-300 flex flex-col items-start p-0">
-        <label className="font-semibold text-gray-700 mb-2 mt-2 ml-3 text-base">
+      <IonItem className="mt-4 bg-white dark:bg-orange-900 rounded-lg shadow-inner border border-orange-300 dark:border-orange-600 flex flex-col items-start p-0">
+        <label className="font-semibold text-gray-700 dark:text-orange-200 mb-2 mt-2 ml-3 text-base">
           Enter custom duration (hours)
         </label>
         <IonInput
           type="number"
           placeholder="e.g., 3"
           value={duration}
-          className="w-full px-3 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500"
+          className="w-full px-3 py-3 rounded-lg border border-gray-300 dark:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-500 focus:border-orange-500 dark:focus:border-orange-500 dark:bg-orange-900 dark:text-orange-100"
           onIonInput={(e: any) => setDuration(e.target.value)}
         />
       </IonItem>
     )}
   </div>
-)}
-        {/* Work Details */}
+)}     Work Details
      <div className="p-6 mb-6 bg-linear-to-r from-teal-50 to-teal-100 rounded-2xl shadow-lg border border-teal-200">
   <h2 className="font-extrabold text-xl mb-5 text-teal-800 border-b border-teal-300 pb-2">
     Work Details
@@ -649,58 +776,60 @@ const [paymentMethod, setPaymentMethod] = useState(""); // <-- empty string
 </div>
 
         {/* Maid Preference */}
-      <div className="p-6 mb-6 bg-linear-to-r from-indigo-50 to-indigo-100 rounded-2xl shadow-lg border border-indigo-200">
-  <h2 className="font-extrabold text-xl mb-5 text-indigo-800 border-b border-indigo-300 pb-2">
+    {/* Maid Preference */}
+<div className="p-6 mb-6 bg-linear-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900 dark:to-indigo-800 rounded-2xl shadow-lg border border-indigo-200 dark:border-indigo-700">
+  <h2 className="font-extrabold text-xl mb-5 text-indigo-800 dark:text-indigo-200 border-b border-indigo-300 dark:border-indigo-600 pb-2">
     Maid Preference (Optional)
   </h2>
 
   {/* Female Maid Checkbox */}
-  <IonItem lines="none" className="mb-3 flex items-center gap-3">
+  <IonItem lines="none" className="mb-3 flex items-center gap-3 bg-white dark:bg-indigo-900 rounded-lg shadow-inner border border-indigo-300 dark:border-indigo-600 px-3 py-2">
     <IonCheckbox
       checked={maidPreference.female}
       onIonChange={(e) =>
         setMaidPreference({ ...maidPreference, female: e.detail.checked })
       }
     />
-    <span className="text-gray-700 font-medium">Female maid</span>
+    <span className="text-gray-700 dark:text-indigo-200 font-medium">Female maid</span>
   </IonItem>
 
   {/* Experienced Maid Checkbox */}
-  <IonItem lines="none" className="mb-3 flex items-center gap-3">
+  <IonItem lines="none" className="mb-3 flex items-center gap-3 bg-white dark:bg-indigo-900 rounded-lg shadow-inner border border-indigo-300 dark:border-indigo-600 px-3 py-2">
     <IonCheckbox
       checked={maidPreference.experienced}
       onIonChange={(e) =>
         setMaidPreference({ ...maidPreference, experienced: e.detail.checked })
       }
     />
-    <span className="text-gray-700 font-medium">Experienced maid</span>
+    <span className="text-gray-700 dark:text-indigo-200 font-medium">Experienced maid</span>
   </IonItem>
 
   {/* Language Preference */}
-  <IonItem className="mb-4 bg-white rounded-lg shadow-inner border border-indigo-300 flex flex-col items-start p-0">
-    <label className="font-semibold text-gray-700 mb-2 mt-2 ml-3 text-base">
+  <IonItem className="mb-4 bg-white dark:bg-indigo-900 rounded-lg shadow-inner border border-indigo-300 dark:border-indigo-600 flex flex-col items-start p-0">
+    <label className="font-semibold text-gray-700 dark:text-indigo-200 mb-2 mt-2 ml-3 text-base">
       Language Preference
     </label>
     <IonInput
       placeholder="Enter preferred language"
       value={maidPreference.language}
-      className="w-full px-3 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+      className="w-full px-3 py-3 rounded-lg border border-gray-300 dark:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 focus:border-indigo-500 dark:focus:border-indigo-500 dark:bg-indigo-900 dark:text-indigo-100"
       onIonInput={(e: any) =>
         setMaidPreference({ ...maidPreference, language: e.target.value })
       }
     />
   </IonItem>
 </div>
-        {/* Payment */}
-       <div className="p-6 mb-6 bg-linear-to-r from-gray-50 to-gray-100 rounded-2xl shadow-lg border border-gray-200">
-  <h2 className="font-extrabold text-xl mb-4 text-gray-800 border-b border-gray-300 pb-2">
+
+{/* Payment Method */}
+<div className="p-6 mb-6 bg-linear-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+  <h2 className="font-extrabold text-xl mb-4 text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-600 pb-2">
     Payment Method
   </h2>
 
   {/* Display Selected Payment Method */}
-  <div className="mt-4 flex items-center gap-3 bg-white rounded-lg shadow-inner border border-gray-300 px-4 py-3">
-    <span className="text-gray-700 font-medium">Selected Method:</span>
-    <span className="text-gray-900 font-semibold">{paymentMethod || "Cash"}</span>
+  <div className="mt-4 flex items-center gap-3 bg-white dark:bg-gray-900 rounded-lg shadow-inner border border-gray-300 dark:border-gray-600 px-4 py-3">
+    <span className="text-gray-700 dark:text-gray-200 font-medium">Selected Method:</span>
+    <span className="text-gray-900 dark:text-gray-100 font-semibold">{paymentMethod || "After On Service"}</span>
   </div>
 </div>
 

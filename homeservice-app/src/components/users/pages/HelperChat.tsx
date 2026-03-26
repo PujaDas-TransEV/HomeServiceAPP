@@ -177,7 +177,7 @@ export default function HelperChat() {
 
               <div>
                 <p className="text-pink-500 text-s opacity-80">
-                  Welcome back 👋
+                  Welcome 👋
                 </p>
                 <p className="font-bold text-lg text-red-600">
                   Helper

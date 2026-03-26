@@ -209,7 +209,7 @@ useEffect(() => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="bg-indigo-50">
+      <IonContent className="bg-indigo-50 dark:bg-gray-700 text-gray-800 dark:text-white">
         <div className="flex flex-col p-3 space-y-2">
           <IonItem button routerLink="/home" className="rounded-lg hover:bg-indigo-100">
             <FaHome className="text-purple-600 w-5 h-5 mr-3" />
@@ -240,7 +240,7 @@ useEffect(() => {
           </IonItem>
  <IonItem button routerLink="/support" className="rounded-lg hover:bg-indigo-100">
   <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-  <IonLabel>Helper Desk</IonLabel>
+  <IonLabel>Help Desk</IonLabel>
 </IonItem>
           <IonItem
             button
@@ -270,7 +270,7 @@ useEffect(() => {
               alt="logo"
             />
             <div>
-              <p className="text-yellow-800 text-s opacity-80">Welcome back 👋</p>
+              <p className="text-yellow-800 text-s opacity-80">Welcome 👋</p>
               <p className="text-indigo-500 font-bold text-lg">{name || "User"}</p>
             </div>
           </div>
@@ -309,23 +309,26 @@ useEffect(() => {
 
       
 <div className="flex flex-col space-y-2">
-  <label className="text-sm font-semibold text-gray-700">
+  <label className="text-sm font-semibold text-gray-700  bg-gray-100 dark:text-gray-500">
     Select Booking ID
   </label>
 
   <select
-    value={selectedBooking}
-    onChange={(e) => setSelectedBooking(e.target.value)}
-    className="w-full p-4 rounded-xl bg-yellow-50 border border-yellow-300 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-  >
-    <option value="">Select Booking</option>
-    {bookings.map((b) => (
-        
-      <option key={b.id} value={b.id}>
-        {b.id} ({b.helper_name} - {b.service_name})
-      </option>
-    ))}
-  </select>
+  value={selectedBooking}
+  onChange={(e) => setSelectedBooking(e.target.value)}
+  className="w-full p-4 rounded-xl 
+  bg-yellow-50 border border-yellow-300 
+  text-gray-900 
+  dark:bg-yellow-200 dark:text-black 
+  focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+>
+  <option value="">Select Booking</option>
+  {bookings.map((b) => (
+    <option key={b.id} value={b.id}>
+      {b.id} ({b.helper_name} - {b.service_name})
+    </option>
+  ))}
+</select>
 </div>
 
 
@@ -335,19 +338,24 @@ useEffect(() => {
     Complaint Category
   </label>
 
+  
   <select
-    value={category}
-    onChange={(e) => setCategory(e.target.value)}
-    className="w-full p-4 rounded-xl bg-green-50 border border-green-300 focus:ring-2 focus:ring-green-400 focus:outline-none"
-  >
-    <option value="">Select Complaint Category</option>
-    <option>Helper did not arrive</option>
-    <option>Late arrival</option>
-    <option>Bad behaviour</option>
-    <option>Service not proper</option>
-    <option>Payment issue</option>
-    <option>Other</option>
-  </select>
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+  className="w-full p-4 rounded-xl 
+  bg-green-50 border border-green-300 
+  text-gray-900 
+  dark:bg-green-200 dark:text-black 
+  focus:ring-2 focus:ring-green-400 focus:outline-none"
+>
+  <option value="">Select Complaint Category</option>
+  <option>Helper did not arrive</option>
+  <option>Late arrival</option>
+  <option>Bad behaviour</option>
+  <option>Service not proper</option>
+  <option>Payment issue</option>
+  <option>Other</option>
+</select>
 </div>
 
 
@@ -357,12 +365,17 @@ useEffect(() => {
     Description
   </label>
 
-  <textarea
-    value={description}
-    onChange={(e) => setDescription(e.target.value)}
-    placeholder="Describe your issue"
-    className="w-full p-4 rounded-xl bg-purple-50 border border-purple-300 focus:ring-2 focus:ring-purple-400 focus:outline-none resize-none h-28"
-  />
+ <textarea
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  placeholder="Describe your issue"
+  className="w-full p-4 rounded-xl 
+  bg-purple-50 border border-purple-300 
+  text-gray-900 placeholder-gray-500
+  dark:bg-purple-200 dark:text-black dark:placeholder-gray-700
+  focus:ring-2 focus:ring-purple-400 focus:outline-none 
+  resize-none h-28"
+/>
 </div>
 
 
@@ -372,17 +385,28 @@ useEffect(() => {
     Upload Proof (Optional)
   </label>
 
-  <div className="border-2 border-dashed border-pink-300 rounded-xl p-5 text-center bg-pink-50">
-    <Upload className="mx-auto text-pink-400 mb-2" size={28} />
-    <p className="text-sm text-gray-500 mb-2">
-      Upload proof / image
-    </p>
+ <div className="border-2 border-dashed border-pink-300 
+  dark:border-pink-400 
+  rounded-xl p-5 text-center 
+  bg-pink-50 dark:bg-pink-200 transition">
 
-    <input
-      type="file"
-      className="text-sm w-full"
-      onChange={(e) => setFile(e.target.files?.[0] || null)}
-    />
+  <Upload className="mx-auto text-pink-400 dark:text-pink-600 mb-2" size={28} />
+
+  <p className="text-sm text-gray-600 dark:text-black mb-2">
+    Upload proof / image
+  </p>
+
+  <input
+    type="file"
+    className="text-sm w-full 
+    text-gray-800 dark:text-black
+    file:mr-3 file:py-2 file:px-4 
+    file:rounded-lg file:border-0 
+    file:bg-pink-500 file:text-white 
+    hover:file:bg-pink-600 cursor-pointer"
+    onChange={(e) => setFile(e.target.files?.[0] || null)}
+  />
+
   </div>
 </div>
 
