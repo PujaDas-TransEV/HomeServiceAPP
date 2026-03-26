@@ -1,3 +1,5 @@
+
+
 import {
   IonPage,
   IonContent,
@@ -179,7 +181,7 @@ const MaidChat: React.FC = () => {
             </IonItem>
             <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
               <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+              <IonLabel>Help Desk / সহায়তা কেন্দ্র</IonLabel>
             </IonItem>
             <IonItem
               button
@@ -216,13 +218,13 @@ const MaidChat: React.FC = () => {
           </div>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding bg-pink-50">
+      <IonContent className="ion-padding bg-pink-50 dark:bg-teal-200">
         {!chatUser && (
           <>
-            <h3 className="font-bold text-gray-700 mb-2">Chat Bookings</h3>
+            <h3 className="font-bold text-gray-700 mb-2 dark:text-teal-200">Chat Bookings</h3>
             {chatBookings.length > 0 ? (
               chatBookings.map((c, i) => (
-                <div key={i} className="bg-white rounded-xl p-3 mb-2 shadow flex justify-between items-center cursor-pointer hover:bg-gray-100">
+                <div key={i} className="bg-teal-300 rounded-xl p-3 mb-2 shadow flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:bg-teal-200">
                   <div className="flex items-center space-x-3" onClick={() => history.push(`/seeker-chat/${c.booking_id}/${c.accountId}`)}>
                     <IonAvatar style={{ width: "35px", height: "35px" }}>
                       <img src={c.profile_picture} alt={c.name}  style={{ width: "35px", height: "35px", objectFit: "cover", borderRadius: "50%" }} />

@@ -425,7 +425,7 @@ useEffect(() => {
     />
   </div> */}
   <div className="mb-4 flex flex-col">
-  <label className="font-semibold text-gray-700 dark:text-gray-300 mb-2 text-base">
+  <label className="font-semibold text-gray-700 dark:text-gray-700 mb-2 text-base">
     Full Name <span className="text-red-500">*</span>
   </label>
   <IonInput

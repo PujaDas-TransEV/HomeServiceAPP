@@ -463,21 +463,57 @@ const handleDelete = async (id: number) => {
       </h3>
 
       <IonInput
-        placeholder="Service Name"
-        className="mb-4 border border-white/30 rounded-xl p-3 bg-white text-white placeholder-white/70"
-        value={newService.name}
-        onIonChange={(e) =>
-          setNewService({ ...newService, name: e.detail.value! })
-        }
-      />
-      <IonInput
-        placeholder="Description"
-        className="mb-6 border border-white/30 rounded-xl p-3 bg-white text-white placeholder-white/70"
-        value={newService.description}
-        onIonChange={(e) =>
-          setNewService({ ...newService, description: e.detail.value! })
-        }
-      />
+  placeholder="Service Name"
+  value={newService.name}
+  onIonChange={(e) =>
+    setNewService({ ...newService, name: e.detail.value! })
+  }
+  className="mb-4 border rounded-xl p-3
+    bg-white dark:bg-gray-800
+    border-gray-300 dark:border-gray-600
+    text-gray-800 dark:text-white
+    placeholder-gray-500 dark:placeholder-gray-400"
+  style={{
+    '--color': '#1f2937',              // light mode text (dark gray)
+    '--placeholder-color': '#6b7280',
+  } as any}
+/>
+
+{/* 🔥 FORCE DARK MODE TEXT */}
+<style>
+  {`
+    .dark ion-input {
+      --color: #ffffff !important;
+      --placeholder-color: #9ca3af !important;
+    }
+  `}
+</style>
+    <IonInput
+  placeholder="Description"
+  value={newService.description}
+  onIonChange={(e) =>
+    setNewService({ ...newService, description: e.detail.value! })
+  }
+  className="mb-6 border rounded-xl p-3
+    bg-white dark:bg-gray-800
+    border-gray-300 dark:border-gray-600
+    text-gray-800 dark:text-white
+    placeholder-gray-500 dark:placeholder-gray-400"
+  style={{
+    '--color': '#1f2937',           // light mode text
+    '--placeholder-color': '#6b7280',
+  } as any}
+/>
+
+{/* 🔥 DARK MODE FORCE */}
+<style>
+  {`
+    .dark ion-input {
+      --color: #ffffff !important;
+      --placeholder-color: #9ca3af !important;
+    }
+  `}
+</style>
 
     
     <div className="flex mt-4">

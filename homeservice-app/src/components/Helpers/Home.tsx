@@ -37,7 +37,7 @@ import banner1 from "../assets/dashboard1.jpg";
 import banner2 from "../assets/home3.jpg";
 import banner3 from "../assets/maid1.jpg";
 import Logo from "../assets/logo.jpg";
-
+import { eyeOutline } from "ionicons/icons";
 const API_BASE = "http://192.168.0.187:9830";
 
 export default function HelperHome() {
@@ -186,7 +186,7 @@ const filteredServices = services.filter((service) =>
 
 <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
   <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-  <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+  <IonLabel>Help Desk / সহায়তা কেন্দ্র</IonLabel>
 </IonItem>
             <IonItem
               button
@@ -249,7 +249,7 @@ const filteredServices = services.filter((service) =>
 
 
         {/* Search Bar */}
-<div className="px-4 mt-6">
+{/* <div className="px-4 mt-6">
   <div className="bg-white rounded-full shadow-lg p-3 flex items-center border-2 border-indigo-300 focus-within:border-purple-500 transition">
     <IonIcon icon={searchOutline} className="text-indigo-500 text-xl" />
 
@@ -259,6 +259,27 @@ const filteredServices = services.filter((service) =>
       value={searchText}
       onChange={(e) => setSearchText(e.target.value)}
       className="ml-3 w-full outline-none bg-transparent text-gray-700"
+    />
+  </div>
+</div> */}
+<div className="px-4 mt-6">
+  <div className="bg-white dark:bg-gray-800 rounded-full shadow-lg p-3 flex items-center 
+                  border-2 border-indigo-300 dark:border-gray-600 
+                  focus-within:border-purple-500 dark:focus-within:border-purple-400 transition">
+
+    <IonIcon 
+      icon={searchOutline} 
+      className="text-indigo-500 dark:text-gray-300 text-xl" 
+    />
+
+    <input
+      type="text"
+      placeholder="Search service..."
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+      className="ml-3 w-full outline-none bg-transparent 
+                 text-gray-700 dark:text-gray-200 
+                 placeholder-gray-400 dark:placeholder-gray-500"
     />
   </div>
 </div>
@@ -354,19 +375,19 @@ const filteredServices = services.filter((service) =>
   </div>
 
   {/* Ionic View Button */}
-  <IonButton
-    fill="solid"
-    color="success"
-    size="small"
-    onClick={(e) => {
-      e.stopPropagation(); // Prevent outer div click
-      history.push(`/seeker/${seeker.registration_id}`);
-    }}
-    className="flex items-center gap-1"
-  >
-    <IonIcon slot="start" icon={searchOutline} />
-    View
-  </IonButton>
+ <IonButton
+  fill="solid"
+  color="success"
+  size="small"
+  onClick={(e) => {
+    e.stopPropagation();
+    history.push(`/seeker/${seeker.registration_id}`);
+  }}
+  className="flex items-center gap-1"
+>
+  <IonIcon slot="start" icon={eyeOutline} />
+  View
+</IonButton>
 </div>
               );
             })
@@ -377,3 +398,4 @@ const filteredServices = services.filter((service) =>
     </IonPage>
   );
 }
+

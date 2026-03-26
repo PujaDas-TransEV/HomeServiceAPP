@@ -535,7 +535,7 @@ const formatDateLabel = (ts?: string | null) => {
               className="rounded-lg hover:bg-red-100"
             >
               <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+              <IonLabel>Help Desk / সহায়তা কেন্দ্র</IonLabel>
             </IonItem>
 
             <IonItem
@@ -594,12 +594,20 @@ const formatDateLabel = (ts?: string | null) => {
         </IonToolbar>
       </IonHeader>
 
-      <div className="flex items-center gap-3 p-3 border-b bg-gray-100">
+      <div className="flex items-center gap-3 p-3 border-b bg-gray-100 dark:bg-blue-900">
         <IonAvatar className="w-10 h-10">
-          <img
+          {/* <img
             src={seeker.profile_picture}
             className="rounded-full object-cover"
             alt={seeker.name}
+          /> */}
+           <img
+            src={seeker.profile_picture}
+            alt="profile"
+            className="w-full h-full object-cover rounded-full"
+            onError={(e: any) =>
+              (e.target.src = "https://i.pravatar.cc/150?img=22")
+            }
           />
         </IonAvatar>
         <div>
@@ -655,7 +663,7 @@ const formatDateLabel = (ts?: string | null) => {
           <div className="relative max-w-[70%]">
             <div
               className={`p-2 rounded-lg ${
-                isOwn ? "bg-green-500 text-white" : "bg-gray-200"
+                isOwn ? "bg-green-500 text-white" : "bg-gray-200 dark:text-gray-900 "
               } ${msg.pending ? "opacity-80" : ""}`}
             >
               {msg.message ? (

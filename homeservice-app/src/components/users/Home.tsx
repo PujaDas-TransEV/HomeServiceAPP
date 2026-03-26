@@ -26,7 +26,7 @@ import banner1 from "../assets/dashboard1.jpg";
 import banner2 from "../assets/home3.jpg";
 import banner3 from "../assets/maid1.jpg";
 import Logo from "../assets/logo.jpg";
-
+import { eyeOutline } from "ionicons/icons";
 const API_BASE = "http://192.168.0.187:9830";
 
 export default function SeekerHome() {
@@ -346,7 +346,7 @@ export default function SeekerHome() {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <IonIcon slot="start" icon={searchOutline} />
+                    <IonIcon slot="start" icon={eyeOutline} />
                     View
                   </IonButton>
                 </div>

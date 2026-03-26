@@ -283,7 +283,7 @@ const handleProfileUpload = async (event: any) => {
       </IonHeader>
 
       {/* SIDE MENU */}
-      <div
+      {/* <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300
           ${openMenu ? "translate-x-0" : "translate-x-full"}`}
       >
@@ -339,8 +339,59 @@ const handleProfileUpload = async (event: any) => {
             <span>লগ আউট / Logout</span>
           </div>
         </div>
-      </div>
+      </div> */}
+<div
+  className={`fixed top-0 right-0 h-full w-64 bg-gray-900 shadow-2xl z-50 transform transition-transform duration-300
+    ${openMenu ? "translate-x-0" : "translate-x-full"}`}
+>
+  {/* Menu Header */}
+  <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+    <span className="font-bold text-indigo-400 text-lg">HelperGo</span>
+    <button
+      className="text-2xl font-bold text-pink-400"
+      onClick={() => setOpenMenu(false)}
+    >
+      <IonIcon icon={closeOutline} />
+    </button>
+  </div>
 
+  {/* Menu Items */}
+  <div className="p-4 space-y-4">
+    {[
+      { icon: homeOutline, label: "হোম / Home", path: "/helper-home" },
+      { icon: personOutline, label: "প্রোফাইল / Profile", path: "/maid-profile" },
+      { icon: peopleOutline, label: "Seeker List / খোঁজকারী তালিকা", path: "/seeker-list" },
+      { icon: calendarOutline, label: "Bookings / বুকিংসমূহ", path: "/helper-bookings" },
+      { icon: callOutline, label: "চ্যাট / Chat", path: "/maid-chat" },
+      { icon: briefcaseOutline, label: "প্রেফারেন্সেস / Preferences", path: "/maid-preferences" },
+      { icon: helpCircleOutline, label: "হেল্পডেস্ক / Helpdesk", path: "/support-system" }
+    ].map((item, idx) => (
+      <div
+        key={idx}
+        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 cursor-pointer"
+        onClick={() => {
+          setOpenMenu(false);
+          history.push(item.path);
+        }}
+      >
+        <IonIcon icon={item.icon} className="text-pink-400 text-xl" />
+        <span className="text-white/80">{item.label}</span>
+      </div>
+    ))}
+
+    {/* Logout */}
+    <div
+      className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-800/20 cursor-pointer text-red-400"
+      onClick={() => {
+        setOpenMenu(false);
+        setShowLogoutModal(true);
+      }}
+    >
+      <IonIcon icon={logOutOutline} className="text-red-400 text-xl" />
+      <span className="text-red-400">লগ আউট / Logout</span>
+    </div>
+  </div>
+</div>
       {/* CONTENT */}
       <IonContent id="main-content" fullscreen>
         <div

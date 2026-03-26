@@ -319,9 +319,9 @@ const filteredComplaints = useMemo(() => {
                   <option value="pending">Pending</option>
                   <option value="resolved">Resolved</option>
                 </select>
-                 {/* Search by Complaint ID */}
+              
   {/* Search by Complaint ID */}
-<div className="relative w-full md:w-96">
+{/* <div className="relative w-full md:w-96">
   <IonIcon
     icon={searchOutline}
     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -332,6 +332,36 @@ const filteredComplaints = useMemo(() => {
     onIonChange={(e) => setSearchId(e.detail.value!)}
     className="pl-10 bg-indigo-50 rounded-lg shadow"
   />
+</div> */}
+<div className="relative w-full md:w-96">
+  <IonIcon
+    icon={searchOutline}
+    className="absolute left-3 top-1/2 -translate-y-1/2 
+      text-gray-400 dark:text-gray-500"
+  />
+
+  <IonInput
+    placeholder="Search by Complaint ID..."
+    value={searchId}
+    onIonChange={(e) => setSearchId(e.detail.value!)}
+    className="pl-10 rounded-lg shadow
+      bg-indigo-50 dark:bg-pink-100
+      border border-indigo-200 dark:border-gray-600"
+    style={{
+      '--color': 'black',          // light mode text
+      '--placeholder-color': '#6b7280',
+    } as any}
+  />
+
+  {/* 🔥 DARK MODE FORCE */}
+  <style>
+    {`
+      .dark ion-input {
+        --color: 'white '
+        --placeholder-color: #9ca3af !important;
+      }
+    `}
+  </style>
 </div>
 
               </div>
@@ -524,25 +554,37 @@ const filteredComplaints = useMemo(() => {
 
               {/* ================= ADD FAQ MODAL ================= */}
               <IonModal isOpen={showFaqModal} onDidDismiss={() => setShowFaqModal(false)}>
-                <div className="p-6 rounded-xl shadow-lg min-w-[500px] max-w-md mx-auto my-20 bg-linear-to-r from-indigo-100 via-purple-100 to-pink-100">
+                <div className="p-6 rounded-xl shadow-lg min-w-[400px] max-w-md mx-auto my-20 bg-linear-to-r from-indigo-100 via-purple-100 to-pink-100">
                   <h2 className="text-2xl font-bold mb-4 text-purple-700 border-b-2 border-purple-300 pb-2">Add New FAQ</h2>
 
-                  <IonInput
-                    placeholder="Question"
-                    value={faqQuestion}
-                    onIonChange={e => setFaqQuestion(e.detail.value!)}
-                    className="mb-3 px-3 py-2 rounded-lg border border-purple-300"
-                  />
+                 <IonInput
+  placeholder="Question"
+  value={faqQuestion}
+  onIonChange={e => setFaqQuestion(e.detail.value!)}
+  className="mb-3 px-3 py-2 rounded-lg 
+    bg-white dark:bg-black 
+    text-gray-800 dark:text-white
+    placeholder-gray-400 dark:placeholder-gray-500
+    border border-purple-300 dark:border-gray-600"
+/>
                   <IonInput
                     placeholder="Answer"
                     value={faqAnswer}
                     onIonChange={e => setFaqAnswer(e.detail.value!)}
-                    className="mb-3 px-3 py-2 rounded-lg border border-purple-300"
+                   className="mb-3 px-3 py-2 rounded-lg 
+    bg-white dark:bg-black 
+    text-gray-800 dark:text-white
+    placeholder-gray-400 dark:placeholder-gray-500
+    border border-purple-300 dark:border-gray-600"
                   />
                   <select
                     value={faqRole}
                     onChange={e => setFaqRole(e.target.value as any)}
-                    className="mb-3 px-3 py-2 rounded-lg border border-purple-300 w-full"
+                   className="mb-3 px-3 py-2 rounded-lg 
+    bg-white dark:bg-black 
+    text-gray-800 dark:text-white
+    placeholder-gray-400 dark:placeholder-gray-500
+    border border-purple-300 dark:border-gray-600"
                   >
                     <option value="seeker">Seeker</option>
                     <option value="helper">Helper</option>

@@ -311,7 +311,7 @@ const savePreferences = async () => {
             </IonItem>
             <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
               <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+              <IonLabel>Help Desk / সহায়তা কেন্দ্র</IonLabel>
             </IonItem>
             <IonItem
               button

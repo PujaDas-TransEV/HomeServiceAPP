@@ -168,7 +168,7 @@ const HelperBookingsPage: React.FC = () => {
             </IonItem>
             <IonItem button routerLink="/support-system" className="rounded-lg hover:bg-red-100">
               <FaHeadset className="text-green-600 w-5 h-5 mr-3" />
-              <IonLabel>Helper Desk / সহায়তা কেন্দ্র</IonLabel>
+              <IonLabel>Help Desk / সহায়তা কেন্দ্র</IonLabel>
             </IonItem>
             <IonItem
               button
@@ -219,24 +219,30 @@ const HelperBookingsPage: React.FC = () => {
   </h1>
 
 </div>
-        {loading ? (
-          <div className="flex justify-center py-20">
-            <IonSpinner name="crescent" />
-          </div>
-        ) : bookings.length === 0 ? (
-          <p className="text-gray-500 text-center mt-10">No bookings found.</p>
-        ) : (
-          <>
-            <div className="mb-6 flex justify-end">
-              <IonSelect placeholder="Booking Summary" className="w-64 bg-white rounded-md shadow-md">
-                {Object.keys(summary).map((status) => (
-                  <IonSelectOption key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}: {summary[status]}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
-            </div>
-
+      {loading ? (
+  <div className="flex justify-center py-20">
+    <IonSpinner name="crescent" />
+  </div>
+) : bookings.length === 0 ? (
+  <p className="text-gray-500 text-center mt-10 dark:text-gray-300">No bookings found.</p>
+) : (
+  <>
+    <div className="mb-6 flex justify-end">
+      <IonSelect
+        placeholder="Booking Summary"
+        className="w-64 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-md shadow-md"
+      >
+        {Object.keys(summary).map((status) => (
+          <IonSelectOption
+            key={status}
+            value={status}
+            className="text-gray-800 dark:text-gray-200"
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}: {summary[status]}
+          </IonSelectOption>
+        ))}
+      </IonSelect>
+    </div>
             {bookings.map((b) => {
                const review = reviews[b.id]; // ✅ fetch review for this booking
               const workDetails = JSON.parse(b.work_details || "{}");
