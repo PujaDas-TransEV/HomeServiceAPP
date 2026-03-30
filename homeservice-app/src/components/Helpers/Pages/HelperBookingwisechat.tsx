@@ -713,17 +713,29 @@ const formatDateLabel = (ts?: string | null) => {
             )}
 
             {popoverOpenId === msg.id && (
-              <div className="absolute right-0 top-6 bg-white shadow rounded w-24 z-10">
-                <button
-                  className="block w-full text-left px-2 py-1"
-                  onClick={() => {
-                    setEditingMessageId(String(msg.id));
-                    setText(msg.message || "");
-                    setPopoverOpenId(null);
-                  }}
-                >
-                  Edit
-                </button>
+              // <div className="absolute right-0 top-6 bg-white shadow rounded w-24 z-10">
+              //   <button
+              //     className="block w-full text-left px-2 py-1"
+              //     onClick={() => {
+              //       setEditingMessageId(String(msg.id));
+              //       setText(msg.message || "");
+              //       setPopoverOpenId(null);
+              //     }}
+              //   >
+              //     Edit
+              //   </button>
+              <div className="absolute right-0 top-6 bg-white dark:bg-white-800 shadow rounded w-24 z-10">
+  <button
+    className="block w-full text-left px-2 py-1 text-gray-800 dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700"
+    onClick={() => {
+      setEditingMessageId(String(msg.id));
+      setText(msg.message || "");
+      setPopoverOpenId(null);
+    }}
+  >
+    Edit
+  </button>
+
 
                 <button
                   className="block w-full text-left px-2 py-1 text-red-500"
