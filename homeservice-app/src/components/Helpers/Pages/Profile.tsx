@@ -282,64 +282,7 @@ const handleProfileUpload = async (event: any) => {
         </IonToolbar>
       </IonHeader>
 
-      {/* SIDE MENU */}
-      {/* <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300
-          ${openMenu ? "translate-x-0" : "translate-x-full"}`}
-      >
-        <div className="p-4 border-b flex justify-between items-center">
-          <span className="font-bold text-indigo-500 text-lg">HelperGo</span>
-          <button className="text-2xl font-bold text-pink-500" onClick={() => setOpenMenu(false)}>
-            <IonIcon icon={closeOutline} />
-          </button>
-        </div>
 
-        <div className="p-4 space-y-4">
-          {[
-            { icon: homeOutline, label: "হোম / Home", path: "/helper-home" },
-            { icon: personOutline, label: "প্রোফাইল / Profile", path: "/maid-profile" },
-           {
-  icon: peopleOutline,      // Ionicon
-  label: "Seeker List / খোঁজকারী তালিকা",
-  path: "/seeker-list",
-  color: "purple-600"         // Tailwind or custom color class
-},
- {
-  icon: calendarOutline,      // Ionicon
-  label: "Bookings / বুকিংসমূহ",
-  path: "/helper-bookings",
-  color: "yellow-600"         // Tailwind or custom color class
-},
-
-            { icon: callOutline, label: "চ্যাট / Chat", path: "/maid-chat" },
-            { icon: briefcaseOutline, label: "প্রেফারেন্সেস / Preferences", path: "/maid-preferences" },
-            { icon: helpCircleOutline, label: "হেল্পডেস্ক / Helpdesk", path: "/support-system" }
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setOpenMenu(false);
-                history.push(item.path);
-              }}
-            >
-              <IonIcon icon={item.icon} className="text-pink-600 text-xl" />
-              <span>{item.label}</span>
-            </div>
-          ))}
-
-          <div
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 cursor-pointer text-red-500"
-            onClick={() => {
-              setOpenMenu(false);
-              setShowLogoutModal(true);
-            }}
-          >
-            <IonIcon icon={logOutOutline} className="text-red-500 text-xl" />
-            <span>লগ আউট / Logout</span>
-          </div>
-        </div>
-      </div> */}
 <div
   className={`fixed top-0 right-0 h-full w-64 bg-gray-900 shadow-2xl z-50 transform transition-transform duration-300
     ${openMenu ? "translate-x-0" : "translate-x-full"}`}

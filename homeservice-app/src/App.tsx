@@ -25,7 +25,8 @@ import MaidPreferences from './components/Helpers/Pages/ServicePreferences';
 import AdminHome from './components/Admin/Home';
 import AdminProfile from './components/Admin/Pages/Profile';
 import AdminServicePage from './components/Admin/Pages/Service';
-
+import UsersNotifications from './components/users/pages/Notifications';
+import HelperNotifications from './components/Helpers/Pages/NotificationsHelper';
 
 // import HelperWorkPreference from './components/Helpers/Pages/Helperworkpreference';
 import LoginPage from './components/Authentication/Login';
@@ -113,6 +114,8 @@ const App: React.FC = () => {
                     <Route exact path="/helper-bookings" component={HelperBooking} />
                     <Route exact path="/support" component={SeekerHelpDesk} />
                     <Route exact path="/support-system" component={HelperHelpDesk} />
+                     <Route exact path="/seeker-notification" component={UsersNotifications} />
+                      <Route exact path="/helper-notification" component={HelperNotifications} />
 <Route
             path="/helper-chat/:booking_id/:receiver_account_id"
             component={BookingWiseHelperChat}
