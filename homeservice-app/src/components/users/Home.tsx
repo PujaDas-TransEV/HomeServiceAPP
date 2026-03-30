@@ -687,7 +687,7 @@ export default function SeekerHome() {
 
         {/* Live Notification Popup */}
         {liveNotification && (
-          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-sm p-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 shadow-2xl text-white border-l-4 border-yellow-400 flex flex-col gap-1 animate-fade-in">
+          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-sm p-4 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 shadow-2xl text-white border-l-4 border-yellow-400 flex flex-col gap-1 animate-fade-in">
             <h3 className="text-lg font-bold tracking-wide">{liveNotification.title}</h3>
             <p className="text-sm opacity-90">{liveNotification.content}</p>
             <div className="flex justify-end mt-1">
